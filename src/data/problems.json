@@ -1,0 +1,588 @@
+{
+  "levels": [
+    [
+      {
+        "category": "Two Pointers",
+        "problems": [
+          {
+            "id": 88,
+            "name": "Merge sorted array",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/merge-sorted-array/description/"
+          },
+          {
+            "id": 167,
+            "name": "Two Sum II - Input Array Is Sorted",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/two-sum-ii-input-array-is-sorted/"
+          },
+          {
+            "id": 11,
+            "name": "Container With Most Water",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/container-with-most-water/"
+          },
+          {
+            "id": 15,
+            "name": "3Sum",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/3sum/"
+          },
+          {
+            "id": 42,
+            "name": "Trapping Rain Water",
+            "difficulty": "Hard",
+            "url": "https://leetcode.com/problems/trapping-rain-water/"
+          },
+          {
+            "id": 283,
+            "name": "Move Zeroes",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/move-zeroes/"
+          },
+          {
+            "id": 75,
+            "name": "Sort Colors",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/sort-colors/"
+          },
+          {
+            "id": 26,
+            "name": "Remove Duplicates from Sorted Array",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/remove-duplicates-from-sorted-array/"
+          },
+          {
+            "id": 763,
+            "name": "Partition Labels",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/partition-labels/"
+          }
+        ]
+      },
+      {
+        "category": "Binary Search",
+        "problems": [
+          {
+            "id": 33,
+            "name": "Search in rotated array",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/search-in-rotated-sorted-array/description/?envType=problem-list-v2&envId=binary-search"
+          },
+          {
+            "id": 34,
+            "name": "Find first and last position of element in Sorted Array",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/description/?envType=problem-list-v2&envId=binary-search"
+          },
+          {
+            "id": 35,
+            "name": "Search Insert Position",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/search-insert-position/description/?envType=problem-list-v2&envId=binary-search"
+          },
+          {
+            "id": 69,
+            "name": "Sqrt(x)",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/sqrtx/description/?envType=problem-list-v2&envId=binary-search"
+          },
+          {
+            "id": 162,
+            "name": "Find peak Element",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/find-peak-element/description/?envType=problem-list-v2&envId=binary-search"
+          },
+          {
+            "id": 278,
+            "name": "Find First Bad Version",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/first-bad-version/?envType=problem-list-v2&envId=binary-search"
+          },
+          {
+            "id": 704,
+            "name": "Binary search",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/binary-search/description/?envType=problem-list-v2&envId=binary-search"
+          },
+          {
+            "id": 875,
+            "name": "Koko eating bananas",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/koko-eating-bananas/description/?envType=problem-list-v2&envId=binary-search"
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "category": "Queues",
+        "problems": [
+          {
+            "id": 2073,
+            "name": "Time Needed to Buy Tickets",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/time-needed-to-buy-tickets/description/?envType=problem-list-v2&envId=queue"
+          },
+          {
+            "id": 387,
+            "name": "First Unique Character in a String",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/first-unique-character-in-a-string/description/?envType=problem-list-v2&envId=queue"
+          },
+          {
+            "id": 950,
+            "name": "Reveal Cards In Increasing Order",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/reveal-cards-in-increasing-order/description/?envType=problem-list-v2&envId=queue"
+          },
+          {
+            "id": 1352,
+            "name": "Product of the Last K Numbers",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/product-of-the-last-k-numbers/description/?envType=problem-list-v2&envId=queue"
+          },
+          {
+            "id": 1823,
+            "name": "Winner of Circular Game",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/find-the-winner-of-the-circular-game/description/?envType=problem-list-v2&envId=queue"
+          }
+        ]
+      },
+      {
+        "category": "Stacks",
+        "problems": [
+          {
+            "id": 20,
+            "name": "Valid Parenthesis",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/valid-parentheses/description/?envType=problem-list-v2&envId=stack"
+          },
+          {
+            "id": 155,
+            "name": "Min Stack",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/min-stack/?envType=problem-list-v2&envId=stack"
+          },
+          {
+            "id": 71,
+            "name": "Simplify Path",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/simplify-path/?envType=problem-list-v2&envId=stack"
+          },
+          {
+            "id": 114,
+            "name": "Flatten Binary Tree to Linked List",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/flatten-binary-tree-to-linked-list/description/?envType=problem-list-v2&envId=stack"
+          },
+          {
+            "id": 946,
+            "name": "Validate Stack Sequences",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/validate-stack-sequences/description/"
+          },
+          {
+            "id": 1209,
+            "name": "Remove All Adjacent Duplicates in String II",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string-ii/description/"
+          },
+          {
+            "id": 735,
+            "name": "Asteroid Collision",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/asteroid-collision/description/"
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "category": "Queues+Stacks",
+        "problems": [
+          {
+            "id": 232,
+            "name": "Implement Queue using Stacks",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/implement-queue-using-stacks/description/"
+          },
+          {
+            "id": 225,
+            "name": "Implement Stack using Queues",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/implement-stack-using-queues/description/"
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "category": "Linked Lists",
+        "problems": [
+          {
+            "id": 206,
+            "name": "Reverse Linked List",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/reverse-linked-list/description/"
+          },
+          {
+            "id": 203,
+            "name": "Remove Linked List Elements",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/remove-linked-list-elements/description/"
+          },
+          {
+            "id": 21,
+            "name": "Merge Two Sorted Lists",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/merge-two-sorted-lists/description/"
+          },
+          {
+            "id": 24,
+            "name": "Swap Nodes in Pairs",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/swap-nodes-in-pairs/description/"
+          },
+          {
+            "id": 430,
+            "name": "Flatten a Multilevel Doubly Linked List",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/flatten-a-multilevel-doubly-linked-list/description/"
+          },
+          {
+            "id": 25,
+            "name": "Reverse Nodes in k-Group",
+            "difficulty": "Hard",
+            "url": "https://leetcode.com/problems/reverse-nodes-in-k-group/description/"
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "category": "Heaps",
+        "problems": [
+          {
+            "id": 1046,
+            "name": "Last Stone Weight",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/last-stone-weight/description/"
+          },
+          {
+            "id": 703,
+            "name": "Kth Largest Element in a Stream",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/kth-largest-element-in-a-stream/description/"
+          },
+          {
+            "id": 347,
+            "name": "Top K Frequent Elements",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/top-k-frequent-elements/description/"
+          },
+          {
+            "id": 23,
+            "name": "Merge k Sorted Lists",
+            "difficulty": "Hard",
+            "url": "https://leetcode.com/problems/merge-k-sorted-lists/description/"
+          },
+          {
+            "id": 295,
+            "name": "Find Median from Data Stream",
+            "difficulty": "Hard",
+            "url": "https://leetcode.com/problems/find-median-from-data-stream/"
+          },
+          {
+            "id": 621,
+            "name": "Task Scheduler",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/task-scheduler/"
+          },
+          {
+            "id": 1167,
+            "name": "Minimum Cost to Connect Sticks",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/minimum-cost-to-connect-sticks/"
+          },
+          {
+            "id": 692,
+            "name": "Top K Frequent Words",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/top-k-frequent-words/"
+          },
+          {
+            "id": 1054,
+            "name": "Distant Barcodes",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/distant-barcodes/"
+          },
+          {
+            "id": 973,
+            "name": "K Closest Points to Origin",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/k-closest-points-to-origin/"
+          }
+        ]
+      },
+      {
+        "category": "Trees",
+        "problems": [
+          {
+            "id": 104,
+            "name": "Maximum Depth of Binary Tree",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/maximum-depth-of-binary-tree/?envType=problem-list-v2&envId=binary-tree"
+          },
+          {
+            "id": 101,
+            "name": "Symmetric Tree",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/symmetric-tree/?envType=problem-list-v2&envId=binary-tree"
+          },
+          {
+            "id": 100,
+            "name": "Same Tree",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/same-tree?envType=problem-list-v2&envId=binary-tree"
+          },
+          {
+            "id": 226,
+            "name": "Invert Binary Tree",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/invert-binary-tree/description/"
+          },
+          {
+            "id": 257,
+            "name": "Binary Tree Paths",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/binary-tree-paths/description/?envType=problem-list-v2&envId=binary-tree"
+          },
+          {
+            "id": 113,
+            "name": "Path Sum II",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/path-sum-ii/description/"
+          },
+          {
+            "id": 235,
+            "name": "Lowest Common Ancestor of a BST",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/description/?envType=problem-list-v2&envId=binary-tree"
+          },
+          {
+            "id": 124,
+            "name": "Binary Tree Maximum Path Sum",
+            "difficulty": "Hard",
+            "url": "https://leetcode.com/problems/binary-tree-maximum-path-sum/description/?envType=problem-list-v2&envId=binary-tree"
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "category": "Backtracking",
+        "problems": [
+          {
+            "id": 22,
+            "name": "Generate Parentheses",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/generate-parentheses/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 37,
+            "name": "Sudoku Solver",
+            "difficulty": "Hard",
+            "url": "https://leetcode.com/problems/sudoku-solver/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 77,
+            "name": "Combinations",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/combinations/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 78,
+            "name": "Subsets",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/subsets/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 17,
+            "name": "Letter Combinations of a Phone Numbe",
+            "difficulty": "medium",
+            "url": "https://leetcode.com/problems/letter-combinations-of-a-phone-number/description/"
+          },
+          {
+            "id": 46,
+            "name": "Permutations",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/permutations/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 784,
+            "name": "Letter Case Permutation",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/letter-case-permutation/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 39,
+            "name": "Combination Sum",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/combination-sum/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 40,
+            "name": "Combination Sum II",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/combination-sum-ii/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 216,
+            "name": "Combination Sum III",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/combination-sum-iii/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 494,
+            "name": "Target Sum",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/target-sum/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 52,
+            "name": "N-Queens II",
+            "difficulty": "Hard",
+            "url": "https://leetcode.com/problems/n-queens-ii/description/?envType=problem-list-v2&envId=backtracking"
+          },
+          {
+            "id": 79,
+            "name": "Word Search",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/word-search/description/?envType=problem-list-v2&envId=backtracking"
+          }
+        ]
+      },
+      {
+        "category": "Dynamic Programming",
+        "problems": [
+          {
+            "id": 509,
+            "name": "Fibonacci Number",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/fibonacci-number/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 70,
+            "name": "Climbing Stairs",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/climbing-stairs/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 121,
+            "name": "Best Time to Buy and Sell Stock",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 198,
+            "name": "House Robber",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/house-robber/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 213,
+            "name": "House Robber II",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/house-robber-ii/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 322,
+            "name": "Coin Change",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/coin-change/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 518,
+            "name": "Coin Change II",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/coin-change-ii/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 392,
+            "name": "Is Subsequence",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/is-subsequence/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 486,
+            "name": "Predict the Winner",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/predict-the-winner/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 494,
+            "name": "Target Sum",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/target-sum/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 118,
+            "name": "Pascal Triangle",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/pascals-triangle/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 119,
+            "name": "Pascal Triangle II",
+            "difficulty": "Easy",
+            "url": "https://leetcode.com/problems/pascals-triangle-ii/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 120,
+            "name": "Triangle",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/triangle/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 91,
+            "name": "Decode Ways",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/decode-ways/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 55,
+            "name": "Jump Game",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/jump-game/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 45,
+            "name": "Jump Game II",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/jump-game-ii/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 62,
+            "name": "Unique Paths",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/unique-paths/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 63,
+            "name": "Unique Paths II",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/unique-paths-ii/description/?envType=problem-list-v2&envId=dynamic-programming"
+          },
+          {
+            "id": 64,
+            "name": "Minimum Path Sum",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/minimum-path-sum/description/?envType=problem-list-v2&envId=dynamic-programming"
+          }
+        ]
+      }
+    ]
+  ]
+}
