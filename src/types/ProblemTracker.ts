@@ -1,4 +1,3 @@
-// Tipo para el JSON
 export type Problem = {
   name: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';

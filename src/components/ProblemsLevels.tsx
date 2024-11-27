@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { Category, Problem, ProblemTracker } from '../types/ProblemTracker';
 
 type ProblemLevelsProps = {
@@ -12,7 +13,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     margin: '0 auto',
     padding: '20px',
     lineHeight: '1.6',
-    backgroundColor: '#f4f4f4', // Fondo de la aplicación
+    backgroundColor: '#f4f4f4',
     borderRadius: '10px',
     boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
   },
@@ -21,7 +22,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: '1px solid #ccc',
     borderRadius: '8px',
     padding: '15px',
-    backgroundColor: '#ffffff', // Fondo del nivel
+    backgroundColor: '#ffffff', 
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
   },
   levelTitle: {
@@ -64,7 +65,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   problemLinkCompleted: {
     color: '#007acc',
-    textDecoration: 'line-through', // Tachado dinámico
+    textDecoration: 'line-through',
     fontWeight: 'bold',
     marginLeft: '8px',
   },

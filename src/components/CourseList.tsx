@@ -38,7 +38,7 @@ const courseStyles: { [key: string]: React.CSSProperties } = {
     listStyleType: 'none',
     padding: 0,
     margin: 0,
-    textAlign: 'left', // Alineación a la izquierda
+    textAlign: 'left', 
   },
   courseItem: {
     marginBottom: '15px',

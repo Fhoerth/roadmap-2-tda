@@ -1,24 +1,21 @@
 import React from 'react';
+
+import CourseList from './components/CourseList';
+import ProblemLevels from './components/ProblemsLevels';
+import './css/App.css';
 import problemsData from './data/problems.json';
 import { env } from './env/getEnv';
-
-import './css/App.css';
-
 import { ProblemTracker } from './types/ProblemTracker';
-import ProblemLevels from './components/ProblemsLevels';
-import CourseList from './components/CourseList';
 
 console.log(env);
 
 function sortProblemsByDifficulty(data: ProblemTracker): ProblemTracker {
-  // Orden de dificultad
   const difficultyOrder: { [key: string]: number } = {
     Easy: 1,
     Medium: 2,
     Hard: 3,
   };
 
-  // Crear una copia del JSON ordenada
   const sortedData: ProblemTracker = {
     levels: data.levels.map((level) =>
       level.map((category) => ({
@@ -34,7 +31,6 @@ function sortProblemsByDifficulty(data: ProblemTracker): ProblemTracker {
   return sortedData;
 }
 
-// Aseguramos que el JSON cumpla con el tipo
 const data = sortProblemsByDifficulty(problemsData as ProblemTracker);
 const courses = [
   {
