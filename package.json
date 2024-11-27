@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --mode production",
     "lint:check": "npx eslint . -f stylish",
     "prettier:check": "prettier --check .",
     "check": "npm run lint:check && npm run prettier:check",
