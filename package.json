@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "npx eslint . -f stylish",
+    "lint:check": "npx eslint . -f stylish",
+    "prettier:check": "prettier --check .",
+    "check": "npm run lint:check && npm run prettier:check",
     "format": "prettier --write .",
     "preview": "vite preview",
     "deploy": "npm run build && gh-pages -d dist"
