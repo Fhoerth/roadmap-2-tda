@@ -2,7 +2,7 @@ import React from 'react';
 
 type Course = {
   id: number;
-  name: string;
+  content: React.ReactElement;
   url: string;
 };
 
@@ -49,13 +49,29 @@ const courseStyles: { [key: string]: React.CSSProperties } = {
     color: '#007acc',
     textDecoration: 'none',
   },
+  paragraph: {
+    color: '#007acc',
+    fontWeight: 700,
+    fontSize: '18px',
+  }
 };
 
 const CourseList = ({ courses }: CourseListProps) => {
   return (
     <div style={courseStyles.container}>
       <div style={courseStyles.header}>
-        <h2 style={courseStyles.title}>Lista de Cursos (Coursera)</h2>
+        <h2 style={courseStyles.title}>Introducción</h2>
+        <p style={courseStyles.paragraph}>
+          Los problemas están pensados para hacerse por niveles. <br />
+          Son problemas que no mezclan conceptos, con enunciados sencillos de entender y directos. <br />
+          La idea es que puedan dominar cada técnica y entiendan los algoritmos, y dentro de lo posible, intentar resolverlos tanto de forma iterativa como recursiva. <br />
+          Si hay alguna duda con respecto a algún ejercicio en particula, siempre se puede preguntar en el grupo :). <br />
+          Como verán, mis habilidades para el diseño gráfico son más que limitadas así que pido perdón por eso.
+        </p>
+      </div>
+
+      <div style={courseStyles.header}>
+        <h2 style={courseStyles.title}>Lista de Videos (AEDIII 2021)</h2>
       </div>
       <ul style={courseStyles.courseList}>
         {courses.map((course) => (
@@ -66,11 +82,13 @@ const CourseList = ({ courses }: CourseListProps) => {
               rel="noopener noreferrer"
               style={courseStyles.courseLink}
             >
-              {course.id}. {course.name}
+              {course.content}
             </a>
           </li>
         ))}
+      <li>Con estos videos y el contenido de IP + AED podemos llegar llegar al nivel 6 (Programación Dinámica)</li>
       </ul>
+      <br />
     </div>
   );
 };

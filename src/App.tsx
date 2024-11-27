@@ -34,9 +34,10 @@ function sortProblemsByDifficulty(data: ProblemTracker): ProblemTracker {
 // Aseguramos que el JSON cumpla con el tipo
 const data = sortProblemsByDifficulty(problemsData as ProblemTracker);
 const courses = [
-  { id: 1, name: 'Algorithmic Toolbox (UC San Diego)', url: 'https://www.coursera.org/learn/algorithmic-toolbox#modules' },
-  { id: 2, name: 'Algorithms, Part II (Princeton University)', url: 'https://www.coursera.org/learn/algorithms-part2#modules' },
-  { id: 3, name: 'Algorithms Specialization (Stanford University)', url: 'https://www.coursera.org/specializations/algorithms#courses' },
+  { id: 1, content: <p>Teórica 1: <br /> Complejidad, Fuerza Bruta, Backtracking.</p>, url: 'https://www.youtube.com/watch?v=HzmyFzz7mtk' },
+  { id: 2, content: <p>Teórica 2: <br /> Algoritmos Golosos, Programación Dinámica.</p>, url: 'https://www.youtube.com/watch?v=ro_IYTlUBAo&t=3016s' },
+  { id: 3, content: <p>Práctica 1: <br /> Backtracking, Programación Dinámica (Parte I).</p>, url: 'https://www.youtube.com/watch?v=7CVdiDU2SU0' },
+  { id: 4, content: <p>Práctica 2: <br /> Algoritmos Golosos, Programación Dinámica (Parte II).</p>, url: 'https://www.youtube.com/watch?v=NLj9z4SpBhc' },
 ];
 
 const App: React.FC = () => {

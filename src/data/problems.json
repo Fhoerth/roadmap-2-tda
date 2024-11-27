@@ -468,6 +468,12 @@
         "category": "Dynamic Programming",
         "problems": [
           {
+            "id": 1143,
+            "name": "Longest Common Subsequence",
+            "difficulty": "Medium",
+            "url": "https://leetcode.com/problems/longest-common-subsequence/description/"
+          },
+          {
             "id": 509,
             "name": "Fibonacci Number",
             "difficulty": "Easy",
