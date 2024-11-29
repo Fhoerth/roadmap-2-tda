@@ -4,3 +4,4 @@ ignored
 .vscode
 .env
 /postgres/data
+.m2
