@@ -32,7 +32,7 @@ services:
       - "$VITE_DEV_PORT:$VITE_DEV_PORT"
     volumes:
       - ./frontend:/frontend
-    command: sh -c "yarn install --ignore-platform && yarn dev --host 0.0.0.0"
+    command: sh -c "yarn install && yarn dev --host 0.0.0.0"
 
   vite-prod:
     build:

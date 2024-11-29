@@ -28,12 +28,14 @@ ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 ENV MODE=production
 ENV NODE_ENV=development
 
-COPY package.json yarn.lock .yarnrc.yml postinstall.js .
+COPY package.json .yarnrc.yml .pnp.cjs .pnp.loader.mjs postinstall.js .
 COPY . .
 
 RUN npm install -g --force yarn
-RUN yarn global add vite
-RUN yarn --ignore-platform
+RUN corepack enable
+RUN yarn set version berry
+RUN yarn plugin import https://raw.githubusercontent.com/mhassan1/yarn-plugin-after-install/v0.6.0/bundles/@yarnpkg/plugin-after-install.js
+RUN yarn install
 RUN yarn clean
 RUN yarn build
 
