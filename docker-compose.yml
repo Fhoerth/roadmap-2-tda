@@ -19,32 +19,32 @@ services:
     networks:
       - dev_network
 
-  # vite-dev:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile_dev # Usa el Dockerfile específico para desarrollo
-  #   container_name: vite-dev
-  #   environment:
-  #     PORT: $VITE_DEV_PORT
-  #   env_file:
-  #     - ./.env
-  #   ports:
-  #     - "$VITE_DEV_PORT:$VITE_DEV_PORT"
-  #   volumes:
-  #     - ./frontend:/frontend
-  #   command: sh -c "yarn install --ignore-platform && yarn dev --host 0.0.0.0"
+  vite-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile_dev # Usa el Dockerfile específico para desarrollo
+    container_name: vite-dev
+    environment:
+      PORT: $VITE_DEV_PORT
+    env_file:
+      - ./.env
+    ports:
+      - "$VITE_DEV_PORT:$VITE_DEV_PORT"
+    volumes:
+      - ./frontend:/frontend
+    command: sh -c "yarn install --ignore-platform && yarn dev --host 0.0.0.0"
 
-  # vite-prod:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile # Usa el Dockerfile específico para producción
-  #   container_name: vite-prod
-  #   environment:
-  #     PORT: $VITE_PROD_PORT
-  #   env_file:
-  #     - ./.env
-  #   ports:
-  #     - "$VITE_PROD_PORT:$VITE_PROD_PORT"
+  vite-prod:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile # Usa el Dockerfile específico para producción
+    container_name: vite-prod
+    environment:
+      PORT: $VITE_PROD_PORT
+    env_file:
+      - ./.env
+    ports:
+      - "$VITE_PROD_PORT:$VITE_PROD_PORT"
 
   backend:
     build:
@@ -74,21 +74,21 @@ services:
       - ~/.m2:/root/.m2 # Cache local de Maven
     command: ./reload.sh
 
-  # pgadmin:
-  #   build:
-  #     context: ./pgadmin
-  #     dockerfile: Dockerfile
-  #   container_name: dev_pgadmin
-  #   environment:
-  #     PORT: $PGADMIN_PORT
-  #     PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL # Cambiar según preferencia
-  #     PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD # Cambiar según preferencia
-  #   ports:
-  #     - "9090:80"
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - dev_network
+  pgadmin:
+    build:
+      context: ./pgadmin
+      dockerfile: Dockerfile
+    container_name: dev_pgadmin
+    environment:
+      PORT: $PGADMIN_PORT
+      PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL # Cambiar según preferencia
+      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD # Cambiar según preferencia
+    ports:
+      - "9090:80"
+    depends_on:
+      - postgres
+    networks:
+      - dev_network
 
 networks:
   dev_network:

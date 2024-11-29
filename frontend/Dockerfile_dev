@@ -12,6 +12,7 @@ COPY . .
 RUN npm install -g --force yarn
 RUN yarn global add vite
 RUN yarn --ignore-platform
+RUN yarn clean
 RUN yarn build
 
 ENV PORT=9997

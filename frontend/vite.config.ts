@@ -10,13 +10,13 @@ if (typeof process.env.PORT !== 'undefined') {
 /** @type {import('vite').UserConfig} */
 export default {
   plugins: [react()],
-  base: '/roadmap-2-tda/',
+  base: '/',
   server: {
     port,
     host: '0.0.0.0',
   },
   build: {
-    outDir: 'dist',
+    outDir: 'dist/',
     sourcemap: false,
     minify: 'esbuild',
     rollupOptions: {

@@ -8,6 +8,7 @@
   },
   "scripts": {
     "postinstall": "node postinstall.js",
+    "clean": "rm -rf dist",
     "dev": "vite",
     "build": "tsc -b && vite build --mode production",
     "lint:check": "npx eslint . -f stylish",

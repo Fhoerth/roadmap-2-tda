@@ -34,10 +34,11 @@ COPY . .
 RUN npm install -g --force yarn
 RUN yarn global add vite
 RUN yarn --ignore-platform
+RUN yarn clean
 RUN yarn build
 
 ENV PORT=9996
 
 EXPOSE ${PORT}
 
-CMD ["yarn", "serve", "-s", "dist", "-l", ${PORT}, "--single"]
+CMD ["sh", "-c", "yarn serve -s dist -l $PORT --single"]
