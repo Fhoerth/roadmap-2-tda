@@ -11,12 +11,12 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    baseline-version: 0
+    baseline-version: 1
   devtools:
     restart:
       enabled: true
