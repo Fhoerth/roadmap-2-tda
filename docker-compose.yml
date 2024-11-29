@@ -81,10 +81,11 @@ services:
     container_name: dev_pgadmin
     environment:
       PORT: $PGADMIN_PORT
+      PGADMIN_LISTEN_PORT: $PGADMIN_LISTEN_PORT
       PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL # Cambiar según preferencia
       PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD # Cambiar según preferencia
     ports:
-      - "9090:80"
+      - "$PGADMIN_PORT:$PGADMIN_PORT"
     depends_on:
       - postgres
     networks:

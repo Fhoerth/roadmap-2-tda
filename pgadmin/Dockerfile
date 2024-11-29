@@ -2,8 +2,8 @@
 FROM dpage/pgadmin4:7.8
 
 # Configuración de variables de entorno
-ENV PGADMIN_DEFAULT_EMAIL=asdasdasd@asdasdasdasd.com
-ENV PGADMIN_DEFAULT_PASSWORD=asdasdasdasdasdasdasd
+ENV PGADMIN_DEFAULT_EMAIL=OVERRIDE_DEFAULT_EMAIL
+ENV PGADMIN_DEFAULT_PASSWORD=OVERRIDE_DEFAULT_PASSWORD
+ENV PGADMIN_LISTEN_PORT=${PORT}
 
-# Expone el puerto 80 para el acceso web
-EXPOSE 80
+EXPOSE ${PORT}

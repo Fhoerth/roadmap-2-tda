@@ -22,7 +22,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: '1px solid #ccc',
     borderRadius: '8px',
     padding: '15px',
-    backgroundColor: '#ffffff', 
+    backgroundColor: '#ffffff',
     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
   },
   levelTitle: {
