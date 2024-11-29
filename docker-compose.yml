@@ -8,51 +8,53 @@ services:
     container_name: dev_postgres
     environment:
       PORT: $POSTGRES_PORT
+      BACKEND_PG_HOST: $BACKEND_PG_HOST
+      PGADMIN_PG_HOST: $PGADMIN_PG_HOST
     env_file:
       - ./.env
     ports:
       - "$POSTGRES_PORT:$POSTGRES_PORT"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/data:/var/lib/postgresql/data
     networks:
       - dev_network
 
-  vite-dev:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile_dev # Usa el Dockerfile específico para desarrollo
-    container_name: vite-dev
-    environment:
-      PORT: $VITE_DEV_PORT
-    env_file:
-      - ./.env
-    ports:
-      - "$VITE_DEV_PORT:$VITE_DEV_PORT"
-    volumes:
-      - ./frontend:/frontend
-    command: sh -c "yarn install --ignore-platform && yarn dev --host 0.0.0.0"
+  # vite-dev:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile_dev # Usa el Dockerfile específico para desarrollo
+  #   container_name: vite-dev
+  #   environment:
+  #     PORT: $VITE_DEV_PORT
+  #   env_file:
+  #     - ./.env
+  #   ports:
+  #     - "$VITE_DEV_PORT:$VITE_DEV_PORT"
+  #   volumes:
+  #     - ./frontend:/frontend
+  #   command: sh -c "yarn install --ignore-platform && yarn dev --host 0.0.0.0"
 
-  vite-prod:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile # Usa el Dockerfile específico para producción
-    container_name: vite-prod
-    environment:
-      PORT: 3000
-    env_file:
-      - ./.env
-    ports:
-      - "8000:3000"
+  # vite-prod:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile # Usa el Dockerfile específico para producción
+  #   container_name: vite-prod
+  #   environment:
+  #     PORT: $VITE_PROD_PORT
+  #   env_file:
+  #     - ./.env
+  #   ports:
+  #     - "$VITE_PROD_PORT:$VITE_PROD_PORT"
 
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-      # args:
-      #   POSTGRES_DB: ${DB}
-      #   POSTGRES_DB_URL: ${DB_URL}
-      #   POSTGRES_USER: ${DB_USERNAME}
-      #   POSTGRES_PASSWORD: ${DB_PASSWORD}
+      args:
+        POSTGRES_DB: ${POSTGRES_DB}
+        POSTGRES_DB_URL: ${POSTGRES_DB_URL}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     container_name: dev_backend
     env_file:
       - ./.env
@@ -72,21 +74,21 @@ services:
       - ~/.m2:/root/.m2 # Cache local de Maven
     command: ./reload.sh
 
-  pgadmin:
-    build:
-      context: ./pgadmin
-      dockerfile: Dockerfile
-    container_name: dev_pgadmin
-    environment:
-      PORT: 80
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com # Cambiar según preferencia
-      PGADMIN_DEFAULT_PASSWORD: admin # Cambiar según preferencia
-    ports:
-      - "9090:80"
-    depends_on:
-      - postgres
-    networks:
-      - dev_network
+  # pgadmin:
+  #   build:
+  #     context: ./pgadmin
+  #     dockerfile: Dockerfile
+  #   container_name: dev_pgadmin
+  #   environment:
+  #     PORT: $PGADMIN_PORT
+  #     PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL # Cambiar según preferencia
+  #     PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD # Cambiar según preferencia
+  #   ports:
+  #     - "9090:80"
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - dev_network
 
 networks:
   dev_network:

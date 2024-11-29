@@ -36,6 +36,8 @@ RUN yarn global add vite
 RUN yarn --ignore-platform
 RUN yarn build
 
+ENV PORT=9996
+
 EXPOSE ${PORT}
 
 CMD ["yarn", "serve", "-s", "dist", "-l", ${PORT}, "--single"]

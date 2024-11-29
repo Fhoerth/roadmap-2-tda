@@ -3,3 +3,4 @@ target
 ignored
 .vscode
 .env
+/postgres/data

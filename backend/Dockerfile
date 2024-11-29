@@ -30,10 +30,11 @@ RUN mvn dependency:resolve
 RUN mvn clean install -DskipTests
 RUN mvn clean package -DskipTests
 
-ENV POSTGRES_DB_URL=${POSTGRES_DB_URL}
-ENV POSTGRES_DB=${POSTGRES_DB}
-ENV POSTGRES_USER=${POSTGRES_USER}
-ENV POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+ENV PORT=9998
+ENV POSTGRES_DB_URL=OVERRIDE_DEFAULT_POSTGRES_DB_URL
+ENV POSTGRES_DB=OVERRIDE_DEFAULT_POSTGRES_DB_URL
+ENV POSTGRES_USER=OVERRIDE_DEFAULT_POSTGRES_USER
+ENV POSTGRES_PASSWORD=OVERRIDE_DEFAULT_POSTGRES_PASSWORD
 
 EXPOSE ${PORT}
 
@@ -42,4 +43,4 @@ EXPOSE ${PORT}
 #      "-Dspring.devtools.restart.enabled=true", \
 #      "-Dspring.devtools.livereload.enabled=true", \
 #      "-Dspring.devtools.remote.secret=mysecret"]
-CMD ["java", "-jar", "target/tracker-1.0-SNAPSHOT.jar"]
+CMD ["java", "-jar", "target/tracker-1.0-SNAPSHOT.jar", "--spring.config.location=/backend/src/main/resources/application.yml"]

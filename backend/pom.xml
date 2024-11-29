@@ -30,11 +30,16 @@
 	</dependencyManagement>
 
 	<dependencies>
-	<dependency>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-devtools</artifactId>
-		<scope>runtime</scope>
-	</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version> <!-- Usa una versión compatible -->
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 		<!-- Spring Boot Starter Web -->
 		<dependency>
 				<groupId>org.springframework.boot</groupId>
@@ -106,12 +111,31 @@
 
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.4.1</version>
+				<configuration>
+						<archive>
+								<manifest>
+										<mainClass>tracker.TrackerApplication</mainClass>
+								</manifest>
+						</archive>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>3.4.0</version>
 				<configuration>
-						<mainClass>tracker.Application</mainClass> <!-- Cambia a la clase principal de tu proyecto -->
+						<mainClass>tracker.TrackerApplication</mainClass> <!-- Cambia a la clase principal de tu proyecto -->
 				</configuration>
+				<executions>
+					<execution>
+							<goals>
+									<goal>repackage</goal>
+							</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>

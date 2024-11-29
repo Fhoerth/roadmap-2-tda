@@ -14,4 +14,6 @@ RUN yarn global add vite
 RUN yarn --ignore-platform
 RUN yarn build
 
+ENV PORT=9997
+
 EXPOSE ${PORT}
