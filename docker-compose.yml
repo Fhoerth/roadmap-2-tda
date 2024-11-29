@@ -1,0 +1,95 @@
+version: "3.9"
+
+services:
+  postgres:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    container_name: dev_postgres
+    environment:
+      PORT: $POSTGRES_PORT
+    env_file:
+      - ./.env
+    ports:
+      - "$POSTGRES_PORT:$POSTGRES_PORT"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dev_network
+
+  vite-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile_dev # Usa el Dockerfile específico para desarrollo
+    container_name: vite-dev
+    environment:
+      PORT: $VITE_DEV_PORT
+    env_file:
+      - ./.env
+    ports:
+      - "$VITE_DEV_PORT:$VITE_DEV_PORT"
+    volumes:
+      - ./frontend:/frontend
+    command: sh -c "yarn install --ignore-platform && yarn dev --host 0.0.0.0"
+
+  vite-prod:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile # Usa el Dockerfile específico para producción
+    container_name: vite-prod
+    environment:
+      PORT: 3000
+    env_file:
+      - ./.env
+    ports:
+      - "8000:3000"
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      # args:
+      #   POSTGRES_DB: ${DB}
+      #   POSTGRES_DB_URL: ${DB_URL}
+      #   POSTGRES_USER: ${DB_USERNAME}
+      #   POSTGRES_PASSWORD: ${DB_PASSWORD}
+    container_name: dev_backend
+    env_file:
+      - ./.env
+    environment:
+      PORT: $BACKEND_PORT
+      JAVA_OPTS: -Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enabled=true
+      SPRING_PROFILES_ACTIVE: dev
+    ports:
+      - "$BACKEND_PORT:$BACKEND_PORT"
+    depends_on:
+      - postgres
+    networks:
+      - dev_network
+    volumes:
+      - ./backend/src:/backend/src # Monta el directorio del código fuente
+      - ./backend/pom.xml:/backend/pom.xml # Monta el POM
+      - ~/.m2:/root/.m2 # Cache local de Maven
+    command: ./reload.sh
+
+  pgadmin:
+    build:
+      context: ./pgadmin
+      dockerfile: Dockerfile
+    container_name: dev_pgadmin
+    environment:
+      PORT: 80
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com # Cambiar según preferencia
+      PGADMIN_DEFAULT_PASSWORD: admin # Cambiar según preferencia
+    ports:
+      - "9090:80"
+    depends_on:
+      - postgres
+    networks:
+      - dev_network
+
+networks:
+  dev_network:
+    driver: bridge
+volumes:
+  postgres_data:

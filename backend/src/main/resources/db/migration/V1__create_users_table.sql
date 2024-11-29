@@ -1,0 +1,7 @@
+-- V1__create_users_table.sql
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    lu TEXT UNIQUE NOT NULL,
+    pin INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
