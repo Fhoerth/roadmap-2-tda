@@ -1,5 +1,5 @@
 {
-  "name": "problem-tracker",
+  "name": "@roadmap-2-tda/problem-tracker",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -19,8 +19,6 @@
     "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
-    "@rollup/wasm-node": "^4.27.4",
-    "esbuild-wasm": "^0.24.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
@@ -51,11 +49,5 @@
     "@rollup/rollup-linux-arm64-musl": "4.27.4",
     "@rollup/rollup-linux-x64-gnu": "^4.27.4"
   },
-  "overrides": {
-    "rollup": "npm:@rollup/wasm-node",
-    "esbuild": "npm:esbuild-wasm"
-  },
-  "resolutions": {
-    "rollup": "npm:@rollup/wasm-node"
-  }
+  "packageManager": "yarn@4.5.3"
 }

@@ -32,24 +32,12 @@ services:
       - "$VITE_DEV_PORT:$VITE_DEV_PORT"
     volumes:
       - ./frontend:/frontend
-    command: sh -c "yarn install --ignore-platform && yarn dev --host 0.0.0.0"
+    command: sh -c "yarn install && yarn dev --host 0.0.0.0"
 
-  vite-prod:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile # Usa el Dockerfile específico para producción
-    container_name: vite-prod
-    environment:
-      PORT: $VITE_PROD_PORT
-    env_file:
-      - ./.env
-    ports:
-      - "$VITE_PROD_PORT:$VITE_PROD_PORT"
-
-  backend:
+  backend-dev:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_dev
       args:
         POSTGRES_DB: ${POSTGRES_DB}
         POSTGRES_DB_URL: ${POSTGRES_DB_URL}
@@ -70,8 +58,7 @@ services:
       - dev_network
     volumes:
       - ./backend/src:/backend/src # Monta el directorio del código fuente
-      - ./backend/pom.xml:/backend/pom.xml # Monta el POM
-      - ~/.m2:/root/.m2 # Cache local de Maven
+      - ./backend/.mvn/.m2:/root/.m2
     command: ./reload.sh
 
   pgadmin:

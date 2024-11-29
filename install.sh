@@ -1,0 +1,1 @@
+cd frontend && npm i -g yarn && corepack enable && yarn set version berry && yarn install && cd ../ && cd backend && mvn dependency:go-offline && mvn clean install && cd ..

@@ -29,10 +29,9 @@ ENV POSTGRES_DB=OVERRIDE_DEFAULT_POSTGRES_DB_URL
 ENV POSTGRES_USER=OVERRIDE_DEFAULT_POSTGRES_USER
 ENV POSTGRES_PASSWORD=OVERRIDE_DEFAULT_POSTGRES_PASSWORD
 
-RUN mvn dependency:resolve
-RUN mvn clean install -DskipTests
-RUN mvn clean package -DskipTests
-
 EXPOSE ${PORT}
+
+RUN --mount=type=cache,target=/root/.m2 mvn dependency:go-offline
+RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests
 
 CMD ["java", "-jar", "target/tracker-1.0-SNAPSHOT.jar", "--spring.config.location=/backend/src/main/resources/application.yml"]
