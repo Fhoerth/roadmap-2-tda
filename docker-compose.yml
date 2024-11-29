@@ -22,7 +22,7 @@ services:
   vite-dev:
     build:
       context: ./frontend
-      dockerfile: Dockerfile_dev # Usa el Dockerfile específico para desarrollo
+      dockerfile: Dockerfile.dev
     container_name: vite-dev
     environment:
       PORT: $VITE_DEV_PORT
@@ -37,7 +37,7 @@ services:
   backend-dev:
     build:
       context: ./backend
-      dockerfile: Dockerfile_dev
+      dockerfile: Dockerfile.dev
       args:
         POSTGRES_DB: ${POSTGRES_DB}
         POSTGRES_DB_URL: ${POSTGRES_DB_URL}
@@ -57,7 +57,7 @@ services:
     networks:
       - dev_network
     volumes:
-      - ./backend/src:/backend/src # Monta el directorio del código fuente
+      - ./backend/src:/backend/src
       - ./backend/.mvn/.m2:/root/.m2
     command: ./reload.sh
 
@@ -67,12 +67,12 @@ services:
       dockerfile: Dockerfile
     container_name: dev_pgadmin
     environment:
-      PORT: $PGADMIN_PORT
+      PORT: $PGADMIN_LISTEN_PORT
       PGADMIN_LISTEN_PORT: $PGADMIN_LISTEN_PORT
-      PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL # Cambiar según preferencia
-      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD # Cambiar según preferencia
+      PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
+      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
     ports:
-      - "$PGADMIN_PORT:$PGADMIN_PORT"
+      - "$PGADMIN_LISTEN_PORT:$PGADMIN_LISTEN_PORT"
     depends_on:
       - postgres
     networks:

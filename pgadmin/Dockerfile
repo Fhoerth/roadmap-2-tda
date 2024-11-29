@@ -1,7 +1,5 @@
-# Usa la imagen oficial de pgAdmin
 FROM dpage/pgadmin4:7.8
 
-# Configuración de variables de entorno
 ENV PGADMIN_DEFAULT_EMAIL=OVERRIDE_DEFAULT_EMAIL
 ENV PGADMIN_DEFAULT_PASSWORD=OVERRIDE_DEFAULT_PASSWORD
 ENV PGADMIN_LISTEN_PORT=${PORT}

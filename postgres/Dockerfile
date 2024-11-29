@@ -1,13 +1,3 @@
-# FROM postgres:15
-
-# # Copiamos el script init.sql
-# COPY init.sql /docker-entrypoint-initdb.d/
-
-# # Configuramos las variables de entorno
-
-# # Exponemos el puerto (opcional, ya se configura en el docker-compose)
-# EXPOSE ${PORT}
-
 FROM postgres:15-alpine
 
 RUN apk add --no-cache su-exec
@@ -35,6 +25,3 @@ RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 EXPOSE ${PORT}
 
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
-# ENTRYPOINT ["/docker-entrypoint-initdb.d/entrypoint.sh"]
-# CMD ["postgres"]
