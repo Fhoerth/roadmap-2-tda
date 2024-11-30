@@ -1,17 +1,17 @@
 import { assert } from '../utils/assert';
 
 type Env = {
-  VITE_API_BASE_URL: string;
+  BACKEND_URL: string;
 };
 
-const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL as string | null;
+const BACKEND_URL = import.meta.env.BACKEND_URL as string | null;
 
-assert(VITE_API_BASE_URL);
+assert(BACKEND_URL);
 
 console.log({
-  VITE_API_BASE_URL,
+  BACKEND_URL,
 });
 
 export const env: Env = {
-  VITE_API_BASE_URL,
+  BACKEND_URL,
 };
