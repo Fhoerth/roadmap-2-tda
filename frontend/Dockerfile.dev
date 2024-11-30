@@ -6,7 +6,7 @@ ENV VITE_API_BASE_URL=${VITE_API_BASE_URL}
 ENV MODE=development
 ENV NODE_ENV=development
 
-COPY package.json .yarnrc.yml .pnp.cjs .pnp.loader.mjs postinstall.js .
+COPY package.json .yarnrc.yml
 COPY . .
 
 RUN npm install -g --force yarn
