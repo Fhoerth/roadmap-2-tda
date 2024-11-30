@@ -17,4 +17,12 @@ public class Environment {
   public static String getMongoDatabase() {
     return getFromEnv("MONGO_DB");
   }
+
+  public static String getAuthSecretKey() {
+    return getFromEnv("BACKEND_AUTH_SECRET_KEY");
+  }
+
+  public static String getAuthRegistrationKey() {
+    return getFromEnv("BACKEND_AUTH_REGISTRATION_KEY");
+  }
 }
