@@ -3,7 +3,7 @@ name: Deploy Backend Securely
 on:
   push:
     paths:
-      - 'backend/**'
+      - 'VERSION'
 
 jobs:
   deploy-backend:
