@@ -1,0 +1,16 @@
+name: Keep Instances Alive
+
+on:
+  schedule:
+    # Ejecuta cada 10 minutos
+    - cron: "*/10 * * * *"
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Backend Keep Alive
+        run: curl -s -o /dev/null https://roadmap-2-tda-frontend.onrender.com
+      - name: Frontend Keep Alive
+        run: curl -s -o /dev/null https://roadmap-2-tda-backend.onrender.com/api/users
