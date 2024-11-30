@@ -1,0 +1,22 @@
+name: Deploy Frontend Securely
+
+on:
+  push:
+    paths:
+      - 'backend/**'
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+
+    env:
+      DEPLOY_URL: ${{ secrets.FRONTEND_DEPLOY_URL }} # Cargar secreto como variable de entorno
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Triggering Backend deployment
+        run: |
+            echo "Enviando request a $DEPLOY_URL"
+            curl -s -o /dev/null -w "%{http_code}\n" $DEPLOY_URL
