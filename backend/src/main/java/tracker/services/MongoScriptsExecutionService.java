@@ -31,16 +31,18 @@ public class MongoScriptsExecutionService {
       if (!hasScriptRun(scriptId)) {
         String scriptName = script.getName();
 
-        Logger.printYellow("Running Mongo script: ".concat(script.getName()));
+        Logger.printPurple("Running Mongo script: ".concat(script.getName()));
 
         Boolean hasRun = script.run();
 
         if (hasRun) {
           markScriptAsExecuted(scriptId, scriptName);
-          Logger.printYellow("Mongo script: ".concat(script.getName()).concat(" run successfully."));
+          Logger.printPurple("Mongo script: ".concat(script.getName()).concat(" run successfully."));
         } else {
           Logger.printRed("Mongo script: ".concat(script.getName()).concat(" run unsuccessfully."));
         }
+      } else {
+        Logger.printYellow("Mongo script: ".concat(script.getName()).concat(" has already run."));
       }
     }
   }

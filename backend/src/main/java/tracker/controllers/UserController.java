@@ -13,7 +13,7 @@ public class UserController {
   @GetMapping
   public List<User> getAllUsers() {
     List<User> res = new ArrayList<>();
-    User user1 = new User("1234", "nickname", 1234);
+    User user1 = new User("224", "nickname", 1234);
 
     res.add(user1);
 
