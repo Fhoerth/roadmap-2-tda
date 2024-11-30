@@ -2,7 +2,7 @@ package tracker.repositories;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import tracker.models.Category;
+import tracker.models.Problem;
 
-public interface ProblemRepository extends MongoRepository<Category, ObjectId> {
+public interface ProblemRepository extends MongoRepository<Problem, ObjectId> {
 }

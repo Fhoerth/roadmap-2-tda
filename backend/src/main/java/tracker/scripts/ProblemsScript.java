@@ -9,8 +9,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tracker.interfaces.MongoScript;
-import tracker.models.Category;
 import tracker.models.Problem;
+import tracker.models.Task;
 import tracker.repositories.ProblemRepository;
 
 @Component
@@ -29,13 +29,13 @@ public class ProblemsScript implements MongoScript {
       File file = new File("src/main/resources/problems.json");
       JsonNode rootNode = objectMapper.readTree(file);
 
-      List<Category> categories = new ArrayList<>();
+      List<Problem> problems = new ArrayList<>();
 
       for (JsonNode categoryNode : rootNode) {
         String name = categoryNode.get("name").asText();
         Integer level = categoryNode.get("level").asInt();
 
-        List<Problem> categoryProblems = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
 
         for (JsonNode problemNode : categoryNode.get("problems")) {
           Integer problemId = problemNode.get("id").asInt();
@@ -43,13 +43,13 @@ public class ProblemsScript implements MongoScript {
           String problemDifficulty = problemNode.get("difficulty").asText();
           String problemUrl = problemNode.get("url").asText();
 
-          categoryProblems.add(new Problem(problemId, problemName, problemDifficulty, problemUrl));
+          tasks.add(new Task(problemId, problemName, problemDifficulty, problemUrl));
         }
 
-        categories.add(new Category(level, name, categoryProblems));
+        problems.add(new Problem(level, name, tasks));
       }
 
-      problemRepository.saveAll(categories);
+      problemRepository.saveAll(problems);
 
       return true;
     } catch (IOException exception) {

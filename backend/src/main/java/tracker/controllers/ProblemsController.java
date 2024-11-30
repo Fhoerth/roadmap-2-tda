@@ -3,7 +3,7 @@ package tracker.controllers;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import tracker.models.Category;
+import tracker.models.Problem;
 import tracker.repositories.ProblemRepository;
 
 @RestController
@@ -13,7 +13,7 @@ public class ProblemsController {
   private ProblemRepository problemRepository;
 
   @GetMapping
-  public List<Category> getAllCategories() {
+  public List<Problem> getAllCategories() {
     return problemRepository.findAll();
   }
 }

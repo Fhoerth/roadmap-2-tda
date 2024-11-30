@@ -1,24 +1,30 @@
 package tracker.models;
 
-public class Problem {
-  private Integer id;
-  private String name;
-  private String difficulty;
-  private String url;
+import java.util.List;
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-  // Constructor
-  public Problem(Integer id, String name, String difficulty, String url) {
-    this.id = id;
+@Document(collection = "problems")
+public class Problem {
+  @Id
+  private ObjectId id; // MongoDB will generate this automatically
+
+  private Integer level;
+  private String name;
+  private List<Task> tasks;
+
+  public Problem(Integer level, String name, List<Task> tasks) {
+    this.level = level;
     this.name = name;
-    this.difficulty = difficulty;
-    this.url = url;
+    this.tasks = tasks;
   }
 
-  public Integer getId() {
+  public ObjectId getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(ObjectId id) {
     this.id = id;
   }
 
@@ -30,35 +36,24 @@ public class Problem {
     this.name = name;
   }
 
-  public String getDifficulty() {
-    return difficulty;
+  public Integer getLevel() {
+    return level;
   }
 
-  public void setDifficulty(String difficulty) {
-    this.difficulty = difficulty;
+  public Integer setLevel(Integer level) {
+    return this.level = level;
   }
 
-  public String getUrl() {
-    return url;
+  public List<Task> getTasks() {
+    return tasks;
   }
 
-  public void setUrl(String url) {
-    this.url = url;
+  public void setTasks(List<Task> tasks) {
+    this.tasks = tasks;
   }
 
   @Override
   public String toString() {
-    return "Problem{" + "id="
-        + id
-        + ", name='"
-        + name
-        + '\''
-        + ", difficulty='"
-        + difficulty
-        + '\''
-        + ", url='"
-        + url
-        + '\''
-        + '}';
+    return "Problem{" + "id=" + id + ", name='" + name + '\'' + ", tasks=" + tasks + '}';
   }
 }

@@ -13,4 +13,8 @@ public class Environment {
   public static String getFrontendUrl() {
     return getFromEnv("FRONTEND_URL");
   }
+
+  public static String getMongoDatabase() {
+    return getFromEnv("MONGO_DB");
+  }
 }
