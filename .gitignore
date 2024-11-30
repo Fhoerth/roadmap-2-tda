@@ -5,3 +5,5 @@ ignored
 .env
 .m2
 cron_job.txt
+metabase
+.DS_Store
