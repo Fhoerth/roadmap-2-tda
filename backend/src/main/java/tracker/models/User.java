@@ -19,7 +19,6 @@ public class User {
     this.pin = pin;
   }
 
-  // Getters y Setters
   public ObjectId getId() {
     return id;
   }

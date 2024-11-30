@@ -7,3 +7,4 @@ ignored
 cron_job.txt
 metabase
 .DS_Store
+JWT.txt
