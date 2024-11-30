@@ -12,8 +12,7 @@ public class UserController {
 
   @GetMapping
   public List<User> getAllUsers() {
-    User user1 = new User();
-    user1.setId((long) 112);
+    User user1 = new User("123", "nickname", 1234);
     users.add(user1);
     return users;
   }

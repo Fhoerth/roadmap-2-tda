@@ -3,5 +3,5 @@ target
 ignored
 .vscode
 .env
-/postgres/data
 .m2
+cron_job.txt

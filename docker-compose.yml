@@ -1,24 +1,6 @@
 version: "3.9"
 
 services:
-  postgres:
-    build:
-      context: ./postgres
-      dockerfile: Dockerfile
-    container_name: dev_postgres
-    environment:
-      PORT: $POSTGRES_PORT
-      BACKEND_PG_HOST: $BACKEND_PG_HOST
-      PGADMIN_PG_HOST: $PGADMIN_PG_HOST
-    env_file:
-      - ./.env
-    ports:
-      - "$POSTGRES_PORT:$POSTGRES_PORT"
-    volumes:
-      - ./postgres/data:/var/lib/postgresql/data
-    networks:
-      - dev_network
-
   vite-dev:
     build:
       context: ./frontend
@@ -38,22 +20,22 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile.dev
-      args:
-        POSTGRES_DB: ${POSTGRES_DB}
-        POSTGRES_DB_URL: ${POSTGRES_DB_URL}
-        POSTGRES_USER: ${POSTGRES_USER}
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     container_name: dev_backend
     env_file:
       - ./.env
     environment:
       PORT: $BACKEND_PORT
+      MONGO_DB: ${MONGO_DB}
+      MONGO_DB_USER: ${MONGO_DB_USER}
+      MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
+      MONGO_DB_URL: ${MONGO_DB_URL}
       JAVA_OPTS: -Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enabled=true
       SPRING_PROFILES_ACTIVE: dev
     ports:
       - "$BACKEND_PORT:$BACKEND_PORT"
     depends_on:
-      - postgres
+      mongodb:
+        condition: service_healthy
     networks:
       - dev_network
     volumes:
@@ -61,25 +43,36 @@ services:
       - ./backend/.mvn/.m2:/root/.m2
     command: ./reload.sh
 
-  pgadmin:
+  mongodb:
     build:
-      context: ./pgadmin
+      context: ./mongodb
       dockerfile: Dockerfile
-    container_name: dev_pgadmin
-    environment:
-      PORT: $PGADMIN_LISTEN_PORT
-      PGADMIN_LISTEN_PORT: $PGADMIN_LISTEN_PORT
-      PGADMIN_DEFAULT_EMAIL: $PGADMIN_DEFAULT_EMAIL
-      PGADMIN_DEFAULT_PASSWORD: $PGADMIN_DEFAULT_PASSWORD
+    container_name: mongodb
     ports:
-      - "$PGADMIN_LISTEN_PORT:$PGADMIN_LISTEN_PORT"
-    depends_on:
-      - postgres
+      - "${MONGO_DB_PORT}:${MONGO_DB_PORT}"
+    environment:
+      PORT: ${MONGO_DB_PORT}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_PASSWORD}
     networks:
       - dev_network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--host",
+          "127.0.0.1",
+          "--port",
+          "${MONGO_DB_PORT}",
+          "--eval",
+          "db.adminCommand('ping')",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   dev_network:
     driver: bridge
-volumes:
-  postgres_data:

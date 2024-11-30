@@ -1,24 +1,13 @@
 server:
-  port: ${PORT}
+  port: ${PORT:8080} 
+
 spring:
-  datasource:
-    url: ${POSTGRES_DB_URL}
-    db: ${POSTGRES_DB}
-    username: ${POSTGRES_USER}
-    password: ${POSTGRES_PASSWORD}
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: true
-    hibernate:
-      ddl-auto: validate
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-on-migrate: true
-    baseline-version: 1
   devtools:
     restart:
       enabled: true
     livereload:
       enabled: true
+
+  data:
+    mongodb:
+      uri: ${MONGO_DB_URL}

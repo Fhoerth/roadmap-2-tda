@@ -1,39 +1,53 @@
 package tracker.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import java.time.LocalDateTime;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
-@Table(name = "user")
+@Document(collection = "users")
 public class User {
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private String id;
 
-  @Column(nullable = false, unique = true)
-  private String name;
+  private String lu;
+  private String nickname;
+  private Integer pin;
 
-  @Column(name = "created_at", nullable = false, updatable = false)
-  private LocalDateTime createdAt;
+  public User(String lu, String nickname, Integer pin) {
+    this.nickname = nickname;
+    this.lu = lu;
+    this.pin = pin;
+  }
 
-  public Long getId() {
+  // Getters y Setters
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getLu() {
+    return lu;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setLu(String lu) {
+    this.lu = lu;
+  }
+
+  public String getNickname() {
+    return nickname;
+  }
+
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
+  }
+
+  public Integer getpin() {
+    return pin;
+  }
+
+  public void setPin(Integer pin) {
+    this.pin = pin;
   }
 }
