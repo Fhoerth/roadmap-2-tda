@@ -2,7 +2,7 @@ FROM node:22-alpine as build
 
 WORKDIR /frontend
 
-ENV BACKEND_URL=${BACKEND_URL}
+ENV VITE_BACKEND_URL=OVERRIDE_DEFAULT_BACKEND_URL
 ENV MODE=production
 ENV NODE_ENV=development
 

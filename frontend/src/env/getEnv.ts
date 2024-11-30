@@ -4,7 +4,7 @@ type Env = {
   BACKEND_URL: string;
 };
 
-const BACKEND_URL = import.meta.env.BACKEND_URL as string | null;
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL as string | null;
 
 assert(BACKEND_URL);
 
