@@ -12,9 +12,12 @@ public class UserController {
 
   @GetMapping
   public List<User> getAllUsers() {
+    List<User> res = new ArrayList<>();
     User user1 = new User("123", "nickname", 1234);
-    users.add(user1);
-    return users;
+
+    res.add(user1);
+
+    return res;
   }
 
   @PostMapping
