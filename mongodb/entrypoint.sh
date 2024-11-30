@@ -2,10 +2,14 @@
 set -e
 
 PORT=${PORT:-27017}
-MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE:-admin}
-MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME:-root}
-MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD:-password}
+MONGO_DB=${MONGO_DB:-admin}
+MONGO_DB_USER=${MONGO_DB_USER:-root}
+MONGO_DB_PASSWORD=${MONGO_DB_PASSWORD:-password}
 
+echo $PORT
+echo $MONGO_DB
+echo $MONGO_DB_USER
+echo $MONGO_DB_PASSWORD
 
 cat <<EOF > /etc/mongod.conf
 net:
@@ -20,12 +24,15 @@ sleep 5
 
 # Crear el usuario root solo si no existe
 mongosh --host 127.0.0.1 --port ${PORT} <<EOF
-use ${MONGO_INITDB_DATABASE}
-if (!db.getUser("${MONGO_INITDB_ROOT_USERNAME}")) {
+use admin
+if (!db.getUser("${MONGO_DB_USER}")) {
   db.createUser({
-    user: "${MONGO_INITDB_ROOT_USERNAME}",
-    pwd: "${MONGO_INITDB_ROOT_PASSWORD}",
-    roles: [{ role: "root", db: "admin" }]
+    user: "${MONGO_DB_USER}",
+    pwd: "${MONGO_DB_PASSWORD}",
+    roles: [
+        { role: "readWrite", db: "${MONGO_DB}" },
+        { role: "readWriteAnyDatabase", db: "admin" }
+    ]
   });
 }
 EOF
