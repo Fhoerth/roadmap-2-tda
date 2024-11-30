@@ -11,3 +11,4 @@ spring:
   data:
     mongodb:
       uri: ${MONGO_DB_URL}
+      database: ${MONGO_DB}
