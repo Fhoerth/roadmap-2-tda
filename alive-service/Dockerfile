@@ -8,4 +8,8 @@ COPY config.js .
 
 RUN npm install
 
+ENV PORT=8080
+
+EXPOSE ${PORT}
+
 CMD ["node", "index.js"]

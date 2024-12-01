@@ -1,4 +1,6 @@
+const http = require("http");
 const puppeteer = require("puppeteer");
+
 const config = require("./config");
 
 (async () => {
@@ -13,7 +15,7 @@ const config = require("./config");
     for (const url of config.urls) {
       try {
         console.log(`Visiting: ${url}`);
-        await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 }); // Tiempo de espera máximo: 1 min.
+        await page.goto(url, { waitUntil: "networkidle2", timeout: 60000 });
         console.log(`Successfully visited: ${url}`);
       } catch (error) {
         console.error(`Error visiting ${url}:`, error.message);
@@ -30,3 +32,19 @@ const config = require("./config");
   // Ejecuta la primera vez inmediatamente.
   await keepAlive();
 })();
+
+const PORT = process.env.PORT || 3000;
+
+const server = http.createServer((req, res) => {
+  if (req.url === "/" && req.method === "GET") {
+    res.writeHead(200, { "Content-Type": "text/plain" });
+    res.end("OK");
+  } else {
+    res.writeHead(404, { "Content-Type": "text/plain" });
+    res.end("Not Found");
+  }
+});
+
+server.listen(PORT, () => {
+  console.log(`Servidor escuchando en el puerto ${PORT}`);
+});
