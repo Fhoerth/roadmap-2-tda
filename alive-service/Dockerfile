@@ -1,15 +1,26 @@
-FROM node:18-alpine
+FROM node:slim AS app
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+RUN apt-get update && apt-get install gnupg wget -y && \
+  wget --quiet --output-document=- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor > /etc/apt/trusted.gpg.d/google-archive.gpg && \
+  sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' && \
+  apt-get update && \
+  apt-get install google-chrome-stable -y --no-install-recommends && \
+  rm -rf /var/lib/apt/lists/*
+
+RUN useradd -m puppeteer
 
 WORKDIR /app
 
-COPY package.json .
-COPY index.js .
-COPY config.js .
-
+WORKDIR /app
+COPY --chown=puppeteer:puppeteer package.json .
+COPY --chown=puppeteer:puppeteer index.js .
+COPY --chown=puppeteer:puppeteer config.js .
 RUN npm install
 
-ENV PORT=8080
+USER puppeteer
 
 EXPOSE ${PORT}
 
-CMD ["node", "index.js"]
+CMD ["node", "/app/index.js"]
