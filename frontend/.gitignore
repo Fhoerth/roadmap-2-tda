@@ -25,3 +25,4 @@ dist-ssr
 .env.development
 courses
 
+.yarn/install-state.gz
