@@ -1,28 +1,25 @@
 package tracker.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import tracker.models.User;
+import tracker.dto.UserDTO;
+import tracker.dto.UserInputDTO;
+import tracker.services.UserService;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
-  private List<User> users = new ArrayList<>();
+  @Autowired
+  private UserService userService;
 
   @GetMapping
-  public List<User> getAllUsers() {
-    List<User> res = new ArrayList<>();
-    User user1 = new User("224", "nickname", 1234);
-
-    res.add(user1);
-
-    return res;
+  public List<UserDTO> getAllUsers() {
+    return userService.getAllUsers();
   }
 
   @PostMapping
-  public User createUser(@RequestBody User user) {
-    users.add(user);
-    return user;
+  public UserDTO createUser(@RequestBody UserInputDTO user) {
+    return userService.createUser(user);
   }
 }

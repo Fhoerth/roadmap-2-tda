@@ -3,17 +3,17 @@ package tracker.controllers;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import tracker.models.Problem;
-import tracker.repositories.ProblemRepository;
+import tracker.dto.ProblemDTO;
+import tracker.services.ProblemService;
 
 @RestController
 @RequestMapping("/api/problems")
 public class ProblemsController {
   @Autowired
-  private ProblemRepository problemRepository;
+  private ProblemService problemService;
 
   @GetMapping
-  public List<Problem> getAllCategories() {
-    return problemRepository.findAll();
+  public List<ProblemDTO> getAllProblems() {
+    return problemService.getAllProblems();
   }
 }
