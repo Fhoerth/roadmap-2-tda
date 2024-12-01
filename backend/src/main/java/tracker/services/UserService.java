@@ -20,6 +20,9 @@ public class UserService {
 
   public UserDTO createUser(UserInputDTO input) {
     User user = new User(input.lu(), input.nickname(), input.pin());
+
+    userRepository.save(user);
+
     return new UserDTO(user.getId(), user.getNickname());
   }
 }

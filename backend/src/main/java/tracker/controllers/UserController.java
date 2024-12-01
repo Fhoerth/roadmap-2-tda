@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tracker.dto.UserDTO;
 import tracker.dto.UserInputDTO;
 import tracker.services.UserService;
+import tracker.utils.Logger;
 
 @RestController
 @RequestMapping("/api/users")
@@ -20,6 +21,7 @@ public class UserController {
 
   @PostMapping
   public UserDTO createUser(@RequestBody UserInputDTO user) {
+    Logger.printBlue("Creating user " + user);
     return userService.createUser(user);
   }
 }
