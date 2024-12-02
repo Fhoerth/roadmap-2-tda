@@ -13,7 +13,7 @@ public class Logger {
    *
    * @param message The message to print.
    */
-  public static void printPurple(String message) {
+  public static void printPurple(Object message) {
     System.out.println(PURPLE + message + RESET);
   }
 
@@ -22,7 +22,7 @@ public class Logger {
    *
    * @param message The message to print.
    */
-  public static void printRed(String message) {
+  public static void printRed(Object message) {
     System.out.println(RED + message + RESET);
   }
 
@@ -31,7 +31,7 @@ public class Logger {
    *
    * @param message The message to print.
    */
-  public static void printGreen(String message) {
+  public static void printGreen(Object message) {
     System.out.println(GREEN + message + RESET);
   }
 
@@ -40,7 +40,7 @@ public class Logger {
    *
    * @param message The message to print.
    */
-  public static void printYellow(String message) {
+  public static void printYellow(Object message) {
     System.out.println(YELLOW + message + RESET);
   }
 
@@ -49,7 +49,7 @@ public class Logger {
    *
    * @param message The message to print.
    */
-  public static void printBlue(String message) {
+  public static void printBlue(Object message) {
     System.out.println(BLUE + message + RESET);
   }
 
@@ -58,7 +58,7 @@ public class Logger {
    *
    * @param message The message to print.
    */
-  public static void print(String message) {
+  public static void print(Object message) {
     System.out.println(message);
   }
 }
