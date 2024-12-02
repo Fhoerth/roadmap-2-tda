@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Component;
-import tracker.models.User;
 import tracker.serialization.ObjectIdDeserializer;
 import tracker.serialization.ObjectIdSerializer;
 
@@ -41,8 +40,7 @@ public class TokenSerializer {
     this.mapper = createMapper();
   }
 
-  public String serialize(User user) throws JsonProcessingException {
-    Token token = new Token(user);
+  public String serialize(Token token) throws JsonProcessingException {
     return TokenObjectSerializer.serialize(mapper, token);
   }
 

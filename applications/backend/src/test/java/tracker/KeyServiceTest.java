@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import tracker.auth.Token;
 import tracker.auth.TokenSerializer;
 import tracker.models.Key;
@@ -89,12 +88,13 @@ public class KeyServiceTest {
     byte[] unsignedSecretKey = keyService.getUnsignedSecretKey();
 
     User user = new User("752/23", "JohnDoe", 1234);
+    Token token = new Token(user);
     user.setId(new ObjectId("64a98712c0a73b4bf8f91b75"));
 
-    String stringifiedToken = tokenSerializer.serialize(user);
-
-    String encryptedStringifiedToken = encryptionService.base64Encrypt(stringifiedToken, unsignedSecretKey);
-    String unencryptedStringifiedToken = encryptionService.base64Decrypt(encryptedStringifiedToken, unsignedSecretKey);
+    String stringifiedToken = tokenSerializer.serialize(token);
+    String encryptedBase64StringifiedToken = encryptionService.base64Encrypt(stringifiedToken, unsignedSecretKey);
+    String unencryptedStringifiedToken = encryptionService.base64Decrypt(encryptedBase64StringifiedToken,
+        unsignedSecretKey);
 
     assertEquals(unencryptedStringifiedToken, stringifiedToken);
 

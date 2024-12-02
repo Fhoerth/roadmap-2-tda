@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Base64;
 import org.junit.jupiter.api.Test;
-
 import tracker.services.security.EncryptionService;
 
 public class EncryptionServiceTests {
