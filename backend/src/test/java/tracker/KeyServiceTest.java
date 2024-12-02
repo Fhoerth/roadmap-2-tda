@@ -3,7 +3,6 @@ package tracker;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import org.bson.types.ObjectId;
@@ -28,7 +27,6 @@ import tracker.utils.HexToBytes;
 @ExtendWith(MockitoExtension.class)
 public class KeyServiceTest {
   private static final String hexadecimalMasterKey = "fa3f34a0c776983ce9322e459c971e277b3568eb7627722fee6287c0b7c01472";
-  private static final ObjectMapper objectMapper = new ObjectMapper();
 
   private EncryptionService encryptionService;
 
