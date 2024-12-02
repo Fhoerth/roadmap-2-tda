@@ -4,12 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.bson.types.ObjectId;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import tracker.models.User;
 import tracker.serialization.ObjectIdDeserializer;
 import tracker.serialization.ObjectIdSerializer;
 
-@Service
+@Component
 public class TokenSerializer {
   private static class TokenObjectDeserializer {
     public static Token deserialize(ObjectMapper mapper, String stringifiedToken) throws JsonProcessingException {
