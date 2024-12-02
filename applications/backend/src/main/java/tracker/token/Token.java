@@ -1,4 +1,4 @@
-package tracker.auth;
+package tracker.token;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.Instant;

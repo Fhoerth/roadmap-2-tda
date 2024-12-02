@@ -14,14 +14,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tracker.auth.Token;
-import tracker.auth.TokenSerializer;
+
 import tracker.models.Key;
 import tracker.models.User;
 import tracker.providers.MasterKeyProvider;
 import tracker.repositories.KeyRepository;
 import tracker.services.EncryptionService;
 import tracker.services.KeyService;
+import tracker.token.Token;
+import tracker.token.TokenSerializer;
 import tracker.utils.HexToBytes;
 
 @ExtendWith(MockitoExtension.class)
