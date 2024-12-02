@@ -19,6 +19,8 @@ import tracker.models.Key;
 import tracker.models.User;
 import tracker.providers.MasterKeyProvider;
 import tracker.repositories.KeyRepository;
+import tracker.serialization.UserDeserializer;
+import tracker.serialization.UserSerializer;
 import tracker.services.EncryptionService;
 import tracker.services.KeyService;
 import tracker.utils.HexToBytes;
@@ -67,10 +69,10 @@ public class KeyServiceTest {
     assertNotNull(capturedKey.getBase64Key(), "The key field should not be null");
     assertEquals(secretKey.getBase64Key(), capturedKey.getBase64Key(),
         "The base64 key should match the key field in the captured object");
-    // when(keyRepository.findAll()).thenReturn(List.of(secretKey));
+    when(keyRepository.findAll()).thenReturn(List.of(secretKey));
 
-    // assertDoesNotThrow(() -> keyService.getUnsignedSecretKey());
-    // verify(keyRepository, times(1)).findAll();
+    assertDoesNotThrow(() -> keyService.getUnsignedSecretKey());
+    verify(keyRepository, times(1)).findAll();
   }
 
   @Test
@@ -87,59 +89,17 @@ public class KeyServiceTest {
     User user = new User("752/23", "JohnDoe", 1234);
     user.setId(new ObjectId("64a98712c0a73b4bf8f91b75"));
 
-    String stringifiedUser = objectMapper.writeValueAsString(user);
+    String stringifiedUser = UserSerializer.serialize(user);
+
     String encryptedStringifiedUser = encryptionService.base64Encrypt(stringifiedUser, unsignedSecretKey);
     String unencryptedStringifiedUser = encryptionService.base64Decrypt(encryptedStringifiedUser, unsignedSecretKey);
-    System.out.println(unencryptedStringifiedUser);
-    // String originalString =
-    // String encryptedString
 
-    // // Step 1. Mock save.
-    // when(keyRepository.save(any(Key.class))).thenAnswer(invocation ->
-    // invocation.getArgument(0));
+    AtomicReference<User> deserializedUser = new AtomicReference<>();
+    assertDoesNotThrow(() -> {
+      deserializedUser.set(UserDeserializer.deserialize(unencryptedStringifiedUser));
+    });
 
-    // // Step 2. Mock findAll.
-    // when(keyRepository.findAll()).thenReturn(List.of(mockKey));
-
-    // byte[] secretKey = keyService.getSecretKey();
-    // // Mock the master key provider to return the static key
-    // when(masterKeyProvider.getMasterKey()).thenReturn(STATIC_MASTER_KEY);
-
-    // // Mock the EncryptionService to simulate key creation
-    // String mockEncryptedKey =
-    // Base64.getEncoder().encodeToString("mocked-encrypted-key".getBytes());
-    // when(encryptionService.createSecretKey(STATIC_MASTER_KEY)).thenReturn(mockEncryptedKey);
-
-    // // Test the method
-    // String result = keyService.generateAndStoreKey();
-
-    // // Verify the repository interaction
-    // verify(keyRepository, times(1)).save(any(Key.class));
-
-    // // Assert the result matches the mock
-    // assertEquals(mockEncryptedKey, result);
-  }
-
-  @Test
-  public void testGetDecryptedKey() throws Exception {
-    // // Mock the master key provider
-    // when(masterKeyProvider.getMasterKey()).thenReturn(STATIC_MASTER_KEY);
-
-    // // Mock the key repository to return a single stored key
-    // String mockEncryptedKey =
-    // Base64.getEncoder().encodeToString("mocked-encrypted-key".getBytes());
-    // Key mockKey = new Key(mockEncryptedKey);
-    // when(keyRepository.findAll()).thenReturn(List.of(mockKey));
-
-    // // Mock the decryption process
-    // SecretKey expectedKey = new SecretKeySpec(new byte[32], ALGORITHM);
-    // when(encryptionService.decryptSecretKey(mockEncryptedKey,
-    // STATIC_MASTER_KEY)).thenReturn(expectedKey);
-
-    // // Test the method
-    // SecretKey result = keyService.getDecryptedKey();
-
-    // // Assert the key matches the expected value
-    // assertEquals(expectedKey, result);
+    assertEquals(deserializedUser.get(), user);
+    assertEquals(deserializedUser.get().hashCode(), user.hashCode());
   }
 }
