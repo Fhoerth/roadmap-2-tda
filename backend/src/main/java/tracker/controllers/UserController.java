@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import tracker.dto2.UserDTO;
-import tracker.dto2.UserRegistrationDTO;
+import tracker.DTO.UserDTO;
+import tracker.DTO.UserRegistrationDTO;
 import tracker.exceptions.BadRequestException;
 import tracker.providers.AuthRegistrationKeyProvider;
 import tracker.services.UserService;

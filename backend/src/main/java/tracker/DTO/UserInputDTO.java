@@ -1,4 +1,4 @@
-package tracker.dto2;
+package tracker.DTO;
 
 public record UserInputDTO(String lu, String nickname, Integer pin) {
 }

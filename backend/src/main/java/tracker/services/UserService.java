@@ -4,8 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tracker.dto2.UserDTO;
-import tracker.dto2.UserInputDTO;
+import tracker.DTO.UserDTO;
+import tracker.DTO.UserInputDTO;
 import tracker.mappers.UserMapper;
 import tracker.models.User;
 import tracker.repositories.UserRepository;

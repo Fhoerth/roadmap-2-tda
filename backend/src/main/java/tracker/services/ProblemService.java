@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import tracker.dto2.ProblemDTO;
+import tracker.DTO.ProblemDTO;
 import tracker.mappers.ProblemMapper;
 import tracker.repositories.ProblemRepository;
 

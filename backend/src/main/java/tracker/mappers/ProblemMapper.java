@@ -3,7 +3,7 @@ package tracker.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import tracker.dto2.ProblemDTO;
+import tracker.DTO.ProblemDTO;
 import tracker.models.Problem;
 
 public class ProblemMapper {

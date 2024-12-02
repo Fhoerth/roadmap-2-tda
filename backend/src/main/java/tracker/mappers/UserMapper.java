@@ -3,7 +3,7 @@ package tracker.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import tracker.dto2.UserDTO;
+import tracker.DTO.UserDTO;
 import tracker.models.User;
 
 public class UserMapper {

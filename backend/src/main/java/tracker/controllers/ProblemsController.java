@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import tracker.dto2.ProblemDTO;
+import tracker.DTO.ProblemDTO;
 import tracker.services.ProblemService;
 
 @RestController

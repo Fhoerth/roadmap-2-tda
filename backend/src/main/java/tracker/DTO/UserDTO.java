@@ -1,4 +1,4 @@
-package tracker.dto2;
+package tracker.DTO;
 
 import org.bson.types.ObjectId;
 

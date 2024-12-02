@@ -3,7 +3,7 @@ package tracker.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import tracker.dto2.TaskDTO;
+import tracker.DTO.TaskDTO;
 import tracker.models.Task;
 
 public class TaskMapper {
