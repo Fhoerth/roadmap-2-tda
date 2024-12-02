@@ -7,7 +7,7 @@ import tracker.DTO.UserDTO;
 import tracker.DTO.UserRegistrationDTO;
 import tracker.exceptions.BadRequestException;
 import tracker.providers.AuthRegistrationKeyProvider;
-import tracker.services.UserService;
+import tracker.services.db.UserService;
 import tracker.utils.Logger;
 
 @RestController

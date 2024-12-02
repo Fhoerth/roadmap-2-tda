@@ -1,0 +1,76 @@
+.
+├── main
+│   ├── java
+│   │   └── tracker
+│   │       ├── DTO
+│   │       │   ├── ProblemDTO.java
+│   │       │   ├── TaskDTO.java
+│   │       │   ├── UserDTO.java
+│   │       │   ├── UserInputDTO.java
+│   │       │   └── UserRegistrationDTO.java
+│   │       ├── TrackerApplication.java
+│   │       ├── controllers
+│   │       │   ├── GlobalExceptionController.java
+│   │       │   ├── ProblemsController.java
+│   │       │   └── UserController.java
+│   │       ├── exceptions
+│   │       │   └── BadRequestException.java
+│   │       ├── infra
+│   │       │   └── CorsConfig.java
+│   │       ├── initializers
+│   │       │   └── Initializer.java
+│   │       ├── interfaces
+│   │       │   └── MongoScript.java
+│   │       ├── mappers
+│   │       │   ├── ProblemMapper.java
+│   │       │   ├── TaskMapper.java
+│   │       │   └── UserMapper.java
+│   │       ├── models
+│   │       │   ├── Key.java
+│   │       │   ├── Problem.java
+│   │       │   ├── Script.java
+│   │       │   ├── Task.java
+│   │       │   └── User.java
+│   │       ├── providers
+│   │       │   ├── AuthRegistrationKeyProvider.java
+│   │       │   ├── FrontendUrlProvider.java
+│   │       │   ├── MasterKeyProvider.java
+│   │       │   └── MongoDbProvider.java
+│   │       ├── repositories
+│   │       │   ├── KeyRepository.java
+│   │       │   ├── ProblemRepository.java
+│   │       │   ├── ScriptRepository.java
+│   │       │   └── UserRepository.java
+│   │       ├── scripts
+│   │       │   ├── V1__ProblemsScript.java
+│   │       │   ├── V2__ProblemsScript.java
+│   │       │   └── V3__SecretKey.java
+│   │       ├── security
+│   │       │   ├── Token.java
+│   │       │   └── TokenSerializer.java
+│   │       ├── serialization
+│   │       │   ├── ObjectIdDeserializer.java
+│   │       │   └── ObjectIdSerializer.java
+│   │       ├── services
+│   │       │   ├── db
+│   │       │   │   ├── MongoScriptsExecutionService.java
+│   │       │   │   ├── ProblemService.java
+│   │       │   │   └── UserService.java
+│   │       │   └── security
+│   │       │       ├── EncryptionService.java
+│   │       │       └── KeyService.java
+│   │       └── utils
+│   │           ├── HexToBytes.java
+│   │           └── Logger.java
+│   └── resources
+│       ├── application.yml
+│       └── problems.json
+├── test
+│   └── java
+│       └── tracker
+│           ├── DummyTests.java
+│           ├── EncryptionServiceTests.java
+│           └── KeyServiceTest.java
+└── tree.txt
+
+25 directories, 49 files

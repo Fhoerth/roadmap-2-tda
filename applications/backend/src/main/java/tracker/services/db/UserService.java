@@ -1,4 +1,4 @@
-package tracker.services;
+package tracker.services.db;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;

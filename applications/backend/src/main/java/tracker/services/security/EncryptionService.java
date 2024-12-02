@@ -1,4 +1,4 @@
-package tracker.services;
+package tracker.services.security;
 
 import java.util.Base64;
 import javax.crypto.Cipher;

@@ -4,7 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Base64;
 import org.junit.jupiter.api.Test;
-import tracker.services.EncryptionService;
+
+import tracker.services.security.EncryptionService;
 
 public class EncryptionServiceTests {
   private static final String BASE_64_MASTER_KEY = "Uw7JanJPixacxBMvuhrJhLVjqxoWIh7HRgq2+FwQn0c=";

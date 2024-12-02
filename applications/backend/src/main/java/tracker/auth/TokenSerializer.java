@@ -1,4 +1,4 @@
-package tracker.token;
+package tracker.auth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
