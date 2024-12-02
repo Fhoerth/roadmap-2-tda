@@ -6,9 +6,11 @@ ENV NODE_ENV=development
 
 RUN mkdir -p /etc/secrets
 RUN touch /etc/secrets/.env
-RUN cp /etc/secrets/.env /frontend/.env
 
 WORKDIR /frontend
+
+RUN cp /etc/secrets/.env /frontend/.env
+
 
 COPY package.json .yarnrc.yml
 COPY . .
