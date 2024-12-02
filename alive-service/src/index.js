@@ -25,13 +25,11 @@ const config = require("./config");
     }
   };
 
-  // Ejecuta cada N minutos.
   setInterval(async () => {
     console.log(`Running keep-alive tasks...`);
     await keepAlive();
   }, config.interval);
 
-  // Ejecuta la primera vez inmediatamente.
   await keepAlive();
 })();
 

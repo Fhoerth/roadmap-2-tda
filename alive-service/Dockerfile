@@ -15,8 +15,8 @@ WORKDIR /app
 
 WORKDIR /app
 COPY --chown=puppeteer:puppeteer package.json .
-COPY --chown=puppeteer:puppeteer index.js .
-COPY --chown=puppeteer:puppeteer config.js .
+COPY --chown=puppeteer:puppeteer src/index.js .
+COPY --chown=puppeteer:puppeteer src/config.js .
 RUN npm install
 
 USER puppeteer

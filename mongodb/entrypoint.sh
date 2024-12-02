@@ -19,10 +19,9 @@ EOF
 
 mongod --config /etc/mongod.conf --fork --logpath /var/log/mongod.log
 
-echo "Esperando a que MongoDB esté operativo..."
+echo "Wating for MongoDB to be active..."
 sleep 5
 
-# Crear el usuario root solo si no existe
 mongosh --host 127.0.0.1 --port ${PORT} <<EOF
 use admin
 if (!db.getUser("${MONGO_DB_USER}")) {
@@ -40,6 +39,5 @@ EOF
 mongod --shutdown
 echo "MongoDB inicializado correctamente."
 
-# Levantar MongoDB en modo normal
 exec mongod --config /etc/mongod.conf
 
