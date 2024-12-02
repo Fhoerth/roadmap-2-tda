@@ -14,12 +14,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tracker.auth.Token;
+import tracker.auth.TokenSerializer;
 import tracker.models.Key;
 import tracker.models.User;
 import tracker.providers.MasterKeyProvider;
 import tracker.repositories.KeyRepository;
-import tracker.serialization.UserDeserializer;
-import tracker.serialization.UserSerializer;
 import tracker.services.EncryptionService;
 import tracker.services.KeyService;
 import tracker.utils.HexToBytes;
@@ -39,11 +39,14 @@ public class KeyServiceTest {
   @InjectMocks
   private KeyService keyService;
 
+  private TokenSerializer tokenSerializer;
+
   @BeforeEach
   public void setup() {
     MockitoAnnotations.openMocks(this);
     encryptionService = new EncryptionService();
     keyService = new KeyService(keyRepository, encryptionService, masterKeyProvider);
+    tokenSerializer = new TokenSerializer();
   }
 
   @Test
@@ -87,17 +90,19 @@ public class KeyServiceTest {
     User user = new User("752/23", "JohnDoe", 1234);
     user.setId(new ObjectId("64a98712c0a73b4bf8f91b75"));
 
-    String stringifiedUser = UserSerializer.serialize(user);
+    String stringifiedToken = tokenSerializer.serialize(user);
 
-    String encryptedStringifiedUser = encryptionService.base64Encrypt(stringifiedUser, unsignedSecretKey);
-    String unencryptedStringifiedUser = encryptionService.base64Decrypt(encryptedStringifiedUser, unsignedSecretKey);
+    String encryptedStringifiedToken = encryptionService.base64Encrypt(stringifiedToken, unsignedSecretKey);
+    String unencryptedStringifiedToken = encryptionService.base64Decrypt(encryptedStringifiedToken, unsignedSecretKey);
 
-    AtomicReference<User> deserializedUser = new AtomicReference<>();
+    assertEquals(unencryptedStringifiedToken, stringifiedToken);
+
+    AtomicReference<Token> deserializedToken = new AtomicReference<>();
     assertDoesNotThrow(() -> {
-      deserializedUser.set(UserDeserializer.deserialize(unencryptedStringifiedUser));
+      deserializedToken.set(tokenSerializer.deserialize(unencryptedStringifiedToken));
     });
 
-    assertEquals(deserializedUser.get(), user);
-    assertEquals(deserializedUser.get().hashCode(), user.hashCode());
+    assertEquals(deserializedToken.get().getUser(), user);
+    assertEquals(deserializedToken.get().getUser().hashCode(), user.hashCode());
   }
 }
