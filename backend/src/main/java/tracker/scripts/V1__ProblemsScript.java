@@ -14,12 +14,16 @@ import tracker.models.Task;
 import tracker.repositories.ProblemRepository;
 
 @Component
-public class ProblemsScript implements MongoScript {
-  @Autowired
+public class V1__ProblemsScript implements MongoScript {
   private ProblemRepository problemRepository;
 
   private String name = "problems-script";
   private String id = "problems-script";
+
+  @Autowired
+  public V1__ProblemsScript(ProblemRepository problemRepository) {
+    this.problemRepository = problemRepository;
+  }
 
   @Override
   public boolean run() {

@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "problems")
 public class Problem {
   @Id
-  private ObjectId id; // MongoDB will generate this automatically
+  private ObjectId id;
 
   private Integer level;
   private String name;
@@ -50,10 +50,5 @@ public class Problem {
 
   public void setTasks(List<Task> tasks) {
     this.tasks = tasks;
-  }
-
-  @Override
-  public String toString() {
-    return "Problem{" + "id=" + id + ", name='" + name + '\'' + ", tasks=" + tasks + '}';
   }
 }

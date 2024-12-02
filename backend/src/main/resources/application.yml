@@ -1,6 +1,10 @@
 server:
   port: ${PORT:8080} 
-
+app:
+  frontend-url: ${FRONTEND_URL}
+  hexadecimal-master-key: ${BACKEND_MASTER_KEY}
+  mongo-db: ${MONGO_DB}
+  auth-registration-key: ${BACKEND_AUTH_REGISTRATION_KEY}
 spring:
   devtools:
     restart:

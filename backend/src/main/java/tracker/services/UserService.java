@@ -11,8 +11,12 @@ import tracker.repositories.UserRepository;
 
 @Service
 public class UserService {
-  @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  public UserService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
 
   public List<UserDTO> getAllUsers() {
     return UserMapper.toDTOList(userRepository.findAll());

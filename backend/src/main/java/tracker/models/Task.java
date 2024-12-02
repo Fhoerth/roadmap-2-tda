@@ -6,7 +6,6 @@ public class Task {
   private String difficulty;
   private String url;
 
-  // Constructor
   public Task(Integer id, String name, String difficulty, String url) {
     this.id = id;
     this.name = name;
@@ -44,21 +43,5 @@ public class Task {
 
   public void setUrl(String url) {
     this.url = url;
-  }
-
-  @Override
-  public String toString() {
-    return "Problem{" + "id="
-        + id
-        + ", name='"
-        + name
-        + '\''
-        + ", difficulty='"
-        + difficulty
-        + '\''
-        + ", url='"
-        + url
-        + '\''
-        + '}';
   }
 }

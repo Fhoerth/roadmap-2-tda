@@ -9,8 +9,12 @@ import tracker.services.ProblemService;
 @RestController
 @RequestMapping("/api/problems")
 public class ProblemsController {
-  @Autowired
   private ProblemService problemService;
+
+  @Autowired
+  public ProblemsController(ProblemService problemService) {
+    this.problemService = problemService;
+  }
 
   @GetMapping
   public List<ProblemDTO> getAllProblems() {

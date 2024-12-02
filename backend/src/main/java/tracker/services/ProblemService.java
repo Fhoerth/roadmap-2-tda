@@ -9,8 +9,12 @@ import tracker.repositories.ProblemRepository;
 
 @Service
 public class ProblemService {
-  @Autowired
   private ProblemRepository problemRepository;
+
+  @Autowired
+  public ProblemService(ProblemRepository problemRepository) {
+    this.problemRepository = problemRepository;
+  }
 
   public List<ProblemDTO> getAllProblems() {
     return ProblemMapper.toDTOList(problemRepository.findAll());

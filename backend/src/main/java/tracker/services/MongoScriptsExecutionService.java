@@ -11,13 +11,12 @@ import tracker.utils.Logger;
 
 @Service
 public class MongoScriptsExecutionService {
-  @Autowired
   private ScriptRepository scriptRepository;
-
   private List<MongoScript> scripts = new ArrayList<>();
 
   @Autowired
-  public MongoScriptsExecutionService(List<MongoScript> scripts) {
+  public MongoScriptsExecutionService(ScriptRepository scriptRepository, List<MongoScript> scripts) {
+    this.scriptRepository = scriptRepository;
     this.scripts.addAll(scripts);
   }
 
@@ -27,22 +26,20 @@ public class MongoScriptsExecutionService {
     for (int i = 0; i < scripts.size(); i += 1) {
       MongoScript script = scripts.get(i);
       String scriptId = script.getId();
+      String scriptName = script.getName();
 
       if (!hasScriptRun(scriptId)) {
-        String scriptName = script.getName();
-
-        Logger.printPurple("Running Mongo script: ".concat(script.getName()));
-
+        Logger.printPurple(String.format("Running Mongo script: %s.", scriptName));
         Boolean hasRun = script.run();
 
         if (hasRun) {
           markScriptAsExecuted(scriptId, scriptName);
-          Logger.printPurple("Mongo script: ".concat(script.getName()).concat(" run successfully."));
+          Logger.printPurple(String.format("Mongo script: %s run successfully.", scriptName));
         } else {
-          Logger.printRed("Mongo script: ".concat(script.getName()).concat(" run unsuccessfully."));
+          Logger.printRed(String.format("Mongo script: %s run unsuccessfully.", scriptName));
         }
       } else {
-        Logger.printYellow("Mongo script: ".concat(script.getName()).concat(" has already run."));
+        Logger.printYellow(String.format("Mongo script: %s has already run.", scriptName));
       }
     }
   }
