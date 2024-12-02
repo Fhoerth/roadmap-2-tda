@@ -2,7 +2,8 @@ package tracker.mappers;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import tracker.dto.TaskDTO;
+
+import tracker.dto2.TaskDTO;
 import tracker.models.Task;
 
 public class TaskMapper {
