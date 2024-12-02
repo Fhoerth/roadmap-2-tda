@@ -3,7 +3,7 @@ version: "3.9"
 services:
   vite-dev:
     build:
-      context: ./frontend
+      context: ./applications/frontend
       dockerfile: Dockerfile.dev
     container_name: vite-dev
     environment:
@@ -14,12 +14,12 @@ services:
     ports:
       - "${FRONTEND_PORT}:${FRONTEND_PORT}"
     volumes:
-      - ./frontend:/frontend
+      - ./applications/frontend:/frontend
     command: sh -c "yarn install && yarn dev --host 0.0.0.0"
 
   backend-dev:
     build:
-      context: ./backend
+      context: ./applications/backend
       dockerfile: Dockerfile.dev
     container_name: dev_backend
     env_file:
@@ -43,13 +43,13 @@ services:
     networks:
       - dev_network
     volumes:
-      - ./backend/src:/backend/src
-      - ./backend/.mvn/.m2:/root/.m2
+      - ./applications/backend/src:/backend/src
+      - ./applications/backend/.mvn/.m2:/root/.m2
     command: ./reload.sh
 
   mongodb:
     build:
-      context: ./mongodb
+      context: ./applications/mongodb
       dockerfile: Dockerfile
     container_name: mongodb
     ports:

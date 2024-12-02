@@ -2,7 +2,6 @@ package tracker.mappers;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import tracker.DTO.UserDTO;
 import tracker.models.User;
 
