@@ -1,6 +1,7 @@
 FROM node:22-alpine as build
 
-ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+ARG VITE_BACKEND_URL
+ENV VITE_BACKEND_URL=$VITE_BACKEND_URL
 ENV MODE=production
 ENV NODE_ENV=development
 
@@ -9,7 +10,7 @@ RUN touch /etc/secrets/.env
 
 WORKDIR /frontend
 
-RUN cp /etc/secrets/.env /frontend/.env
+RUN cp /etc/secrets/.env .env
 
 
 COPY package.json .yarnrc.yml
