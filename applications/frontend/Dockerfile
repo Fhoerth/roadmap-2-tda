@@ -1,10 +1,14 @@
 FROM node:22-alpine as build
 
-WORKDIR /frontend
-
 ENV VITE_BACKEND_URL=OVERRIDE_DEFAULT_BACKEND_URL
 ENV MODE=production
 ENV NODE_ENV=development
+
+RUN mkdir -p /etc/secrets
+RUN touch /etc/secrets/.env
+RUN cp /etc/secrets/.env /frontend/.env
+
+WORKDIR /frontend
 
 COPY package.json .yarnrc.yml
 COPY . .
