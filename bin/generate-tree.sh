@@ -1,0 +1,1 @@
+cd applications/backend/src && tree > tree.txt && mv tree.txt ApplicationTree.txt && mv ApplicationTree.txt ../ && cd .. && cat ApplicationTree.txt
