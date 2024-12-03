@@ -72,10 +72,10 @@ public class AuthCookie {
 
       Cookie cookie = new Cookie(AUTH_COOKIE_NAME, encryptedBase64StringifiedToken);
 
-      cookie.setHttpOnly(true);
-      cookie.setSecure(true);
-      cookie.setMaxAge(ONE_MONTH_IN_SECONDS);
       cookie.setPath("/");
+      cookie.setSecure(true);
+      cookie.setHttpOnly(true);
+      cookie.setMaxAge(ONE_MONTH_IN_SECONDS);
 
       return cookie;
     } catch (Exception exception) {
