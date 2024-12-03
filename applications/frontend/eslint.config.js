@@ -1,7 +1,7 @@
 import js from '@eslint/js';
-import svelte from 'eslint-plugin-svelte';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
+import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import path from 'path';
 import process from 'process';
@@ -43,7 +43,10 @@ export default [
       },
     ],
     rules: {
-      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        { argsIgnorePattern: '^_' },
+      ],
       '@typescript-eslint/no-explicit-any': 'warn',
       'svelte/indent': ['error', 2],
       'svelte/no-unused-vars': 'warn',
