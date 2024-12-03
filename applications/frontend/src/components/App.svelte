@@ -1,10 +1,11 @@
 <script lang="ts">
   import Counter from '../lib/Counter.svelte'
+  import Layout from './Layout.svelte';
 
   import '../env';
 </script>
 
-<main>
+<Layout>
   <div>
     <a href="https://vite.dev" target="_blank" rel="noreferrer">
       Vite
@@ -26,7 +27,7 @@
   <p class="read-the-docs">
     Click on the Vite and Svelte logos to learn more
   </p>
-</main>
+</Layout>
 
 <style>
   .read-the-docs {
