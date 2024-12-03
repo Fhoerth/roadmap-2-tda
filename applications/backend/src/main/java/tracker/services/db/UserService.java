@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tracker.DTO.UserDTO;
 import tracker.DTO.UserInputDTO;
+import tracker.DTO.UserLoginDTO;
 import tracker.exceptions.InvalidUserException;
 import tracker.exceptions.UserNotFoundException;
 import tracker.exceptions.UserNotUniqueException;
@@ -24,6 +25,15 @@ public class UserService {
 
   public List<UserDTO> getAllUsers() {
     return UserMapper.toDTOList(userRepository.findAll());
+  }
+
+  public User getUser(UserLoginDTO input) throws UserNotFoundException {
+    User user = userRepository.getByLuAndPin(input.lu(), input.pin());
+
+    if (user == null)
+      throw new UserNotFoundException("User Not Found");
+
+    return user;
   }
 
   public UserDTO createUser(UserInputDTO input) throws UserNotUniqueException {
@@ -45,9 +55,8 @@ public class UserService {
   public boolean isValidUser(User userToBeValidated) throws UserNotFoundException, InvalidUserException {
     Optional<User> maybeUser = userRepository.findById(userToBeValidated.getId());
 
-    if (maybeUser.isEmpty()) {
-      throw new UserNotFoundException("User not found.");
-    }
+    if (maybeUser.isEmpty())
+      throw new UserNotFoundException("User Not Found.");
 
     User user = maybeUser.get();
 

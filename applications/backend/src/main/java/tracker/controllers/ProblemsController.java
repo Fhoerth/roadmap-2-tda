@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import tracker.DTO.ProblemDTO;
+import tracker.auth.Auth;
 import tracker.services.db.ProblemService;
 
 @RestController
@@ -17,6 +18,7 @@ public class ProblemsController {
   }
 
   @GetMapping
+  @Auth
   public List<ProblemDTO> get() {
     return problemService.getAllProblems();
   }

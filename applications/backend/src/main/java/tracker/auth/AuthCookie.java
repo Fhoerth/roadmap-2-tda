@@ -62,6 +62,17 @@ public class AuthCookie {
     }
   }
 
+  public Cookie createExpiedCookie() {
+    Cookie cookie = new Cookie(AUTH_COOKIE_NAME, "");
+
+    cookie.setPath("/");
+    cookie.setSecure(true);
+    cookie.setHttpOnly(true);
+    cookie.setMaxAge(0);
+
+    return cookie;
+  }
+
   public Cookie createSecureAuthCookie(User user) {
     Token token = new Token(user);
 

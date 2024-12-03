@@ -11,4 +11,7 @@ public interface UserRepository extends MongoRepository<User, ObjectId> {
 
   @Query(value = "{ 'nickname': ?0 }", exists = true)
   boolean existsByNickname(String nickname);
+
+  @Query(value = "{ 'lu': ?0, 'pin': ?1 }")
+  User getByLuAndPin(String lu, Integer pin);
 }
