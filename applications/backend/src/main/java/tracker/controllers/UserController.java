@@ -63,6 +63,8 @@ public class UserController {
 
     Logger.printBlue("Creating user " + input.getData());
 
-    return userService.createUser(input.getData());
+    User user = userService.createUser(input.getData());
+
+    return new UserDTO(user.getId(), user.getNickname());
   }
 }

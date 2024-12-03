@@ -36,7 +36,7 @@ public class UserService {
     return user;
   }
 
-  public UserDTO createUser(UserInputDTO input) throws UserNotUniqueException {
+  public User createUser(UserInputDTO input) throws UserNotUniqueException {
     Boolean existsByLu = userRepository.existsByLu(input.lu());
     Boolean existsByNickname = userRepository.existsByNickname(input.nickname());
 
@@ -49,7 +49,7 @@ public class UserService {
 
     userRepository.save(user);
 
-    return new UserDTO(user.getId(), user.getNickname());
+    return user;
   }
 
   public boolean isValidUser(User userToBeValidated) throws UserNotFoundException, InvalidUserException {
