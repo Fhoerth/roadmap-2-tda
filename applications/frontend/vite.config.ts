@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import { svelte } from '@sveltejs/vite-plugin-svelte'
+import { svelte } from '@sveltejs/vite-plugin-svelte';
 import dotenv from 'dotenv';
 import process from 'process';
+import { defineConfig } from 'vite';
 
 let fallbackPort: number = 5173;
 let port: number = fallbackPort;
@@ -32,4 +32,4 @@ export default defineConfig({
       input: './index.html',
     },
   },
-})
+});
