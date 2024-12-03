@@ -1,5 +1,7 @@
-<script>
-  export let content; // Propiedad para recibir contenido dinámico
+<script lang="ts">
+  import type { SvelteComponent } from 'svelte';
+
+  export let content: string | typeof SvelteComponent | null = null;
 </script>
 
 <div class="flex flex-col w-full min-h-screen">
@@ -17,7 +19,7 @@
     {#if content}
       {@html content}
     {:else}
-      <slot /> <!-- Espacio para contenido hijo -->
+      <slot />
     {/if}
   </main>
 </div>
