@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import tracker.exceptions.BadRequestException;
 import tracker.exceptions.UnauthorizedException;
+import tracker.exceptions.UserNotUniqueException;
 
 @ControllerAdvice
 public class GlobalExceptionController {
@@ -20,6 +21,12 @@ public class GlobalExceptionController {
   public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException exception) {
     ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), exception.getMessage());
     return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+  }
+
+  @ExceptionHandler(UserNotUniqueException.class)
+  public ResponseEntity<ErrorResponse> handleUserNotUniqueException(UserNotUniqueException exception) {
+    ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.toString(), exception.getMessage());
+    return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
   }
 
   @Data

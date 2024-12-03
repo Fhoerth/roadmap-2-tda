@@ -8,6 +8,7 @@ import tracker.DTO.UserDTO;
 import tracker.DTO.UserInputDTO;
 import tracker.exceptions.InvalidUserException;
 import tracker.exceptions.UserNotFoundException;
+import tracker.exceptions.UserNotUniqueException;
 import tracker.mappers.UserMapper;
 import tracker.models.User;
 import tracker.repositories.UserRepository;
@@ -25,7 +26,15 @@ public class UserService {
     return UserMapper.toDTOList(userRepository.findAll());
   }
 
-  public UserDTO createUser(UserInputDTO input) {
+  public UserDTO createUser(UserInputDTO input) throws UserNotUniqueException {
+    Boolean existsByLu = userRepository.existsByLu(input.lu());
+    Boolean existsByNickname = userRepository.existsByNickname(input.nickname());
+
+    if (existsByLu)
+      throw new UserNotUniqueException("LU not unique.");
+    else if (existsByNickname)
+      throw new UserNotUniqueException("Nickname not unique.");
+
     User user = new User(input.lu(), input.nickname(), input.pin());
 
     userRepository.save(user);

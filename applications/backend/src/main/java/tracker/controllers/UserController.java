@@ -11,7 +11,7 @@ import tracker.services.db.UserService;
 import tracker.utils.Logger;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
 public class UserController {
   private UserService userService;
   private AuthRegistrationKeyProvider authRegistrationKeyProvider;
@@ -23,12 +23,12 @@ public class UserController {
   }
 
   @GetMapping
-  public List<UserDTO> getAllUsers() {
+  public List<UserDTO> get() {
     return userService.getAllUsers();
   }
 
-  @PostMapping
-  public UserDTO createUser(@RequestBody UserRegistrationDTO input) {
+  @PostMapping("/create")
+  public UserDTO create(@RequestBody UserRegistrationDTO input) {
     if (!input.getAuthRegistrationKey().equals(authRegistrationKeyProvider.key())) {
       throw new BadRequestException("Wrong Auth Registration Key");
     }

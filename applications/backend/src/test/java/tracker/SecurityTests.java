@@ -25,7 +25,7 @@ import tracker.services.security.KeyService;
 import tracker.utils.HexToBytes;
 
 @ExtendWith(MockitoExtension.class)
-public class KeyServiceTest {
+public class SecurityTests {
   private static final String hexadecimalMasterKey = "fa3f34a0c776983ce9322e459c971e277b3568eb7627722fee6287c0b7c01472";
 
   private EncryptionService encryptionService;

@@ -17,7 +17,7 @@ public class ProblemsController {
   }
 
   @GetMapping
-  public List<ProblemDTO> getAllProblems() {
+  public List<ProblemDTO> get() {
     return problemService.getAllProblems();
   }
 }
