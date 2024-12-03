@@ -1,30 +1,53 @@
 import js from '@eslint/js';
-import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
+import svelte from 'eslint-plugin-svelte';
+import tseslint from '@typescript-eslint/eslint-plugin';
+import tsparser from '@typescript-eslint/parser';
 import globals from 'globals';
 import path from 'path';
 import process from 'process';
-import tseslint from 'typescript-eslint';
 
-export default tseslint.config(
-  { ignores: ['dist', 'courses'] },
+export default [
   {
-    extends: [js.configs.recommended, ...tseslint.configs.recommended],
-    files: [path.join(process.cwd(), 'src', '**', '*.{ts,tsx}')],
+    ignores: ['dist', 'node_modules', 'build'],
+  },
+  {
+    files: [path.join(process.cwd(), 'src', '**', '*.{js,ts,svelte}')],
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      parser: tsparser,
+      parserOptions: {
+        ecmaVersion: 2020,
+        sourceType: 'module',
+        project: path.resolve(process.cwd(), 'tsconfig.json'),
+        tsconfigRootDir: process.cwd(),
+      },
+      globals: {
+        ...globals.browser,
+      },
     },
     plugins: {
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      '@typescript-eslint': tseslint,
+      svelte,
     },
+    settings: {
+      'svelte3/typescript': true,
+    },
+    extends: [
+      js.configs.recommended,
+      'plugin:svelte/recommended',
+      'plugin:@typescript-eslint/recommended',
+    ],
+    overrides: [
+      {
+        files: ['*.svelte'],
+        processor: 'svelte3/svelte3',
+      },
+    ],
     rules: {
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'svelte/indent': ['error', 2],
+      'svelte/no-unused-vars': 'warn',
+      'svelte/no-at-html-tags': 'warn',
     },
   },
-);
+];

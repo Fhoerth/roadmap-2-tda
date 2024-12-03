@@ -14,11 +14,16 @@
     "check": "svelte-check --tsconfig ./tsconfig.json && tsc -p tsconfig.node.json"
   },
   "devDependencies": {
+    "@eslint/js": "^9.16.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@tsconfig/svelte": "^5.0.4",
     "@types/node": "^22.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.17.0",
+    "@typescript-eslint/parser": "^8.17.0",
     "dotenv": "^16.4.7",
+    "eslint": "^9.16.0",
+    "eslint-plugin-svelte": "^2.46.1",
     "prettier": "^3.4.1",
     "svelte": "^5.2.7",
     "svelte-check": "^4.1.0",
@@ -31,5 +36,8 @@
     "@rollup/rollup-linux-arm64-musl": "4.27.4",
     "@rollup/rollup-linux-x64-gnu": "^4.27.4"
   },
-  "packageManager": "yarn@4.5.3"
+  "packageManager": "yarn@4.5.3",
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
 }
