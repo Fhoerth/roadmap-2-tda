@@ -1,9 +1,11 @@
-import react from '@vitejs/plugin-react-swc';
+import { defineConfig } from 'vite'
+import { svelte } from '@sveltejs/vite-plugin-svelte'
 import dotenv from 'dotenv';
 import process from 'process';
 
 let fallbackPort: number = 5173;
 let port: number = fallbackPort;
+
 if (typeof process.env.PORT !== 'undefined') {
   port = parseInt(process.env.PORT);
 }
@@ -11,9 +13,9 @@ if (typeof process.env.PORT !== 'undefined') {
 dotenv.config();
 console.log('BACKEND_URL', process.env.VITE_BACKEND_URL);
 
-/** @type {import('vite').UserConfig} */
-export default {
-  plugins: [react()],
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [svelte()],
   base: '/',
   define: {
     'process.env': process.env,
@@ -30,4 +32,4 @@ export default {
       input: './index.html',
     },
   },
-};
+})

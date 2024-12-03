@@ -35,6 +35,17 @@ h1 {
   line-height: 1.1;
 }
 
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;

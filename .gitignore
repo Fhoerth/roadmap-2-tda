@@ -1,11 +1,11 @@
 *.db
-target
-ignored
+.ignored
 .vscode
 .env
 .m2
+.DS_Store
+target
 cron_job.txt
 metabase
-.DS_Store
 JWT.txt
 generate-master-key
