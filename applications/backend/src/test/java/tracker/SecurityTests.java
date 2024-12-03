@@ -50,6 +50,30 @@ public class KeyServiceTest {
   }
 
   @Test
+  void encrypt_decrypt_test() {
+    boolean failed = false;
+
+    EncryptionService service = new EncryptionService();
+    byte[] masterKey = HexToBytes.convert(hexadecimalMasterKey);
+
+    try {
+      String base64SecretKey = service.createBase64SecretKey(masterKey);
+      byte[] secretKey = service.decryptBase64SecretKey(base64SecretKey, masterKey);
+
+      String textToBeEncrypted = "HELLO_WORLD";
+      String encryptedText = service.base64Encrypt(textToBeEncrypted, secretKey);
+      String decryptedText = service.base64Decrypt(encryptedText, secretKey);
+
+      assertEquals(textToBeEncrypted, decryptedText);
+    } catch (Exception e) {
+      e.printStackTrace();
+      failed = true;
+    }
+
+    assertFalse(failed);
+  }
+
+  @Test
   public void test_generate_and_store_signed_secret_key() {
     AtomicReference<String> base64SecretKey = new AtomicReference<>();
 

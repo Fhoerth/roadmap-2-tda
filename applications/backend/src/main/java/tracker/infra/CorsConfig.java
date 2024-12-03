@@ -27,7 +27,7 @@ public class CorsConfig {
 
     config.setAllowedOrigins(Collections.singletonList(frontendUrl));
     config.setAllowedMethods(Collections.singletonList("*"));
-    config.setAllowedHeaders(Collections.singletonList("*")); 
+    config.setAllowedHeaders(Collections.singletonList("*"));
     source.registerCorsConfiguration("/**", config);
 
     return new CorsFilter(source);
