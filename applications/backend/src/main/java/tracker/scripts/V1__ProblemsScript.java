@@ -15,10 +15,10 @@ import tracker.repositories.ProblemRepository;
 
 @Component
 public class V1__ProblemsScript implements MongoScript {
-  private ProblemRepository problemRepository;
-
   private String name = "problems-script";
   private String id = "problems-script";
+
+  private ProblemRepository problemRepository;
 
   @Autowired
   public V1__ProblemsScript(ProblemRepository problemRepository) {
@@ -47,7 +47,7 @@ public class V1__ProblemsScript implements MongoScript {
           String problemDifficulty = problemNode.get("difficulty").asText();
           String problemUrl = problemNode.get("url").asText();
 
-          tasks.add(new Task(problemId, problemName, problemDifficulty, problemUrl));
+          tasks.add(new Task(problemId, problemName, problemDifficulty, problemUrl, "", ""));
         }
 
         problems.add(new Problem(level, name, tasks));
@@ -62,10 +62,12 @@ public class V1__ProblemsScript implements MongoScript {
     }
   }
 
+  @Override
   public String getId() {
     return id;
   }
 
+  @Override
   public String getName() {
     return name;
   }

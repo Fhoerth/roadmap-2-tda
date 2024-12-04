@@ -11,11 +11,11 @@ import tracker.providers.MongoDbProvider;
 
 @Component
 public class V2__ProblemsScript implements MongoScript {
-  private MongoClient mongoClient;
-  private MongoDbProvider mongoDbProvider;
-
   private String name = "v2__problems-script-2.0";
   private String id = "v2__problems-script-2.0";
+
+  private MongoClient mongoClient;
+  private MongoDbProvider mongoDbProvider;
 
   @Autowired
   public V2__ProblemsScript(MongoClient mongoClient, MongoDbProvider mongoDbProvider) {
@@ -33,10 +33,12 @@ public class V2__ProblemsScript implements MongoScript {
     return true;
   }
 
+  @Override
   public String getId() {
     return id;
   }
 
+  @Override
   public String getName() {
     return name;
   }

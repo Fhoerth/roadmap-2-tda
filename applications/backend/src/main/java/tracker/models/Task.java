@@ -5,12 +5,16 @@ public class Task {
   private String name;
   private String difficulty;
   private String url;
+  private String editCodeUrl;
+  private String slug;
 
-  public Task(Integer id, String name, String difficulty, String url) {
+  public Task(Integer id, String name, String difficulty, String url, String editCodeUrl, String slug) {
     this.id = id;
     this.name = name;
     this.difficulty = difficulty;
     this.url = url;
+    this.editCodeUrl = editCodeUrl;
+    this.slug = slug;
   }
 
   public Integer getId() {
@@ -43,5 +47,21 @@ public class Task {
 
   public void setUrl(String url) {
     this.url = url;
+  }
+
+  public String getEditCodeUrl() {
+    return editCodeUrl;
+  }
+
+  public void setEditCodeUrl(String editCodeUrl) {
+    this.editCodeUrl = editCodeUrl;
+  }
+
+  public String getSlug() {
+    return slug;
+  }
+
+  public void setSlug(String slug) {
+    this.slug = slug;
   }
 }

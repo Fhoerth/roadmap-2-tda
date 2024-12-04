@@ -9,11 +9,11 @@ import tracker.utils.Logger;
 
 @Component
 public class V3__SecretKey implements MongoScript {
-  private KeyService keyService;
-  private KeyRepository keyRepository;
-
   private String name = "v3__secret-key";
   private String id = "v3__secret-key";
+
+  private KeyService keyService;
+  private KeyRepository keyRepository;
 
   @Autowired
   public V3__SecretKey(KeyService keyService, KeyRepository keyRepository) {
@@ -45,10 +45,12 @@ public class V3__SecretKey implements MongoScript {
     }
   }
 
+  @Override
   public String getId() {
     return id;
   }
 
+  @Override
   public String getName() {
     return name;
   }
