@@ -1,299 +1,296 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project
-	xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>tracker</groupId>
-	<artifactId>tracker</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>tracker</name>
-	<properties>
-			<maven.compiler.source>17</maven.compiler.source>
-			<maven.compiler.target>17</maven.compiler.target>
-			<maven.compiler.release>17</maven.compiler.release>
-			<spring-boot.version>3.1.3</spring-boot.version>
-			<java.version>17</java.version>
-			<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
-
-	<dependencyManagement>
-		<dependencies>
-				<dependency>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-dependencies</artifactId>
-						<version>${spring-boot.version}</version>
-						<type>pom</type>
-						<scope>import</scope>
-				</dependency>
-		</dependencies>
-	</dependencyManagement>
-
-	<dependencies>
-		<dependency>
-			<groupId>org.aspectj</groupId>
-			<artifactId>aspectjweaver</artifactId>
-			<version>1.9.20</version>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.28</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<!-- Spring Boot Starter Web -->
-		<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-data-mongodb</artifactId>
-				<version>3.1.3</version>
-		</dependency>
-		<!-- Spring Boot Starter Test -->
-		<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-test</artifactId>
-				<scope>test</scope>
-				<version>${spring-boot.version}</version>
-		</dependency>
-		<!-- JUnit 5 -->
- 		<dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter</artifactId>
-        <version>5.10.0</version> <!-- Cambia según la versión deseada -->
-        <scope>test</scope>
-    </dependency>
-		<!-- Mockito -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>tracker</groupId>
+  <artifactId>tracker</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+  <name>tracker</name>
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <maven.compiler.release>17</maven.compiler.release>
+    <spring-boot.version>3.1.3</spring-boot.version>
+    <java.version>17</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
     <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>5.5.0</version> <!-- Cambia según la versión deseada -->
-        <scope>test</scope>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>1.9.20</version>
     </dependency>
-
-<!-- Jackson-->
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-    <version>2.14.0</version>
-</dependency>
-
-<!-- Jsup -->
-<dependency>
-    <groupId>org.jsoup</groupId>
-    <artifactId>jsoup</artifactId>
-    <version>1.16.1</version> <!-- Asegúrate de usar la última versión -->
-</dependency>
-
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.28</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Spring Boot Starter Web -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-mongodb</artifactId>
+      <version>3.1.3</version>
+    </dependency>
+    <!-- Spring Boot Starter Test -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+      <version>${spring-boot.version}</version>
+    </dependency>
+    <!-- JUnit 5 -->
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.0</version>
+      <!-- Cambia según la versión deseada -->
+      <scope>test</scope>
+    </dependency>
+    <!-- Mockito -->
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>5.5.0</version>
+      <!-- Cambia según la versión deseada -->
+      <scope>test</scope>
+    </dependency>
+    <!-- Jackson-->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.14.0</version>
+    </dependency>
+    <!-- Jsup -->
+    <dependency>
+      <groupId>org.jsoup</groupId>
+      <artifactId>jsoup</artifactId>
+      <version>1.16.1</version>
+      <!-- Asegúrate de usar la última versión -->
+    </dependency>
     <!-- Mockito JUnit 5 Integration -->
     <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-junit-jupiter</artifactId>
-        <version>5.5.0</version> <!-- Cambia según la versión deseada -->
-        <scope>test</scope>
-		</dependency>
-	</dependencies>
-	<build>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-junit-jupiter</artifactId>
+      <version>5.5.0</version>
+      <!-- Cambia según la versión deseada -->
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
     <!-- <resources>
         <resource>
             <directory>${project.basedir}/backend/src/main/resources</directory>
         </resource>
     </resources> -->
     <resources>
-        <resource>
-            <directory>${project.basedir}/src/main/resources</directory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </resource>
+      <resource>
+        <directory>${project.basedir}/src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
     </resources>
     <!-- <testResources>
         <testResource>
             <directory>${project.basedir}/src/test/resources</directory>
         </testResource>
     </testResources> -->
-
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.4.1</version>
-				<configuration>
-						<archive>
-								<manifest>
-										<mainClass>tracker.TrackerApplication</mainClass>
-								</manifest>
-						</archive>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<version>${spring-boot.version}</version>
-				<configuration>
-						<mainClass>tracker.TrackerApplication</mainClass> <!-- Cambia a la clase principal de tu proyecto -->
-				</configuration>
-				<executions>
-					<execution>
-							<goals>
-									<goal>repackage</goal>
-							</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>build-helper-maven-plugin</artifactId>
-				<version>3.2.0</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
-				<configuration>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
-  					<!-- <configuration>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.4.1</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <mainClass>tracker.TrackerApplication</mainClass>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
+        <configuration>
+          <mainClass>tracker.TrackerApplication</mainClass>
+          <!-- Cambia a la clase principal de tu proyecto -->
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.2.0</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.10.1</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <!-- <configuration>
 						<includes>
 							<include>**/*.java</include>
 							<include>**/*Test.java</include>
 						</includes>
 					</configuration> -->
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-					<groupId>com.diffplug.spotless</groupId>
-					<artifactId>spotless-maven-plugin</artifactId>
-					<version>2.25.0</version>
-					<executions>
-							<execution>
-									<goals>
-											<goal>check</goal>
-											<goal>apply</goal>
-									</goals>
-							</execution>
-					</executions>
-					<configuration>
-							<java>
-									<toggleOffOn />
-									<includes>
-											<include>src/main/java/**/*.java</include>
-											<include>src/test/java/**/*.java</include>
-											<include>src/performance/**/*.java</include>
-									</includes>
-									<palantirJavaFormat>
-										<version>2.44.0</version>                     <!-- optional -->
-									</palantirJavaFormat>
-									<eclipse>
-										<file>${basedir}/eclipse-formatter.xml</file>
-									</eclipse>
-									<importOrder>
-										<order>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>com.diffplug.spotless</groupId>
+        <artifactId>spotless-maven-plugin</artifactId>
+        <version>2.25.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+              <goal>apply</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <java>
+            <toggleOffOn/>
+            <includes>
+              <include>src/main/java/**/*.java</include>
+              <include>src/test/java/**/*.java</include>
+              <include>src/performance/**/*.java</include>
+            </includes>
+            <palantirJavaFormat>
+              <version>2.44.0</version>
+              <!-- optional -->
+            </palantirJavaFormat>
+            <eclipse>
+              <file>${basedir}/eclipse-formatter.xml</file>
+            </eclipse>
+            <importOrder>
+              <order>
 												java
 												javax
 												org
 												com
 										</order>
-                		<!-- <removeUnused>true</removeUnused> -->
-            			</importOrder>
-							</java>
-					</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.10</version>
-				<configuration>
-					<excludes>
-						<exclude>**/performance/**</exclude>
-						<exclude>**/src/performance/**</exclude>
-						<exclude>**/performance/**/*.class</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<!-- Prepare Agent -->
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<excludes>
-								<exclude>**/performance/**</exclude>
-								<exclude>src/performance/**</exclude>
-								<exclude>**/src/performance/**</exclude>
-								<exclude>**/performance/**/*.class</exclude>
-								<exclude>performance/**</exclude>
-							</excludes>
-						</configuration>
-					</execution>
-					<!-- Generate Report with Exclusion -->
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.0.0</version>
-				<configuration>
-					<includes>
-						<include>**/*.java</include>
-						<include>**/*Test.java</include>
-					</includes>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<profiles>
-		<profile>
-			<id>include-performance</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>build-helper-maven-plugin</artifactId>
-						<version>3.2.0</version>
-						<executions>
-							<execution>
-								<id>add-performance-source</id>
-								<phase>initialize</phase>
-								<goals>
-									<goal>add-source</goal>
-								</goals>
-								<configuration>
-									<sources>
-										<source>src/performance/java</source>
-									</sources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
+              <!-- <removeUnused>true</removeUnused> -->
+            </importOrder>
+          </java>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.10</version>
+        <configuration>
+          <excludes>
+            <exclude>**/performance/**</exclude>
+            <exclude>**/src/performance/**</exclude>
+            <exclude>**/performance/**/*.class</exclude>
+          </excludes>
+        </configuration>
+        <executions>
+          <!-- Prepare Agent -->
+          <execution>
+            <id>prepare-agent</id>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>**/performance/**</exclude>
+                <exclude>src/performance/**</exclude>
+                <exclude>**/src/performance/**</exclude>
+                <exclude>**/performance/**/*.class</exclude>
+                <exclude>performance/**</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+          <!-- Generate Report with Exclusion -->
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <includes>
+            <include>**/*.java</include>
+            <include>**/*Test.java</include>
+          </includes>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>include-performance</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <id>add-performance-source</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>src/performance/java</source>
+                  </sources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

@@ -1,1 +1,1 @@
-./bin/install.sh && cd ./applications/backend && ./format.sh && cd ../.. && cd ./applications/frontend && ./format.sh && cd ..
+./bin/install.sh && cd ./applications/backend && ./format.sh && cd ../.. && cd ./applications/frontend && ./format.sh && cd ../.. && xmllint --format applications/backend/pom.xml -o applications/backend/pom.xml
