@@ -81,12 +81,17 @@
       <artifactId>jackson-databind</artifactId>
       <version>2.14.0</version>
     </dependency>
-    <!-- Jsup -->
+    <!-- Validator -->
     <dependency>
-      <groupId>org.jsoup</groupId>
-      <artifactId>jsoup</artifactId>
-      <version>1.16.1</version>
-      <!-- Asegúrate de usar la última versión -->
+      <groupId>org.hibernate.validator</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>8.0.0.Final</version>
+    </dependency>
+    <!-- Jakarta -->
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+      <version>3.0.0</version>
     </dependency>
     <!-- Mockito JUnit 5 Integration -->
     <dependency>
