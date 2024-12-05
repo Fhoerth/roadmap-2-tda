@@ -1599,6 +1599,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/yallist@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "@types/yallist@npm:4.0.4"
+  checksum: 10c0/1106d1a5c3e1f153f9001f5a04730b3f734dd4152c2e1fb0eb30645b655f914b177267821c391096593a3fa5aba647c1afbc3e75430fed9de80471eccf851c01
+  languageName: node
+  linkType: hard
+
 "@types/yargs-parser@npm:*":
   version: 21.0.3
   resolution: "@types/yargs-parser@npm:21.0.3"
@@ -4097,6 +4104,7 @@ __metadata:
     "@trivago/prettier-plugin-sort-imports": "npm:^4.3.0"
     "@types/express": "npm:^5.0.0"
     "@types/jest": "npm:^29.5.14"
+    "@types/yallist": "npm:^4.0.4"
     dotenv: "npm:^16.4.7"
     esbuild: "npm:^0.24.0"
     express: "npm:^4.21.1"
