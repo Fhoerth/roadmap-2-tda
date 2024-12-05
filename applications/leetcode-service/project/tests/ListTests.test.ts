@@ -13,6 +13,30 @@ describe('List', () => {
     expect(node2.prev).toBe(node1);
   });
 
+  test('stress test: removeTail in O(1) for 1000 elements', () => {
+    const list = new List<number>();
+    const nodes: ListNode<number>[] = [];
+  
+    for (let i = 1; i <= 1000; i++) {
+      nodes.push(list.append(i));
+    }
+
+    let j = 1000;
+    
+    while (j >= 1) {
+      const tail = list.getTail();
+
+      expect(list.isEmpty()).toBe(false);
+      expect(tail).toBeTruthy();
+      expect(tail?.value).toEqual(j);
+
+      list.removeTail();
+      j -= 1;
+    }
+
+    expect(list.isEmpty()).toBe(true);
+
+  });
   test('stress test: removeNode in O(1) for 1000 elements', () => {
     const list = new List<number>();
     const nodes: ListNode<number>[] = [];

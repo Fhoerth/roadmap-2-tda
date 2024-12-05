@@ -44,6 +44,12 @@ class List<T> {
     node.prev = null;
   }
 
+  removeTail(): void {
+    if (this.tail) {
+      this.removeNode(this.tail);
+    }
+  }
+
   getHead(): ListNode<T> | null {
     return this.head;
   }
