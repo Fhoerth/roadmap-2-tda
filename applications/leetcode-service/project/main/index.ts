@@ -1,12 +1,12 @@
 import process from 'process';
 
-import { server } from './server';
 import { Scrapper } from './Scrapper';
+import { server } from './server';
 
 const OK = 0;
 
 async function main() {
-  const scrapper = await Scrapper.createAndLaunchScrapper();
+  const scrapper = new Scrapper();
 
   console.log('Registering SIGINT listener.');
 
@@ -20,7 +20,8 @@ async function main() {
       });
     });
   });
+
+  await scrapper.launch();
 }
 
 void main();
-
