@@ -13,7 +13,7 @@
 
     "esModuleInterop": true,
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./project",
 
     /* Linting */
     "strict": true,
@@ -22,6 +22,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src/**/*"],
+  "include": ["project/**/*"],
   "exclude": ["node_modules", "dist"]
 }

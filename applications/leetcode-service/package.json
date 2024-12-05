@@ -7,7 +7,7 @@
     "dev": "nodemon",
     "build": "vite build",
     "format": "prettier --write .",
-    "start": "node dist/server.js"
+    "start": "node dist/main/server.js"
   },
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
