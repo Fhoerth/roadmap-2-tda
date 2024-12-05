@@ -96,24 +96,27 @@ class Scrapper {
 
   async #lifecycle(): Promise<void> {
     console.log('Lifecycle');
-    console.log(this.#waitForConnection.status);
 
-    try {
-      const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise();
-      const mainPromise = Promise.resolve()
-        .then(() => this.#performLogin())
-        .then(() => this.#isAliveAndConnected())
-        .then(() => {
-          deferredTimeoutPromise.resolve();
-        });
-
-      await Promise.all([deferredTimeoutPromise.promise, mainPromise]);
-
-      console.log('Lifecycle OK!');
-    } catch (reason: any) {
-      await this.close();
-      await this.launch();
+    const runLogin = async (): Promise<void> => {
+      try {
+        const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise();
+        const mainPromise = Promise.resolve()
+          .then(() => this.#performLogin())
+          .then(() => this.#isAliveAndConnected())
+          .then(() => {
+            deferredTimeoutPromise.resolve();
+          });
+  
+        await Promise.all([deferredTimeoutPromise.promise, mainPromise]);
+  
+        console.log('Lifecycle OK!');
+      } catch (reason: any) {
+        await this.close();
+        await this.launch();
+      }
     }
+
+    return this.#isAliveAndConnected().catch(runLogin);
   }
 
   async #isAliveAndConnected(): Promise<void> {
@@ -126,11 +129,13 @@ class Scrapper {
       newPage.waitForNavigation(),
     ]);
 
-    if (!newPage.url().includes('/profile')) {
-      throw new Error('`mainLeetCodePage` is not available.');
-    }
+    const url = newPage.url();
 
     await newPage.close();
+
+    if (!url.includes('/profile')) {
+      throw new Error('`mainLeetCodePage` is not available.');
+    }
 
     console.log('Browser is alive and connected :)');
   }
