@@ -94,7 +94,10 @@ class Scrapper {
     return this.#browser;
   }
 
-  async #init(): Promise<void> {
+  async #lifecycle(): Promise<void> {
+    console.log('Lifecycle');
+    console.log(this.#waitForConnection.status);
+
     try {
       const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise();
       const mainPromise = Promise.resolve()
@@ -105,6 +108,8 @@ class Scrapper {
         });
 
       await Promise.all([deferredTimeoutPromise.promise, mainPromise]);
+
+      console.log('Lifecycle OK!');
     } catch (reason: any) {
       await this.close();
       await this.launch();
@@ -169,7 +174,7 @@ class Scrapper {
     this.#mainLeetCodePage = page;
     this.#waitForConnection.reset();
 
-    await this.#init();
+    await this.#lifecycle();
 
     console.log('Browser launched successfully');
   }
