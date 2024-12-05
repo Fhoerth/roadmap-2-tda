@@ -103,7 +103,18 @@ class Scrapper {
   }
 
   async #waitForLifecycles(): Promise<void> {
-    
+    console.log('Waiting for Lifecycles');
+
+    const tail = this.#lifecyclesInProgress.getTail();
+
+    if (tail) {
+      this.#lifecyclesInProgress.removeTail();
+
+      await tail.value;
+      await this.#waitForLifecycles();
+    }
+
+    console.log('Lifecycles OK!');
   }
 
   async #lifecycle(): Promise<void> {
