@@ -21,7 +21,7 @@ async function main() {
     });
   });
 
-  await scrapper.launch();
+  await scrapper.start();
 }
 
 void main();

@@ -1,6 +1,6 @@
 import { connect } from 'puppeteer-real-browser';
 import type { Browser, Page } from 'rebrowser-puppeteer-core';
-
+import { List } from '../List';
 import { env } from '../env';
 
 type PromiseStatus = 'pending' | 'resolved' | 'rejected';
@@ -17,12 +17,14 @@ class Scrapper {
   #password = env.password;
 
   #waitForConnection: DeferredPromise<void>;
+  #lifecyclesInProgress: List<Promise<void>>;
 
   #browser?: Browser;
   #mainLeetCodePage?: Page;
 
   constructor() {
     this.#waitForConnection = Scrapper.createDeferredPromise();
+    this.#lifecyclesInProgress = new List();
   }
 
   static async createBrowser(): Promise<{ browser: Browser; page: Page }> {
@@ -94,29 +96,49 @@ class Scrapper {
     return this.#browser;
   }
 
+  async #maybeClose(): Promise<void> {
+    if (this.#browser) {
+      this.close();
+    }
+  }
+
+  async #waitForLifecycles(): Promise<void> {
+    
+  }
+
   async #lifecycle(): Promise<void> {
     console.log('Lifecycle');
 
-    const runLogin = async (): Promise<void> => {
-      try {
-        const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise();
-        const mainPromise = Promise.resolve()
-          .then(() => this.#performLogin())
-          .then(() => this.#isAliveAndConnected())
-          .then(() => {
-            deferredTimeoutPromise.resolve();
-          });
-  
-        await Promise.all([deferredTimeoutPromise.promise, mainPromise]);
-  
-        console.log('Lifecycle OK!');
-      } catch (reason: any) {
-        await this.close();
-        await this.launch();
-      }
-    }
+    const createLoginLifecycle = async (): Promise<void> => {
+      const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise();
+      const mainPromise = Promise.resolve()
+        .then(() => this.#performLogin())
+        .then(() => this.#isAliveAndConnected())
+        .then(() => {
+          deferredTimeoutPromise.resolve();
+        });
 
-    return this.#isAliveAndConnected().catch(runLogin);
+      await Promise.all([deferredTimeoutPromise.promise, mainPromise]);
+  };
+
+    const createLifecycle = async (): Promise<void> => {
+      try {
+        await this.#isAliveAndConnected();
+      } catch (_: unknown) {
+        await this.#maybeClose();
+        await this.#launch();
+        await createLoginLifecycle().catch(createLifecycle);
+      }
+    };
+
+    await this.#waitForLifecycles();
+
+    const node = this.#lifecyclesInProgress.append(createLifecycle());
+    await node.value;
+
+    this.#lifecyclesInProgress.removeNode(node);
+
+    console.log('Lifecycle OK!');
   }
 
   async #isAliveAndConnected(): Promise<void> {
@@ -170,18 +192,31 @@ class Scrapper {
     console.log('Login successfully.');
   }
 
-  async launch(): Promise<void> {
+  async #launch(): Promise<void> {
     console.log('Launching Browser');
 
-    const { browser, page } = await Scrapper.createBrowser();
+    const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise(2000);
 
-    this.#browser = browser;
-    this.#mainLeetCodePage = page;
-    this.#waitForConnection.reset();
+    return Promise.all([
+      Scrapper.createBrowser(),
+      deferredTimeoutPromise,
+    ]).then(([{ browser, page }]) => {
+      this.#browser = browser;
+      this.#mainLeetCodePage = page;
+      this.#waitForConnection.reset();
+      deferredTimeoutPromise.resolve();
 
+      console.log('Browser launched successfully');
+    }).catch(() => {
+      console.log('Error launching Browser.');
+
+      return this.#launch();
+    });
+  }
+
+  async start(): Promise<void> {
+    await this.#launch();
     await this.#lifecycle();
-
-    console.log('Browser launched successfully');
   }
 
   public async close(callback?: () => void): Promise<void> {
