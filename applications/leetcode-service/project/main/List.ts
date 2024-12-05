@@ -24,7 +24,7 @@ class List<T> {
       this.tail = newNode;
     }
 
-    return newNode; 
+    return newNode;
   }
 
   removeNode(node: ListNode<T>): void {

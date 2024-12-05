@@ -16,13 +16,13 @@ describe('List', () => {
   test('stress test: removeTail in O(1) for 1000 elements', () => {
     const list = new List<number>();
     const nodes: ListNode<number>[] = [];
-  
+
     for (let i = 1; i <= 1000; i++) {
       nodes.push(list.append(i));
     }
 
     let j = 1000;
-    
+
     while (j >= 1) {
       const tail = list.getTail();
 
@@ -35,24 +35,23 @@ describe('List', () => {
     }
 
     expect(list.isEmpty()).toBe(true);
-
   });
   test('stress test: removeNode in O(1) for 1000 elements', () => {
     const list = new List<number>();
     const nodes: ListNode<number>[] = [];
-  
+
     for (let i = 1; i <= 1000; i++) {
       nodes.push(list.append(i));
     }
-  
+
     while (nodes.length > 2) {
       const middleIndex = Math.floor(nodes.length / 2);
       const middleNode = nodes[middleIndex];
-  
+
       list.removeNode(middleNode);
-  
+
       nodes.splice(middleIndex, 1);
-  
+
       if (middleIndex > 0) {
         expect(nodes[middleIndex - 1].next).toBe(nodes[middleIndex] || null);
       }
@@ -60,20 +59,20 @@ describe('List', () => {
         expect(nodes[middleIndex].prev).toBe(nodes[middleIndex - 1] || null);
       }
     }
-  
+
     const headNode = nodes[0];
     const tailNode = nodes[1];
-  
+
     list.removeNode(headNode);
     expect(list.getHead()).toBe(tailNode);
     expect(tailNode.prev).toBeNull();
-  
+
     list.removeNode(tailNode);
     expect(list.isEmpty()).toBe(true);
     expect(list.getHead()).toBeNull();
     expect(list.getTail()).toBeNull();
   });
-  
+
   test('isEmpty returns true for an empty list', () => {
     const list = new List<number>();
     expect(list.isEmpty()).toBe(true);

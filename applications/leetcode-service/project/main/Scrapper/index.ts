@@ -1,5 +1,6 @@
 import { connect } from 'puppeteer-real-browser';
 import type { Browser, Page } from 'rebrowser-puppeteer-core';
+
 import { List } from '../List';
 import { env } from '../env';
 
@@ -130,7 +131,7 @@ class Scrapper {
         });
 
       await Promise.all([deferredTimeoutPromise.promise, mainPromise]);
-  };
+    };
 
     const createLifecycle = async (): Promise<void> => {
       try {
@@ -208,21 +209,20 @@ class Scrapper {
 
     const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise(2000);
 
-    return Promise.all([
-      Scrapper.createBrowser(),
-      deferredTimeoutPromise,
-    ]).then(([{ browser, page }]) => {
-      this.#browser = browser;
-      this.#mainLeetCodePage = page;
-      this.#waitForConnection.reset();
-      deferredTimeoutPromise.resolve();
+    return Promise.all([Scrapper.createBrowser(), deferredTimeoutPromise])
+      .then(([{ browser, page }]) => {
+        this.#browser = browser;
+        this.#mainLeetCodePage = page;
+        this.#waitForConnection.reset();
+        deferredTimeoutPromise.resolve();
 
-      console.log('Browser launched successfully');
-    }).catch(() => {
-      console.log('Error launching Browser.');
+        console.log('Browser launched successfully');
+      })
+      .catch(() => {
+        console.log('Error launching Browser.');
 
-      return this.#launch();
-    });
+        return this.#launch();
+      });
   }
 
   async start(): Promise<void> {
