@@ -8,7 +8,7 @@ class Scrapper {
   #browser: Browser;
   #page: Page;
 
-  #waitForConnectionPromise: Promise<void>;
+  // #waitForConnectionPromise: Promise<void>;
   #resolveWaitForConnection: () => void;
   #rejectWaitForConnection: (error: Error) => void;
 
@@ -16,9 +16,9 @@ class Scrapper {
     this.#browser = browser;
     this.#page = page;
 
-    const { promise, resolve, reject } = Scrapper.createDeferredPromise();
+    const { /*promise, */resolve, reject } = Scrapper.createDeferredPromise();
 
-    this.#waitForConnectionPromise = promise;
+    // this.#waitForConnectionPromise = promise;
     this.#resolveWaitForConnection = resolve;
     this.#rejectWaitForConnection = reject;
   }
