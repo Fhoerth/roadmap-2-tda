@@ -44,6 +44,9 @@ RUN yarn set version berry
 RUN yarn plugin import https://raw.githubusercontent.com/mhassan1/yarn-plugin-after-install/v0.6.0/bundles/@yarnpkg/plugin-after-install.js
 RUN yarn install
 
+ENV UNAME=OVERRIDE_DEFAULT_UNAME
+ENV PWORD=OVERRIDE_DEFAULT_PWORD
+
 # Copy the rest of the application code
 COPY . .
 RUN yarn build
