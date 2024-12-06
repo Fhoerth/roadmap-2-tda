@@ -82,7 +82,7 @@ async function ensureLeetCodeLogin(browser: Browser) {
     );
 
     if (response) {
-      await response.text();
+      console.log('LOGIN TEXT', await response.text());
     }
 
     console.log('Looking for Loggin Button...');
