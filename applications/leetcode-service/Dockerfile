@@ -32,6 +32,8 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
+RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
+
 # Set up the working directory in the container
 WORKDIR /app
 
@@ -43,6 +45,7 @@ RUN npm install i
 
 ENV UNAME=OVERRIDE_DEFAULT_UNAME
 ENV PWORD=OVERRIDE_DEFAULT_PWORD
+ENV LCUNAME=OVERRIDE_DEFAULT_PWORD
 
 # Copy the rest of the application code
 COPY . .
