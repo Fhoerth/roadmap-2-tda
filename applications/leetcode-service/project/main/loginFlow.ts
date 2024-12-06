@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
-import puppeteer from 'puppeteer-core';
-import fs from 'fs';
 import path from 'path';
+import puppeteer, { Browser, Page } from 'puppeteer';
+
+// Add stealth plugin and use defaults (all tricks to hide puppeteer usage)
 
 dotenv.config();
 
@@ -10,26 +11,134 @@ console.log(htmlPath);
 
 const username = process.env.UNAME!;
 const password = process.env.PWORD!;
-const userAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36';
+const lcUsername = process.env.LCUNAME!;
 
-puppeteer.launch({ headless: true, executablePath: '/usr/bin/google-chrome', args: ['--no-sandbox', '--disable-setuid-sandbox'] }).then(async browser => {
-  const page = await browser.newPage()
-  await page.setViewport({ width: 800, height: 600 })
-  await page.setUserAgent(userAgent);
+async function createPage(browser: Browser) {
+  const page = await browser.newPage();
+  await page.setViewport({ width: 800, height: 600 });
+  await page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
+  );
+  return page;
+}
 
-  console.log('Going to github.com');
-  await page.goto('https://www.github.com/login', { waitUntil: 'networkidle2' });
+async function clickButton(page: Page, selector: string) {
+  return new Promise<void>(async (resolve, reject) => {
+    try {
+      const buttonExists = await page.evaluate((querySelector) => {
+        const button = document.querySelector(querySelector) as HTMLElement;
+        console.log('Submit button Found!', button);
 
-  await page.waitForSelector('input[name="login"]', { visible: true });
-  await page.waitForSelector('input[name="password"]', { visible: true });
+        if (button) {
+          button.click();
+          return true; // Indica que el botón fue encontrado y clicado
+        }
+
+        return false; // Indica que el botón no fue encontrado
+      }, selector);
+
+      if (buttonExists) {
+        resolve();
+      } else {
+        reject(new Error('Button not found.'));
+      }
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+async function checkIfUserIsLoggedIn(browser: Browser) {
+  console.log('Checking if user is logged in....');
+  const page = await createPage(browser);
+
+  try {
+    const response = await page.goto('https://leetcode.com/profile', {
+      waitUntil: 'networkidle2',
+    });
+
+    if (response) {
+      const text = await response.text();
+      console.log('Looking for username', lcUsername);
+      if (!text.includes(lcUsername)) {
+        throw new Error('Loggin Not Success.');
+      }
+    } else {
+      throw new Error('No response from /profile!');
+    }
+  } catch (error) {
+    await page.close();
+    throw error;
+  }
+}
+
+async function ensureLeetCodeLogin(browser: Browser) {
+  const page = await createPage(browser);
+
+  try {
+    const response = await page.goto(
+      'https://leetcode.com/accounts/github/login/?next=%2Fu%2Flogin%2F',
+      { waitUntil: 'networkidle2' },
+    );
+
+    if (response) {
+      await response.text();
+    }
+
+    console.log('Looking for Loggin Button...');
+    await clickButton(page, 'button[type="submit"]');
+    await page.waitForNavigation({ waitUntil: 'networkidle2' });
+
+    return checkIfUserIsLoggedIn(browser);
+  } catch {
+    console.log('Ensure Leet Code Login Failed, proably treated as a bot');
+    await page.close();
+    return ensureLeetCodeLogin(browser);
+  }
+}
+
+async function fetchSumission(browser: Browser, submissionId: string) {
+  console.log('Fetching Submission...');
+
+  const page = await createPage(browser);
+  const response = await page.goto(
+    `https://leetcode.com/submissions/detail/${submissionId}/`,
+    { waitUntil: 'networkidle2' },
+  );
+
+  if (response) {
+    const text = await response.text();
+    console.log(text);
+  }
+}
+
+async function main() {
+  const browser = await puppeteer.launch({
+    headless: true,
+    executablePath: '/usr/bin/google-chrome',
+    args: ['--no-sandbox', '--disable-setuid-sandbox'],
+  });
+  const githubLoginPage = await createPage(browser);
+  await githubLoginPage.goto('https://www.github.com/login');
+
+  await githubLoginPage.waitForSelector('input[name="login"]', {
+    visible: true,
+  });
+  await githubLoginPage.waitForSelector('input[name="password"]', {
+    visible: true,
+  });
 
   console.log('Filling inputs...');
-  await page.type('input[name="login"]', username, { delay: 200 });
-  await page.type('input[name="password"]', password, { delay: 200 });
+  await githubLoginPage.type('input[name="login"]', username, { delay: 200 });
+  await githubLoginPage.type('input[name="password"]', password, {
+    delay: 200,
+  });
 
   console.log('Clicking submit.');
-  await page.evaluate(() => {
-    const button = document.querySelector('input[type="submit"]') as HTMLElement;
+  await githubLoginPage.evaluate(() => {
+    const button = document.querySelector(
+      'input[type="submit"]',
+    ) as HTMLElement;
 
     if (button) {
       button.click();
@@ -39,45 +148,14 @@ puppeteer.launch({ headless: true, executablePath: '/usr/bin/google-chrome', arg
   });
 
   console.log('Waiting for navigation.');
-  await page.waitForNavigation();
+  await githubLoginPage.waitForNavigation();
+  console.log('Done!');
 
-  const newPage = await browser.newPage();
-  await newPage.setViewport({ width: 800, height: 600 })
-  await newPage.setUserAgent(userAgent);
+  console.log('Initializing LeetCode Login Process...');
+  await ensureLeetCodeLogin(browser);
 
-  console.log('Navigating to leetcode login.');
-  const loginResponse = await newPage.goto('https://leetcode.com/accounts/github/login/?next=%2Fu%2Flogin%2F', { waitUntil: 'networkidle2' });
+  await fetchSumission(browser, '1469695308');
+  console.log('Finished!');
+}
 
-  if (loginResponse) {
-    const text = await loginResponse.text();
-    console.log(text);
-  }
-
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  await newPage.evaluate(() => {
-    const button = document.querySelector('button[type="submit"]') as HTMLElement;
-
-    if (button) {
-      button.click();
-    } else {
-      throw new Error('Continue button not found.');
-    }
-  });
-
-  console.log('Fetching submission.');
-  const thirdPage = await browser.newPage();
-  await thirdPage.setViewport({ width: 800, height: 600 })
-  await thirdPage.setUserAgent(userAgent);
-  await thirdPage.waitForNetworkIdle({ idleTime: 2000 });
-
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
-  const response = await thirdPage.goto('https://leetcode.com/submissions/detail/1469695308/', {waitUntil: 'networkidle2'});
-  
-  if (response) {
-    const text = await response.text();
-    fs.writeFileSync(htmlPath, text);
-    console.log(text);
-  }
-});
+void main();
