@@ -29,9 +29,15 @@ class Scrapper {
   }
 
   static async createBrowser(): Promise<{ browser: Browser; page: Page }> {
+    console.log('STARTING CREATE BROWSER');
+
     const { browser, page } = await connect({
-      headless: false,
+      headless: true,
+      turnstile: true,
+      disableXvfb: true,
     });
+
+    console.log('STARTING CREATE BROWSER OK!');
 
     return { browser, page };
   }
@@ -122,6 +128,7 @@ class Scrapper {
     console.log('Lifecycle');
 
     const createLoginLifecycle = async (): Promise<void> => {
+      // bug aca esto debereia estar abajo?
       const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise();
       const mainPromise = Promise.resolve()
         .then(() => this.#performLogin())
@@ -205,9 +212,9 @@ class Scrapper {
   }
 
   async #launch(): Promise<void> {
-    console.log('Launching Browser');
+    console.log('Launching Browser!!!');
 
-    const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise(2000);
+    const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise(15000);
 
     return Promise.all([Scrapper.createBrowser(), deferredTimeoutPromise])
       .then(([{ browser, page }]) => {
@@ -218,11 +225,31 @@ class Scrapper {
 
         console.log('Browser launched successfully');
       })
-      .catch(() => {
-        console.log('Error launching Browser.');
+      .catch((error) => {
+        console.log('Error launching Browser.', error);
 
         return this.#launch();
       });
+  }
+
+  async scrapSubmission(): Promise<string> {
+    await this.#lifecycle();
+
+    const id = '1469695308';
+    const newPage = await this.#getBrowser().newPage();
+    const response = await newPage.goto(`http://leetcode.com/submissions/detail/${id}/`);
+    await new Promise<void>((resolve) => {
+      setTimeout(() => resolve(), 3000);
+    })
+    if (!response) {
+      throw new Error(`No response for submission id: ${id}`);
+    }
+
+    const html = await response.text();
+
+    await newPage.close();
+
+    return html;
   }
 
   async start(): Promise<void> {

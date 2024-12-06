@@ -22,6 +22,9 @@ async function main() {
   });
 
   await scrapper.start();
+  const submission = await scrapper.scrapSubmission();
+
+  console.log('SUBMISSION', submission);
 }
 
 void main();
