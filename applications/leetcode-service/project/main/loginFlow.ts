@@ -19,6 +19,7 @@ async function createPage(browser: Browser) {
   await page.setUserAgent(
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
   );
+  await page.setJavaScriptEnabled(true);
   return page;
 }
 
@@ -82,7 +83,13 @@ async function ensureLeetCodeLogin(browser: Browser) {
     );
 
     if (response) {
-      console.log('LOGIN TEXT', await response.text());
+      const text = await response.text();
+
+      if (text.includes('Just a moment...')) {
+        console.log('Waiting just a moment');
+
+        await page.waitForNavigation({ waitUntil: 'domcontentloaded' });
+      }
     }
 
     console.log('Looking for Loggin Button...');
