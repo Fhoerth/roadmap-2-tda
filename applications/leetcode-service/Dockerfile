@@ -64,11 +64,11 @@ RUN npm run build
 RUN mkdir -p ${LEETCODE_SERVICE_COOKIE_DIR}
 RUN mkdir -p ${LEETCODE_SERVICE_MOCK_DIR}
 
-COPY test-browser.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
-
 # Expose the port your app runs on
 EXPOSE ${PORT}
 
-# Command to run the application
-CMD ["npm", "run", "start"]
+# Entrada condicional para ejecutar con o sin Xvfb
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+CMD ["/usr/local/bin/entrypoint.sh"]

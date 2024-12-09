@@ -172,12 +172,16 @@ async function main() {
   });
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     executablePath: '/usr/bin/google-chrome',
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--disable-blink-features=AutomationControlled',
+      '--disable-accelerated-2d-canvas',
+      '--disable-gpu',
+      '--single-process',
+      '--no-zygote',
       '--start-maximized',
     ],
   });
