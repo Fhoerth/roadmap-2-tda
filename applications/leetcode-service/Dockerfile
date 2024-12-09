@@ -45,7 +45,7 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    && npm install -g yarn \
+    && npm install -g pnpm \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
@@ -53,17 +53,13 @@ RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
 WORKDIR /leetcode-service
 
 # Copy package.json and package-lock.json to the working directory
-COPY package.json yarn.lock ./
+COPY package.json pnpm-lock.yaml ./
 
-RUN npm install -g --force yarn
-RUN corepack enable
-RUN yarn set version berry
-RUN yarn plugin import https://raw.githubusercontent.com/mhassan1/yarn-plugin-after-install/v0.6.0/bundles/@yarnpkg/plugin-after-install.js
-RUN yarn install
+RUN pnpm i
 
 # Copy the rest of the application code
 COPY . .
-RUN yarn build
+RUN npm run build
 
 RUN mkdir -p ${LEETCODE_SERVICE_COOKIE_DIR}
 RUN mkdir -p ${LEETCODE_SERVICE_MOCK_DIR}

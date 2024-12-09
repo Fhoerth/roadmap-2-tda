@@ -172,7 +172,7 @@ async function main() {
   });
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     executablePath: '/usr/bin/google-chrome',
     args: [
       '--no-sandbox',
