@@ -1,0 +1,50 @@
+# Usar la imagen oficial de Selenium con Chrome y Firefox
+FROM selenium/standalone-firefox
+
+# Establecer las variables de entorno
+ENV DISPLAY=host.docker.internal:0
+ENV LEETCODE_SERVICE_COOKIE_DIR=/usr/cookies
+ENV LEETCODE_USERNAME=OVERRIDE_DEFAULT_LEETCODE_USERNAME
+ENV LEETCODE_PASSWORD=OVERRIDE_DEFAULT_LEETCODE_PASSWORD
+ENV PORT=9994
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+
+RUN sudo mkdir -p /var/lib/apt/lists/partial && sudo chmod -R 777 /var/lib/apt/lists/partial && apt-get update
+
+# Instalar Node.js, Yarn y dependencias adicionales para el servicio
+RUN apt-get update && apt-get install -y \
+    curl \
+    gnupg \
+    xvfb \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install -g yarn \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crear el directorio de cookies
+RUN mkdir -p ${LEETCODE_SERVICE_COOKIE_DIR}
+
+# Establecer el directorio de trabajo
+WORKDIR /leetcode-service
+
+# Copy package.json and package-lock.json to the working directory
+COPY package.json yarn.lock ./
+
+RUN npm install -g --force yarn
+RUN corepack enable
+RUN yarn set version berry
+RUN yarn plugin import https://raw.githubusercontent.com/mhassan1/yarn-plugin-after-install/v0.6.0/bundles/@yarnpkg/plugin-after-install.js
+RUN yarn install
+
+# Copy the rest of the application code
+COPY . .
+RUN yarn build
+
+RUN mkdir -p ${LEETCODE_SERVICE_COOKIE_DIR}
+
+# Expose the port your app runs on
+EXPOSE ${PORT}
+
+# Command to run the application
+CMD ["npm", "run", "start"]

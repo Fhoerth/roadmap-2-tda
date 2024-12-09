@@ -4,12 +4,8 @@ FROM debian:bullseye-slim
 ENV DISPLAY=host.docker.internal:0
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 ENV LEETCODE_SERVICE_COOKIE_DIR=/usr/cookies
-ENV LEETCODE_SERVICE_MOCK_DIR=/usr/mocks
 ENV LEETCODE_USERNAME=OVERRIDE_DEFAULT_LEETCODE_USERNAME
-ENV GITHUB_USERNAME=OVERRIDE_DEFAULT_GITHUB_USERNAME
-ENV GITHUB_PASSWORD=OVERRIDE_DEFAULT_GITHUB_PASSWORD
-ENV GITHUB_TOPT_SECRET=OVERRIDE_DEFAULT_GITHUB_TOPT_SECRET
-ENV GITHUB_PROFILE_NAME=OVERRIDE_DEFAULT_GITHUB_PROFILE_NAME
+ENV LEETCODE_PASSWORD=OVERRIDE_DEFAULT_LEETCODE_PASSWORD
 ENV PORT=9994
 
 # Configuración inicial e instalación de dependencias
@@ -38,6 +34,16 @@ RUN apt-get update && apt-get install -y \
 RUN ln -s /usr/bin/chromium /usr/bin/google-chrome \
     && ln -s /usr/bin/chromium /usr/bin/google-chrome-stable
 
+# Descargar y extraer Firefox desde el sitio oficial de Mozilla
+RUN wget -O firefox.tar.bz2 "https://download.mozilla.org/?product=firefox-latest&os=linux64&lang=en-US" \
+    && tar -xjf firefox.tar.bz2 -C /opt/ \
+    && rm firefox.tar.bz2 \
+    && ln -s /opt/firefox/firefox /usr/bin/google-chrome
+
+# Verificar la instalación
+RUN google-chrome --version
+RUN /usr/bin/google-chrome --version
+
 # Configuración adicional (Node.js, Yarn, etc.)
 RUN apt-get update && apt-get install -y \
     curl \
@@ -47,6 +53,7 @@ RUN apt-get update && apt-get install -y \
     && apt-get install -y nodejs \
     && npm install -g yarn \
     && rm -rf /var/lib/apt/lists/*
+
 
 RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
 # Set up the working directory in the container
@@ -66,10 +73,6 @@ COPY . .
 RUN yarn build
 
 RUN mkdir -p ${LEETCODE_SERVICE_COOKIE_DIR}
-RUN mkdir -p ${LEETCODE_SERVICE_MOCK_DIR}
-
-COPY test-browser.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Expose the port your app runs on
 EXPOSE ${PORT}

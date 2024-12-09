@@ -1,84 +1,113 @@
 version: "3.9"
 
 services:
-  vite-dev:
+  leetcode-service:
     build:
-      context: ./applications/frontend
-      dockerfile: Dockerfile.dev
-    container_name: vite-dev
-    environment:
-      PORT: ${FRONTEND_PORT}
-      VITE_BACKEND_URL: ${VITE_BACKEND_URL}
-    env_file:
-      - ./.env
-    ports:
-      - "${FRONTEND_PORT}:${FRONTEND_PORT}"
-    volumes:
-      - ./applications/frontend:/frontend
-    command: sh -c "yarn install && yarn dev --host 0.0.0.0"
-
-  backend-dev:
-    build:
-      context: ./applications/backend
-      dockerfile: Dockerfile.dev
-    container_name: dev_backend
-    env_file:
-      - ./.env
-    environment:
-      PORT: $BACKEND_PORT
-      MONGO_DB: ${MONGO_DB}
-      MONGO_DB_USER: ${MONGO_DB_USER}
-      MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
-      MONGO_DB_URL: ${MONGO_DB_URL}
-      FRONTEND_URL: ${FRONTEND_URL}
-      BACKEND_MASTER_KEY: ${BACKEND_MASTER_KEY}
-      BACKEND_AUTH_REGISTRATION_KEY: ${BACKEND_AUTH_REGISTRATION_KEY}
-      JAVA_OPTS: -Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enabled=true
-      SPRING_PROFILES_ACTIVE: dev
-    ports:
-      - "$BACKEND_PORT:$BACKEND_PORT"
-    depends_on:
-      mongodb:
-        condition: service_healthy
-    networks:
-      - dev_network
-    volumes:
-      - ./applications/backend/src:/backend/src
-      - ./applications/backend/.mvn/.m2:/root/.m2
-    command: ./reload.sh
-
-  mongodb:
-    build:
-      context: ./applications/mongodb
+      context: ./applications/leetcode-service
       dockerfile: Dockerfile
-    container_name: mongodb
-    ports:
-      - "${MONGO_DB_PORT}:${MONGO_DB_PORT}"
+    container_name: leetcode-service
     environment:
-      PORT: ${MONGO_DB_PORT}
-      MONGO_INITDB_DATABASE: ${MONGO_DB}
-      MONGO_DB: ${MONGO_DB}
-      MONGO_DB_USER: ${MONGO_DB_USER}
-      MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_PASSWORD}
-    networks:
-      - dev_network
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "mongosh",
-          "--host",
-          "127.0.0.1",
-          "--port",
-          "${MONGO_DB_PORT}",
-          "--eval",
-          "db.adminCommand('ping')",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+      DISPLAY: host.docker.internal:0
+      PORT: ${LEETCODE_SERVICE_PORT}
+      LEETCODE_SERVICE_COOKIE_DIR: ${LEETCODE_SERVICE_COOKIE_DIR}
+      LEETCODE_SERVICE_MOCK_DIR: ${LEETCODE_SERVICE_MOCK_DIR}
+      LEETCODE_USERNAME: ${LEETCODE_USERNAME}
+      GITHUB_USERNAME: ${GITHUB_USERNAME}
+      GITHUB_PASSWORD: ${GITHUB_PASSWORD}
+      GITHUB_PROFILE_NAME: ${GITHUB_PROFILE_NAME}
+      GITHUB_TOPT_SECRET: ${GITHUB_TOPT_SECRET}
+    env_file:
+      - ./.env
+    ports:
+      - ${LEETCODE_SERVICE_PORT}:${LEETCODE_SERVICE_PORT}
+    cap_add:
+      - SYS_ADMIN
+    shm_size: '1g'
+    volumes:
+      - ./applications/leetcode-service/.yarn:/leetcode-service/.yarn
+      - ./applications/leetcode-service/project:/leetcode-service/project
+      - ./applications/leetcode-service/node_modules:/leetcode-service/node_modules
+      - ./applications/leetcode-service/cookies:${LEETCODE_SERVICE_COOKIE_DIR}
+      - ./applications/leetcode-service/mocks:${LEETCODE_SERVICE_MOCK_DIR}
+
+  # vite-dev:
+  #   build:
+  #     context: ./applications/frontend
+  #     dockerfile: Dockerfile.dev
+  #   container_name: vite-dev
+  #   environment:
+  #     PORT: ${FRONTEND_PORT}
+  #     VITE_BACKEND_URL: ${VITE_BACKEND_URL}
+  #   env_file:
+  #     - ./.env
+  #   ports:
+  #     - "${FRONTEND_PORT}:${FRONTEND_PORT}"
+  #   volumes:
+  #     - ./applications/frontend:/frontend
+  #   command: sh -c "yarn install && yarn dev --host 0.0.0.0"
+
+  # backend-dev:
+  #   build:
+  #     context: ./applications/backend
+  #     dockerfile: Dockerfile.dev
+  #   container_name: dev_backend
+  #   env_file:
+  #     - ./.env
+  #   environment:
+  #     PORT: $BACKEND_PORT
+  #     MONGO_DB: ${MONGO_DB}
+  #     MONGO_DB_USER: ${MONGO_DB_USER}
+  #     MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
+  #     MONGO_DB_URL: ${MONGO_DB_URL}
+  #     FRONTEND_URL: ${FRONTEND_URL}
+  #     BACKEND_MASTER_KEY: ${BACKEND_MASTER_KEY}
+  #     BACKEND_AUTH_REGISTRATION_KEY: ${BACKEND_AUTH_REGISTRATION_KEY}
+  #     JAVA_OPTS: -Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enabled=true
+  #     SPRING_PROFILES_ACTIVE: dev
+  #   ports:
+  #     - "$BACKEND_PORT:$BACKEND_PORT"
+  #   depends_on:
+  #     mongodb:
+  #       condition: service_healthy
+  #   networks:
+  #     - dev_network
+  #   volumes:
+  #     - ./applications/backend/src:/backend/src
+  #     - ./applications/backend/.mvn/.m2:/root/.m2
+  #   command: ./reload.sh
+
+  # mongodb:
+  #   build:
+  #     context: ./applications/mongodb
+  #     dockerfile: Dockerfile
+  #   container_name: mongodb
+  #   ports:
+  #     - "${MONGO_DB_PORT}:${MONGO_DB_PORT}"
+  #   environment:
+  #     PORT: ${MONGO_DB_PORT}
+  #     MONGO_INITDB_DATABASE: ${MONGO_DB}
+  #     MONGO_DB: ${MONGO_DB}
+  #     MONGO_DB_USER: ${MONGO_DB_USER}
+  #     MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
+  #     MONGO_INITDB_ROOT_USERNAME: ${MONGO_DB_USER}
+  #     MONGO_INITDB_ROOT_PASSWORD: ${MONGO_DB_PASSWORD}
+  #   networks:
+  #     - dev_network
+  #   healthcheck:
+  #     test:
+  #       [
+  #         "CMD",
+  #         "mongosh",
+  #         "--host",
+  #         "127.0.0.1",
+  #         "--port",
+  #         "${MONGO_DB_PORT}",
+  #         "--eval",
+  #         "db.adminCommand('ping')",
+  #       ]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
 networks:
   dev_network:
