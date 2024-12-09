@@ -1,7 +1,7 @@
 # Usar una imagen base de Debian
 FROM debian:bullseye-slim
 
-ENV DISPLAY=host.docker.internal:0
+ENV DISPLAY=:99
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 ENV LEETCODE_SERVICE_COOKIE_DIR=/usr/cookies
 ENV LEETCODE_SERVICE_MOCK_DIR=/usr/mocks
@@ -42,7 +42,6 @@ RUN ln -s /usr/bin/chromium /usr/bin/google-chrome \
 RUN apt-get update && apt-get install -y \
     curl \
     gnupg \
-    xvfb \
     && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g pnpm \

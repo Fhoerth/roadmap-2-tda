@@ -176,6 +176,7 @@ async function main() {
     executablePath: '/usr/bin/google-chrome',
     args: [
       '--no-sandbox',
+      '--disable-dev-shm-usage',
       '--disable-setuid-sandbox',
       '--disable-blink-features=AutomationControlled',
       '--disable-accelerated-2d-canvas',
