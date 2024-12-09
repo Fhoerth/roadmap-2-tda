@@ -13,7 +13,7 @@ import { saveHtmlToFile } from './mocks';
 import { server } from './server';
 
 const OK = 0;
-
+console.log(getTotpCode());
 async function createPage(browser: Browser): Promise<Page> {
   const page = await browser.newPage();
   await page.setViewport({ width: 1280, height: 720 });
@@ -150,6 +150,7 @@ async function loginToGithub(context: BrowserContext, githubLoginPage: Page): Pr
   console.log('Done!');
   await saveCookies(context);
   await saveHtmlToFile(githubLoginPage);
+  await githubLoginPage.goto('https://www.github.com/');
 }
 
 async function loginToLeetCode(context: BrowserContext, leetCodePage: Page): Promise<void> {
