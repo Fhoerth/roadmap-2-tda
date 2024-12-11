@@ -25,11 +25,21 @@ class CookieService {
 
     try {
       const cookies = await context.cookies();
+      const stringifiedCookies = JSON.stringify(cookies, null, 2);
+      const parsedCookies: Record<string, Record<string, unknown>> = JSON.parse(stringifiedCookies);
+
+      // Remove partition keys since it has trouble while loading
+      // cookies into browser.
+      for (const [key] of Object.entries(parsedCookies)) {
+        if ('partitionKey' in parsedCookies[key]) {
+          delete parsedCookies[key].partitionKey;
+        }
+      }
 
       await mkdirp(this.#cookieDir);
       await fs.writeFile(
         this.#cookieFile,
-        JSON.stringify(cookies, null, 2),
+        JSON.stringify(parsedCookies, null, 2),
         'utf-8',
       );
     } catch (error) {
