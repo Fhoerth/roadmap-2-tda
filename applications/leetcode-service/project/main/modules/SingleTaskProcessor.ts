@@ -1,26 +1,34 @@
 import { DeferredPromise } from './DeferredPromise';
 import { Queue } from './Queue';
 
-type TaskProcessor<T> = {
-  solve: () => Promise<T>;
-};
-
 class Task<T> {
-  readonly #taskProcessor: TaskProcessor<T>;
-  readonly #waitToBeResolved: DeferredPromise<T>;
+  readonly #solve: () => Promise<T>;
+  readonly #deferredPromise: DeferredPromise<T>;
 
-  constructor(taskProcessor: TaskProcessor<T>) {
-    this.#taskProcessor = taskProcessor;
-    this.#waitToBeResolved = new DeferredPromise<T>();
+  constructor(solve: () => Promise<T>, deferredPromise: DeferredPromise<T>) {
+    this.#solve = solve;
+    this.#deferredPromise = deferredPromise;
   }
 
   public async solve(): Promise<void> {
-    const taskResult = await this.#taskProcessor.solve();
-    this.#waitToBeResolved.resolve(taskResult);
+    try {
+      const taskResult = await this.#solve();
+      this.#deferredPromise.resolve(taskResult);
+    } catch (error) {
+      if (error instanceof Error) {
+        this.reject(error);
+      } else {
+        this.reject(new Error('Task has been rejected'));
+      }
+    }
   }
 
-  public async waitToBeResolved(): Promise<T> {
-    return this.#waitToBeResolved.waitForPromise();
+  public async waitForPromise(): Promise<T> {
+    return this.#deferredPromise.waitForPromise();
+  }
+
+  public reject(error: Error): void {
+    return this.#deferredPromise.reject(error);
   }
 }
 
@@ -79,11 +87,14 @@ class SingleTaskProcessor<T> {
       });
   }
 
-  public enqueueTask(task: Task<T>): Promise<T> {
+  public enqueueTask(solve: () => Promise<T>): DeferredPromise<T> {
+    const deferredPromise = new DeferredPromise<T>();
+    const task = new Task<T>(solve, deferredPromise);
+
     this.#queue.enqueue(task);
     this.#processTasks();
 
-    return task.waitToBeResolved();
+    return deferredPromise;
   }
 
   public isEmpty(): boolean {
@@ -91,5 +102,4 @@ class SingleTaskProcessor<T> {
   }
 }
 
-export { Task };
 export { SingleTaskProcessor };
