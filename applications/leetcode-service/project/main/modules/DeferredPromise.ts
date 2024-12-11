@@ -17,6 +17,7 @@ class DeferredPromise<T> {
   public resolve: Resolve<T>;
   public reject: (error: Error) => void;
   public reset: () => void;
+  public safeReset: () => void;
   public clear: () => void;
   public status: Status;
 
@@ -30,6 +31,9 @@ class DeferredPromise<T> {
     this.reset = (): void => {
       this.reject(this.#resetError);
     };
+    this.safeReset = (): void => {
+      this.reject(this.#resetError);
+    }
     this.clear = (): void => {
       this.reject(this.#clearError);
     };
@@ -61,6 +65,12 @@ class DeferredPromise<T> {
         }
 
         rejectPromise(error);
+      };
+
+      this.safeReset = (): void => {
+        if (this.status !== Status.PENDING) {
+          this.#promise = this.#createPromise();
+        }
       };
 
       this.reset = (): void => {
