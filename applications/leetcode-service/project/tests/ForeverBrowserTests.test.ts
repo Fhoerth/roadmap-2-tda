@@ -1,4 +1,5 @@
 import { ForeverBrowser } from '../main/modules/ForeverBrowser';
+import { failingVoidPromise } from './utils/failingVoidPromise';
 
 // import { waitForChromeToLaunch } from './utils/waitForChromeToLaunch';
 // import { killProcess } from './utils/killProcess';
@@ -7,7 +8,7 @@ import { ForeverBrowser } from '../main/modules/ForeverBrowser';
 jest.setTimeout(30000);
 
 describe('ForeverBrowser', () => {
-  it.only('works', async () => {
+  it('relaunches browser when is closed', async () => {
     let timesBrowserHasBeenOpened = 0;
 
     const n = 5;
@@ -38,15 +39,15 @@ describe('ForeverBrowser', () => {
       setTimeout(resolve, (n + 1) * timeToLaunchBrowser),
     );
 
-    expect(timesBrowserHasBeenOpened).toBe(n);
+    expect(timesBrowserHasBeenOpened).toBe(n + 1);
 
-    browser.clearOnRelaunchCallback();
+    browser.clearOnLaunchCallback();
     await browser.halt();
 
     console.log('Done!');
   });
 
-  it.only('waitForBrowserToBeOpen works after calling multiple times `close()`', async () => {
+  it('waitForBrowserToBeOpen works after calling multiple times `close()`', async () => {
     const browser = new ForeverBrowser();
 
     browser.launchForever();
@@ -79,6 +80,17 @@ describe('ForeverBrowser', () => {
         resolve();
       }, 500);
     });
+  });
+
+  it('keeps trying to execute launchCallback until it resolves', async () => {
+    const foreverBrowser = new ForeverBrowser();
+
+    foreverBrowser.launchForever(failingVoidPromise(5));
+
+    const browser = await foreverBrowser.waitForBrowserToBeOpen();
+    await browser.newPage();
+
+    await foreverBrowser.halt();
   });
 
   // it.only('closes and opens browser 5 times', async () => {

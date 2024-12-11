@@ -5,39 +5,53 @@ import { DeferredPromise } from './DeferredPromise';
 
 class ForeverBrowser {
   #halt: boolean;
-  #waitForBrowserToBeOpen: DeferredPromise<Browser>;
   #launchingBrowser: boolean;
+  #launchingBrowserForFirstTime: boolean;
   #browser: Browser | null;
-  #onRelaunchCallback: (() => void) | null;
+  #waitForBrowserToBeOpen: DeferredPromise<Browser>;
+  #onLaunchCallback: (() => Promise<void>) | null;
   #onDisconnectedCallback: (() => Promise<void>) | null;
 
   constructor() {
     this.#halt = false;
-    this.#waitForBrowserToBeOpen = new DeferredPromise<Browser>();
     this.#launchingBrowser = false;
+    this.#launchingBrowserForFirstTime = true;
     this.#browser = null;
-    this.#onRelaunchCallback = null;
+    this.#waitForBrowserToBeOpen = new DeferredPromise<Browser>();
+    this.#onLaunchCallback = null;
     this.#onDisconnectedCallback = null;
   }
 
+  async #runOnLaunchCallback(): Promise<void> {
+    console.log('#runOnLaunchCallback');
+
+    if (this.#onLaunchCallback) {
+      try {
+        await this.#onLaunchCallback();
+      } catch (error) {
+        return this.#runOnLaunchCallback();
+      }
+    }
+  }
+
   async #launchForeverRecursive(
-    onRelaunchCallback?: () => void,
+    onLaunchCallback?: () => Promise<void>,
   ): Promise<void> {
     if (this.#halt) {
       throw new Error('Halt');
     }
 
     try {
-      this.#onRelaunchCallback = onRelaunchCallback || null;
+      this.#onLaunchCallback = onLaunchCallback || null;
 
+      // @todo: Change function.
       const launch = async (): Promise<void> => {
-        if (this.#launchingBrowser) {
-          this.#waitForBrowserToBeOpen.waitForPromise();
+        if (!this.#launchingBrowserForFirstTime && this.#launchingBrowser) {
+          await this.#waitForBrowserToBeOpen.waitForPromise();
           this.#waitForBrowserToBeOpen.reset();
-          this.#launchingBrowser = true;
         }
 
-        if (this.#browser && this.#onDisconnectedCallback) {
+        if (!this.#launchingBrowserForFirstTime && this.#browser && this.#onDisconnectedCallback) {
           this.#browser.off('disconnected', this.#onDisconnectedCallback);
         }
 
@@ -48,13 +62,17 @@ class ForeverBrowser {
           args: ['--no-sandbox'],
         });
 
-        this.#launchingBrowser = false;
         this.#browser = browser;
+
+        if (this.#launchingBrowserForFirstTime) {
+          this.#launchingBrowserForFirstTime = false;
+          await this.#runOnLaunchCallback();
+        }
 
         this.#onDisconnectedCallback = async () => {
           this.#waitForBrowserToBeOpen.reset();
           await launch();
-          this.#onRelaunchCallback?.();
+          await this.#runOnLaunchCallback();
         };
         this.#browser.on('disconnected', this.#onDisconnectedCallback);
 
@@ -63,7 +81,7 @@ class ForeverBrowser {
 
       await launch();
     } catch (_) {
-      return this.#launchForeverRecursive(onRelaunchCallback);
+      return this.#launchForeverRecursive(onLaunchCallback);
     }
   }
 
@@ -75,16 +93,16 @@ class ForeverBrowser {
     return this.#browser;
   }
 
-  public clearOnRelaunchCallback(): void {
-    this.#onRelaunchCallback = null;
+  public clearOnLaunchCallback(): void {
+    this.#onLaunchCallback = null;
   }
 
   public waitForBrowserToBeOpen(): Promise<Browser> {
     return this.#waitForBrowserToBeOpen.waitForPromise();
   }
 
-  public launchForever(onRelaunchCallback?: () => void): void {
-    void this.#launchForeverRecursive(onRelaunchCallback);
+  public launchForever(onLaunchCallback?: () => Promise<void>): void {
+    void this.#launchForeverRecursive(onLaunchCallback);
   }
 
   public async halt(): Promise<void> {
