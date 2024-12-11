@@ -14,6 +14,7 @@ import type { Statistics } from './utils/extractStatistics';
 type SubmissionId = string;
 type Submission = Statistics & {
   code: string;
+  slug: string;
 };
 
 class Scrapper {
@@ -133,6 +134,7 @@ class Scrapper {
       const statistics = await extractStatistics(submissionId, statisticsPage);
       const submission = {
         ...statistics,
+        slug,
         code: sourceCode,
       };
 
@@ -184,4 +186,6 @@ class Scrapper {
   }
 }
 
-export { Scrapper };
+const scrapper = new Scrapper();
+
+export { scrapper };

@@ -1,4 +1,5 @@
 import { getUserProfile } from './queries/getUserProfile';
+import { getACSubmissions } from './queries/getACSubmissions';
 
 class GraphQLClient {
   #BASE_URL = 'https://leetcode.com/graphql';
@@ -26,7 +27,7 @@ class GraphQLClient {
   }
 }
 
-const queries = { getUserProfile };
+const queries = { getUserProfile, getACSubmissions };
 
 export { queries };
 export { GraphQLClient };

@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { router } from './routes';
+import { router } from './router';
 
 const PORT = process.env.PORT || 3000;
 
