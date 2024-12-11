@@ -1,5 +1,5 @@
-import { getUserProfile } from './queries/getUserProfile';
 import { getACSubmissions } from './queries/getACSubmissions';
+import { getUserProfile } from './queries/getUserProfile';
 
 class GraphQLClient {
   #BASE_URL = 'https://leetcode.com/graphql';

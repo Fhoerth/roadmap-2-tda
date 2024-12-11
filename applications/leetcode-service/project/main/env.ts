@@ -5,6 +5,7 @@ import { assert } from '../common/utils/assert';
 
 dotenv.config();
 
+const PORT = assert(process.env.PORT);
 const LEETCODE_SERVICE_COOKIE_DIR = assert(
   process.env.LEETCODE_SERVICE_COOKIE_DIR,
 );
@@ -20,7 +21,7 @@ const GITHUB_PROFILE_NAME = assert(process.env.GITHUB_PROFILE_NAME);
 const DISPLAY = assert(process.env.DISPLAY);
 
 const env = {
-  PORT: process.env.PORT || 6778,
+  PORT,
   LEETCODE_SERVICE_COOKIE_DIR,
   LEETCODE_SERVICE_VIDEO_DIR,
   LEETCODE_SERVICE_MOCK_DIR,

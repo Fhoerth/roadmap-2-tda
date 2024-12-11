@@ -3,7 +3,6 @@ import { CookieService } from '../CookieService';
 import { DeferredPromise } from '../DeferredPromise';
 import { ForeverBrowser } from '../ForeverBrowser';
 import { LoginService } from './LoginService';
-// import { changeToDarkTheme } from './utils/changeToDarkTheme';
 import { extractSlug } from './utils/extractSlugs';
 import { extractSourceCode } from './utils/extractSourceCode';
 // import { DeferredTimeoutPromise } from '../DeferredTimeoutPromise';

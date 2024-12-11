@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { GraphQLClient, queries } from './leetcode/GraphQLClient';
 import { scrapper } from './modules/Scrapper';
+
 const router = Router();
 const graphQLClient = new GraphQLClient();
 
