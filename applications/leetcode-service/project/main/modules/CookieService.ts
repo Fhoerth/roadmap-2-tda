@@ -26,7 +26,9 @@ class CookieService {
     try {
       const cookies = await context.cookies();
       const stringifiedCookies = JSON.stringify(cookies, null, 2);
-      const parsedCookies: Record<string, Record<string, unknown>> = JSON.parse(stringifiedCookies);
+      const parsedCookies: Record<string, Record<string, unknown>> = JSON.parse(
+        stringifiedCookies,
+      );
 
       // Remove partition keys since it has trouble while loading
       // cookies into browser.

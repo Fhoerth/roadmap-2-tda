@@ -1,9 +1,9 @@
 function extractSlug(content: string): string {
   const slugRegex = /\/problems\/([\w-]+)\//g;
-  
+
   let slug: string = '';
   let match: RegExpExecArray | null;
-  
+
   while ((match = slugRegex.exec(content)) !== null) {
     if (!slug) {
       slug = match[1].trim().toLowerCase();

@@ -61,6 +61,10 @@ class ForeverBrowser {
         }
 
         const { browser } = await connect({
+          // customConfig: {
+          //   userDataDir: '',
+          //   pipe:
+          // },
           turnstile: true,
           disableXvfb: true,
           headless: false,

@@ -3,6 +3,7 @@ FROM debian:bullseye-slim
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
 ENV LEETCODE_SERVICE_COOKIE_DIR=/usr/cookies
+ENV LEETCODE_SERVICE_VIDEO_DIR=/usr/videos
 ENV LEETCODE_SERVICE_MOCK_DIR=/usr/mocks
 ENV LEETCODE_PROFILE_NAME=OVERRIDE_DEFAULT_LEETCODE_PROFILE_NAME
 ENV GITHUB_USERNAME=OVERRIDE_DEFAULT_GITHUB_USERNAME
@@ -12,22 +13,28 @@ ENV GITHUB_PROFILE_NAME=OVERRIDE_DEFAULT_GITHUB_PROFILE_NAME
 ENV PORT=9994
 
 # Configuración inicial e instalación de dependencias
-RUN apt-get update && apt-get install -y \
+RUN apt-get update --fix-missing && apt-get install -y \
     wget \
     gnupg \
+    build-essential \
+    python3 \
+    python3-pip \
     ca-certificates \
     apt-transport-https \
     software-properties-common \
     chromium \
     bzip2 \
+    ffmpeg \
     libasound2 \
     libdbus-glib-1-2 \
     libc6 \
     fonts-liberation \
     libx11-xcb1 \
+    x11-apps \
     libxcomposite1 \
     libxrandr2 \
     libxdamage1 \
+    byzanz \
     libfontconfig1 \
     libgtk-3-0 \
     x11-xserver-utils \
@@ -53,13 +60,14 @@ WORKDIR /leetcode-service
 # Copy package.json and package-lock.json to the working directory
 COPY package.json pnpm-lock.yaml ./
 
-RUN pnpm i
+RUN pnpm install --frozen-lockfile || pnpm install
 
 # Copy the rest of the application code
 COPY . .
 RUN npm run build
 
 RUN mkdir -p ${LEETCODE_SERVICE_COOKIE_DIR}
+RUN mkdir -p ${LEETCODE_SERVICE_VIDEO_DIR}
 RUN mkdir -p ${LEETCODE_SERVICE_MOCK_DIR}
 
 # Expose the port your app runs on

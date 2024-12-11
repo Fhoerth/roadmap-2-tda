@@ -1,12 +1,16 @@
+import path from 'path';
+
 import { assert } from '../../../common/utils/assert';
+import { env } from '../../env';
 import { CookieService } from '../CookieService';
 import { DeferredPromise } from '../DeferredPromise';
 import { ForeverBrowser } from '../ForeverBrowser';
 import { SingleTaskProcessor } from '../SingleTaskProcessor';
 import { LoginService } from './LoginService';
+import { captureElementScreenshot } from './utils/captureScreenshot';
 import { extractSlug } from './utils/extractSlugs';
 
-import { bringChromeToFront } from '../../utils/so/bringChromeToFront';
+// import { searchByText } from './utils/searchByText';
 
 type SubmissionId = string;
 type Submission = {
@@ -36,10 +40,10 @@ class Scrapper {
     this.#isFirstLaunch = true;
     this.#performingLoginCheck = false;
 
+    console.log(this.#performingLoginCheck);
+
     this.#waitForLoginCheck = new DeferredPromise<void>();
     this.#waitForStatusOK = new DeferredPromise<void>();
-
-    console.log(this.#performingLoginCheck, this.#waitForLoginCheck);
 
     this.#foreverBrowser.launchForever(async () => {
       if (!this.#isFirstLaunch) {
@@ -94,7 +98,7 @@ class Scrapper {
     const submissionDetailUrl = `https://leetcode.com/submissions/detail/${submissionId}/`;
     const generateProblemStatisticsUrl = (slug: string): string =>
       `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
-    
+
     const browser = this.#foreverBrowser.getBrowser();
     const submissionPage = await browser.newPage();
 
@@ -105,8 +109,6 @@ class Scrapper {
     );
 
     if (response) {
-      bringChromeToFront();
-
       const content = await response.text();
       const slug = extractSlug(content);
       const problemStatisticsUrl = generateProblemStatisticsUrl(slug);
@@ -117,15 +119,23 @@ class Scrapper {
         height: 1024,
       });
       await statisticsPage.bringToFront();
-      await statisticsPage.goto(problemStatisticsUrl);
+      await statisticsPage.goto(problemStatisticsUrl, {
+        waitUntil: 'networkidle2',
+      });
+      const screenshotOutputPath = path.join(
+        env.LEETCODE_SERVICE_VIDEO_DIR,
+        `statistics-${submissionId}.png`,
+      );
+      const elementHandle = assert(await statisticsPage.$('body'));
+      await captureElementScreenshot(elementHandle, screenshotOutputPath);
 
       const submission: Submission = {
         id: submissionId,
         code: content,
       };
 
-      await statisticsPage.close();
-      await submissionPage.close();
+      // await statisticsPage.close();
+      // await submissionPage.close();
 
       return submission;
     } else {
