@@ -154,7 +154,7 @@ class LoginService {
       'https://leetcode.com/accounts/github/login/?next=%2F',
       { waitUntil: 'networkidle2' },
     );
-  
+
     await this.#clickButton(leetCodePage, 'button[type="submit"]');
     await leetCodePage.waitForNavigation({ waitUntil: 'networkidle2' });
   }
