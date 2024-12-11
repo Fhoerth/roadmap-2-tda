@@ -20,9 +20,9 @@ async function main() {
     process.exit(OK);
   });
 
-  await scrapper.waitForScrapperToBeReady();
+  const submission = await scrapper.fetchSubmission('1462218586');
 
-  console.log('SCRAPPER', scrapper);
+  console.log('SCRAPPER', submission);
 }
 
 void main();
