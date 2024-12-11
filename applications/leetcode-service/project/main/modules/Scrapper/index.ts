@@ -1,191 +1,182 @@
-// import { connect } from 'puppeteer-real-browser';
-// import type { Browser, Page } from 'rebrowser-puppeteer-core';
-// import { CookieService } from './CookieService';
-// import { LoginService } from './LoginService';
-// import { Queue } from '../Queue';
+import path from 'path';
 
-// type DeferredPromise<T> = {
-//   promise: Promise<T>;
-//   resolve: () => T;
-//   reject: (error: Error) => void;
-//   reset: () => void;
-// };
+import { assert } from '../../../common/utils/assert';
+import { env } from '../../env';
+import { CookieService } from '../CookieService';
+import { DeferredPromise } from '../DeferredPromise';
+import { ForeverBrowser } from '../ForeverBrowser';
+import { SingleTaskProcessor } from '../SingleTaskProcessor';
+import { LoginService } from './LoginService';
+import { captureElementScreenshot } from './utils/captureScreenshot';
+import { extractSlug } from './utils/extractSlugs';
 
-// type DeferredTimeoutPromise = {
-//   promise: Promise<void>;
-// }
+// import { searchByText } from './utils/searchByText';
 
-// class Scrapper {
-//   #waitForBrowserLaunch: DeferredPromise<void>;
-//   #requests: Queue<Promise<string>>;
+type SubmissionId = string;
+type Submission = {
+  id: SubmissionId;
+  code: string;
+};
+const a: Submission = { id: '123', code: 'asd' };
 
-//   #browser?: Browser;
-//   #mainLeetCodePage?: Page;
-//   #mainGitHubPage?: Page;
+console.log(SingleTaskProcessor, a);
 
-//   constructor() {
-//     this.#waitForLaunch = Scrapper.createDeferredPromise();
-//     this.#lifecyclesInProgress = new List();
-//   }
+class Scrapper {
+  #cookieService: CookieService | null;
+  #loginService: LoginService | null;
+  #foreverBrowser: ForeverBrowser;
 
-//   static async createBrowser(): Promise<{ browser: Browser; page: Page }> {
-//     console.log('STARTING CREATE BROWSER');
+  #isFirstLaunch: boolean;
+  #performingLoginCheck: boolean;
 
-//     const { browser, page } = await connect({
-//       turnstile: true,
-//       disableXvfb: true,
-//       headless: false,
-//       args: ['--no-sandbox'],
-//     });
+  #waitForLoginCheck: DeferredPromise<void>;
+  #waitForStatusOK: DeferredPromise<void>;
 
-//     console.log('STARTING CREATE BROWSER OK!');
+  constructor() {
+    this.#cookieService = null;
+    this.#loginService = null;
+    this.#foreverBrowser = new ForeverBrowser();
 
-//     return { browser, page };
-//   }
+    this.#isFirstLaunch = true;
+    this.#performingLoginCheck = false;
 
-//   #getMainGitHubPage(): Page {
-//     if (!this.#mainGitHubPage) {
-//       throw new Error('Page not set.');
-//     }
+    console.log(this.#performingLoginCheck);
 
-//     return this.#mainGitHubPage;
-//   }
+    this.#waitForLoginCheck = new DeferredPromise<void>();
+    this.#waitForStatusOK = new DeferredPromise<void>();
 
-//   #getMainLeetCodePage(): Page {
-//     if (!this.#mainLeetCodePage) {
-//       throw new Error('Page not set.');
-//     }
+    this.#foreverBrowser.launchForever(async () => {
+      if (!this.#isFirstLaunch) {
+        this.#waitForStatusOK.reset();
+        this.#waitForLoginCheck.reset();
+      }
 
-//     return this.#mainLeetCodePage;
-//   }
+      this.#isFirstLaunch = false;
+      this.#loginService = new LoginService();
+      this.#cookieService = new CookieService();
 
-//   #getBrowser(): Browser {
-//     if (!this.#browser) {
-//       throw new Error('Browser not set.');
-//     }
+      const browser = this.#foreverBrowser.getBrowser();
 
-//     return this.#browser;
-//   }
+      this.#cookieService.setBrowser(browser);
+      this.#cookieService.loadCookies();
 
-//   async #maybeClose(): Promise<void> {
-//     if (this.#browser) {
-//       this.close();
-//     }
-//   }
+      const mainGitHubPage = await browser.newPage();
+      const mainLeetCodePage = await browser.newPage();
 
-//   static createDeferredTimeoutPromise(t = 15000): DeferredTimeoutPromise {
-//     const deferredPromise = Scrapper.createDeferredPromise();
+      this.#loginService.setMainGitHubPage(mainGitHubPage);
+      this.#loginService.setMainLeetCodePage(mainLeetCodePage);
 
-//     setTimeout(() => {
-//       deferredPromise.reject(new Error('Timeout'));
-//     }, t);
+      await this.#performLogin();
 
-//     return { promise: deferredPromise.promise };
-//   }
+      console.log('Browser is ready to receive requests');
+      console.log('GitHub login: OK!');
+      console.log('LeetCode login: OK!');
+      console.log('====================================');
 
-//   // Renombrar a waitForActiveRequests.
-//   async #waitForActiveLifecycles(): Promise<void> {
-//     const tail = this.#lifecyclesInProgress.getTail();
+      this.#performingLoginCheck = false;
+      this.#waitForStatusOK.resolve();
+    });
+  }
 
-//     if (tail) {
-//       this.#lifecyclesInProgress.removeTail();
+  #getCookieService(): CookieService {
+    return assert(this.#cookieService);
+  }
 
-//       await tail.value;
-//       await this.#waitForActiveLifecycles();
-//     }
-//   }
+  #getLoginService(): LoginService {
+    return assert(this.#loginService);
+  }
 
-//   // Renombrar a performRequest (con url), devuelve string
-//   async #createLifecycle<T>(onResolve: (t: T) => void): Promise<void> {
-//     // await this.#startLifecycle();
-//     // Este crea el lifecycle y espera a todos los lifecycles
-//     // Debe llamar al metodo getLeetCodePage
-//   }
+  async #patientlyWaitForStatusOK(): Promise<void> {
+    try {
+      await this.#waitForStatusOK.waitForPromise();
+    } catch (_) {
+      return this.#patientlyWaitForStatusOK();
+    }
+  }
 
-//   async #getLeetCodePage(): Promise<void> {
-//     // Abrir una pagina, fijarse si está logueado (isLoggedIn)
-//     // Si no, DEBE VER SI HAY UNA PROMISE PARA LOGEAR,
-//     // EN CUYO CASO ESPERARLA Y VOLVER A LLAMARSE RECURSIVAMENTE
-//     // Si no: cerrar el browser, y volver al launchForever.
-//     //  --> ESte va a llamar a perform login. Una vez que termine
-//     //  --> Puedo llamar recursivamente, hasta que (isLoggedIn)
-//     //      devuelva True
-//   }
+  async #processSubmission(submissionId: SubmissionId): Promise<Submission> {
+    const submissionDetailUrl = `https://leetcode.com/submissions/detail/${submissionId}/`;
+    const generateProblemStatisticsUrl = (slug: string): string =>
+      `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
 
-//   async #isLoggedIn(): Promise<void> {}
+    const browser = this.#foreverBrowser.getBrowser();
+    const submissionPage = await browser.newPage();
 
-//   async #performLogin(): Promise<void> {}
+    await submissionPage.bringToFront();
+    const response = await submissionPage.goto(
+      `https://leetcode.com/submissions/detail/${submissionId}/`,
+      { waitUntil: 'networkidle2' },
+    );
 
-//   async #launchForever(): Promise<void> {
-//     const deferredTimeoutPromise = Scrapper.createDeferredTimeoutPromise(15000);
-//     this.#waitForConnection.revolve();
+    if (response) {
+      const content = await response.text();
+      const slug = extractSlug(content);
+      const problemStatisticsUrl = generateProblemStatisticsUrl(slug);
 
-//     return Promise.race([
-//       Scrapper.createBrowser(),
-//       deferredTimeoutPromise,
-//     ]).then((result) => {
-//       if ('browser' in result && 'page' in result) {
-//         const { browser, page } = result;
+      const statisticsPage = await browser.newPage();
+      await statisticsPage.setViewport({
+        width: 1280,
+        height: 1024,
+      });
+      await statisticsPage.bringToFront();
+      await statisticsPage.goto(problemStatisticsUrl, {
+        waitUntil: 'networkidle2',
+      });
+      const screenshotOutputPath = path.join(
+        env.LEETCODE_SERVICE_VIDEO_DIR,
+        `statistics-${submissionId}.png`,
+      );
+      const elementHandle = assert(await statisticsPage.$('body'));
+      await captureElementScreenshot(elementHandle, screenshotOutputPath);
 
-//         browser.on('disconnected', () => {
-//           this.#launchForever();
-//         });
+      const submission: Submission = {
+        id: submissionId,
+        code: content,
+      };
 
-//         return { browser, page };
-//       }
+      // await statisticsPage.close();
+      // await submissionPage.close();
 
-//       throw new Error('Timeout!');
-//     }).then(({ browser, page }) => {
-//       this.#browser = browser;
-//       this.#mainLeetCodePage = page;
-//     })
-//     .then(() => this.#getBrowser().newPage())
-//     .then((page) => {
-//       this.#mainGitHubPage = page;
-//       this.#waitForConnection.clear();
+      return submission;
+    } else {
+      await submissionPage.close();
+      throw new Error(`No response for url: ${submissionDetailUrl}`);
+    }
+  }
 
-//       console.log('Browser launched successfully');
-//     })
-//     .then(() => {
-//       this.#startLifecycle();
-//     })
-//     .catch((error) => {
-//       console.log('Error launching Browser.', error);
+  async #performLogin(): Promise<void> {
+    try {
+      this.#performingLoginCheck = true;
+      await this.#getLoginService().performLogin();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await this.#getCookieService().saveCookies();
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      this.#waitForLoginCheck.resolve();
+      this.#performingLoginCheck = false;
+    } catch (reason) {
+      let error: Error;
 
-//       return this.#launchForever();
-//     });
-//   }
+      if (reason instanceof Error) {
+        error = reason;
+      } else {
+        error = new Error('#performLogin not successful');
+      }
 
-//   async scrapSubmission(): Promise<string> {
-//     // Crear lifecycle
-//     const id = '1469695308';
-//     const newPage = await this.#getBrowser().newPage();
-//     const response = await newPage.goto(
-//       `http://leetcode.com/submissions/detail/${id}/`,
-//     );
-//     await new Promise<void>((resolve) => {
-//       setTimeout(() => resolve(), 3000);
-//     });
-//     if (!response) {
-//       throw new Error(`No response for submission id: ${id}`);
-//     }
+      this.#waitForLoginCheck.reject(error);
+      throw error;
+    }
+  }
 
-//     const html = await response.text();
+  public async halt(): Promise<void> {
+    return this.#foreverBrowser.halt();
+  }
 
-//     await newPage.close();
+  public async fetchSubmission(
+    submissionId: SubmissionId,
+  ): Promise<Submission> {
+    await this.#patientlyWaitForStatusOK();
+    return this.#processSubmission(submissionId);
+  }
+}
 
-//     return html;
-//   }
-
-//   async start(): Promise<void> {
-//     await this.#launchForever();
-//   }
-
-//   public async close(callback?: () => void): Promise<void> {
-//     await this.#getBrowser().close();
-//     console.log('Closed');
-//     callback?.();
-//   }
-// }
-
-// export { Scrapper };
+export { Scrapper };

@@ -1,6 +1,6 @@
 import process from 'process';
 
-import { Scrapper } from './modules/Scrapper/Scrapper';
+import { Scrapper } from './modules/Scrapper';
 import { server } from './server';
 
 const OK = 0;
