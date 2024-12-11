@@ -1,34 +1,29 @@
-import path from 'path';
-
 import { assert } from '../../../common/utils/assert';
-import { env } from '../../env';
 import { CookieService } from '../CookieService';
 import { DeferredPromise } from '../DeferredPromise';
 import { ForeverBrowser } from '../ForeverBrowser';
-import { SingleTaskProcessor } from '../SingleTaskProcessor';
 import { LoginService } from './LoginService';
-import { captureElementScreenshot } from './utils/captureScreenshot';
 import { extractSlug } from './utils/extractSlugs';
-
+import { extractSourceCode } from './utils/extractSourceCode';
+// import { DeferredTimeoutPromise } from '../DeferredTimeoutPromise';
+// import { SingleTaskProcessor } from '../SingleTaskProcessor';
 // import { searchByText } from './utils/searchByText';
+import { extractStatistics } from './utils/extractStatistics';
+import type { Statistics } from './utils/extractStatistics';
 
 type SubmissionId = string;
-type Submission = {
-  id: SubmissionId;
+type Submission = Statistics & {
   code: string;
 };
-const a: Submission = { id: '123', code: 'asd' };
-
-console.log(SingleTaskProcessor, a);
 
 class Scrapper {
   #cookieService: CookieService | null;
   #loginService: LoginService | null;
   #foreverBrowser: ForeverBrowser;
+  #submissions: Map<SubmissionId, Submission>;
 
   #isFirstLaunch: boolean;
   #performingLoginCheck: boolean;
-
   #waitForLoginCheck: DeferredPromise<void>;
   #waitForStatusOK: DeferredPromise<void>;
 
@@ -36,6 +31,7 @@ class Scrapper {
     this.#cookieService = null;
     this.#loginService = null;
     this.#foreverBrowser = new ForeverBrowser();
+    this.#submissions = new Map();
 
     this.#isFirstLaunch = true;
     this.#performingLoginCheck = false;
@@ -94,7 +90,13 @@ class Scrapper {
     }
   }
 
-  async #processSubmission(submissionId: SubmissionId): Promise<Submission> {
+  async #processSubmissionWihtoutTimeout(
+    submissionId: SubmissionId,
+  ): Promise<Submission> {
+    if (this.#submissions.has(submissionId)) {
+      return this.#submissions.get(submissionId)!;
+    }
+
     const submissionDetailUrl = `https://leetcode.com/submissions/detail/${submissionId}/`;
     const generateProblemStatisticsUrl = (slug: string): string =>
       `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
@@ -111,6 +113,7 @@ class Scrapper {
     if (response) {
       const content = await response.text();
       const slug = extractSlug(content);
+      const sourceCode = extractSourceCode(content);
       const problemStatisticsUrl = generateProblemStatisticsUrl(slug);
 
       const statisticsPage = await browser.newPage();
@@ -120,28 +123,27 @@ class Scrapper {
       });
       await statisticsPage.bringToFront();
       await statisticsPage.goto(problemStatisticsUrl, {
-        waitUntil: 'networkidle2',
+        waitUntil: 'domcontentloaded',
       });
-      const screenshotOutputPath = path.join(
-        env.LEETCODE_SERVICE_VIDEO_DIR,
-        `statistics-${submissionId}.png`,
-      );
-      const elementHandle = assert(await statisticsPage.$('body'));
-      await captureElementScreenshot(elementHandle, screenshotOutputPath);
-
-      const submission: Submission = {
-        id: submissionId,
-        code: content,
+      await new Promise((resolve) => setTimeout(resolve, 2500));
+      console.log('Resolved!');
+      const statistics = await extractStatistics(submissionId, statisticsPage);
+      const submission = {
+        ...statistics,
+        code: sourceCode,
       };
 
-      // await statisticsPage.close();
-      // await submissionPage.close();
-
+      this.#submissions.set(submissionId, submission);
+      await submissionPage.close();
       return submission;
     } else {
       await submissionPage.close();
       throw new Error(`No response for url: ${submissionDetailUrl}`);
     }
+  }
+
+  async #processSubmission(submissionId: SubmissionId): Promise<Submission> {
+    return this.#processSubmissionWihtoutTimeout(submissionId);
   }
 
   async #performLogin(): Promise<void> {
