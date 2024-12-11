@@ -194,4 +194,28 @@ describe('SingleTaskProcessor', () => {
       await waitForDeferredPromise(dP);
     }
   });
+
+  it('allows all tasks to be rejected', async () => {
+    const processor = new SingleTaskProcessor<number>();
+
+    const deferredPromises = [
+      // First promise will be unqueued automatically so we set reject, but we expect
+      // normal promises to be rejected :).
+      processor.enqueueTask(async () => Promise.reject(new Error('Error!'))),
+      processor.enqueueTask(async () => Promise.resolve(20)),
+      processor.enqueueTask(async () => Promise.resolve(30)),
+    ];
+
+    processor.rejectAll();
+
+    const waitForDeferredPromise = async (
+      dP: DeferredPromise<number>,
+    ): Promise<void> => {
+      expect(dP.waitForPromise()).rejects.toThrow();
+    };
+
+    for (const dP of deferredPromises) {
+      await waitForDeferredPromise(dP);
+    }
+  });
 });

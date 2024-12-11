@@ -71,20 +71,12 @@ class SingleTaskProcessor<T> {
     this.#processingTask = true;
     const nextTask = this.#dequeueTask();
 
-    const processSolve = () => {
+    nextTask.solve().then(() => {
       this.#processingTask = false;
       this.#waitForTaskToBeResolved.resolve();
       this.#waitForTaskToBeResolved.reset();
       return this.#processTasks();
-    };
-
-    nextTask
-      .solve()
-      .then(processSolve)
-      .catch((error) => {
-        processSolve();
-        throw error;
-      });
+    });
   }
 
   public enqueueTask(solve: () => Promise<T>): DeferredPromise<T> {
@@ -95,6 +87,13 @@ class SingleTaskProcessor<T> {
     this.#processTasks();
 
     return deferredPromise;
+  }
+
+  public rejectAll(): void {
+    while (!this.#queue.isEmpty()) {
+      const task = this.#dequeueTask();
+      task.reject(new Error('Task has been rejected manually (rejectAll)'));
+    }
   }
 
   public isEmpty(): boolean {
