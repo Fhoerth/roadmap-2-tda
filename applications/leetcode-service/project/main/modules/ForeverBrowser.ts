@@ -23,12 +23,14 @@ class ForeverBrowser {
   }
 
   async #runOnLaunchCallback(): Promise<void> {
-    console.log('#runOnLaunchCallback');
-
     if (this.#onLaunchCallback) {
       try {
         await this.#onLaunchCallback();
       } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        }
+
         return this.#runOnLaunchCallback();
       }
     }
@@ -44,14 +46,17 @@ class ForeverBrowser {
     try {
       this.#onLaunchCallback = onLaunchCallback || null;
 
-      // @todo: Change function.
       const launch = async (): Promise<void> => {
         if (!this.#launchingBrowserForFirstTime && this.#launchingBrowser) {
           await this.#waitForBrowserToBeOpen.waitForPromise();
           this.#waitForBrowserToBeOpen.reset();
         }
 
-        if (!this.#launchingBrowserForFirstTime && this.#browser && this.#onDisconnectedCallback) {
+        if (
+          !this.#launchingBrowserForFirstTime &&
+          this.#browser &&
+          this.#onDisconnectedCallback
+        ) {
           this.#browser.off('disconnected', this.#onDisconnectedCallback);
         }
 

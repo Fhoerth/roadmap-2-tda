@@ -62,11 +62,11 @@ class LoginService {
     });
   }
 
-  async #isGitHubLoggedIn(): Promise<boolean> {
-    const gitHubPage = this.#getMainGitHubPage();
+  public async isGitHubLoggedIn(gitHubPage: Page): Promise<boolean> {
     const settingsUrl = 'https://github.com/settings';
 
     try {
+      await gitHubPage.bringToFront();
       await gitHubPage.goto(settingsUrl, { waitUntil: 'networkidle2' });
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -84,17 +84,16 @@ class LoginService {
     }
   }
 
-  async #isLeetCodeLoggedIn(): Promise<boolean> {
-    const leetCodePage = this.#getMainLeetCodePage();
+  public async isLeetCodeLoggedIn(leetCodePage: Page): Promise<boolean> {
     const profileUrl = 'https://leetcode.com/profile/';
 
     try {
+      await leetCodePage.bringToFront();
       await leetCodePage.goto(profileUrl, { waitUntil: 'networkidle2' });
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       if (leetCodePage.url() == profileUrl) {
         const content = await leetCodePage.content();
-
         if (
           content
             .toLowerCase()
@@ -113,6 +112,7 @@ class LoginService {
   async #loginToGitHub(): Promise<void> {
     const gitHubPage = this.#getMainGitHubPage();
 
+    await gitHubPage.bringToFront();
     await gitHubPage.goto('https://www.github.com/login', {
       waitUntil: 'networkidle2',
     });
@@ -149,36 +149,36 @@ class LoginService {
   async #loginToLeetCode(): Promise<void> {
     const leetCodePage = this.#getMainLeetCodePage();
 
+    await leetCodePage.bringToFront();
+    await leetCodePage.goto(
+      'https://leetcode.com/accounts/github/login/?next=%2F',
+      { waitUntil: 'networkidle2' },
+    );
+  
     await this.#clickButton(leetCodePage, 'button[type="submit"]');
     await leetCodePage.waitForNavigation({ waitUntil: 'networkidle2' });
   }
 
   async performLogin(): Promise<void> {
+    console.log('Performing Login');
+
     const gitHubPage = this.#getMainGitHubPage();
     const leetCodePage = this.#getMainLeetCodePage();
 
-    if (!(await this.#isGitHubLoggedIn())) {
+    if (!(await this.isGitHubLoggedIn(gitHubPage))) {
       await this.#loginToGitHub();
     }
 
-    if (!(await this.#isLeetCodeLoggedIn())) {
+    if (!(await this.isLeetCodeLoggedIn(leetCodePage))) {
       await this.#loginToLeetCode();
     }
 
-    const isGitHubLoggedIn = await this.#isGitHubLoggedIn();
-    const isLeetCodeLoggedIn = await this.#isLeetCodeLoggedIn();
+    const isGitHubLoggedIn = await this.isGitHubLoggedIn(gitHubPage);
+    const isLeetCodeLoggedIn = await this.isLeetCodeLoggedIn(leetCodePage);
 
     if (!isGitHubLoggedIn || !isLeetCodeLoggedIn) {
       throw new Error('Login Error!');
     }
-
-    await leetCodePage.goto('https://leetcode.com/profile/', {
-      waitUntil: 'networkidle2',
-    });
-
-    await gitHubPage.goto('https://github.com/settings', {
-      waitUntil: 'networkidle2',
-    });
   }
 
   public setMainLeetCodePage(page: Page): void {

@@ -27,6 +27,7 @@ class Scrapper {
       const browser = this.#foreverBrowser.getBrowser();
 
       this.#cookieService.setBrowser(browser);
+      this.#cookieService.loadCookies();
 
       const mainGitHubPage = await browser.newPage();
       const mainLeetCodePage = await browser.newPage();
@@ -35,6 +36,10 @@ class Scrapper {
       this.#loginService.setMainLeetCodePage(mainLeetCodePage);
 
       await this.#performLogin();
+
+      console.log('Browser is ready to receive requests');
+      console.log('GitHub login: OK!');
+      console.log('LeetCode login: OK!');
     });
   }
 
@@ -47,10 +52,21 @@ class Scrapper {
   }
 
   async #performLogin(): Promise<void> {
-
+    await this.#getLoginService().performLogin();
+    this.#getCookieService().saveCookies();
+    // Aca si hay un login en espera... me sumo a ese.
+    // El login si falla tiene que haltear el browser y volverlo a abrir
+    // Side effect se vuelve a llamar performLogin.
+    console.log(this.#getCookieService, this.#getLoginService, this.#performingLogin, this.#waitForLogin);
   }
 
-  public async waitForScrapperToBeReady() {}
+  public async waitForScrapperToBeReady(): Promise<void> {
+    await this.#foreverBrowser.waitForBrowserToBeOpen();
+  }
+
+  public async halt(): Promise<void> {
+    return this.#foreverBrowser.halt();
+  }
 }
 
 export { Scrapper };

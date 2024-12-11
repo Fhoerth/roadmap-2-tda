@@ -1,6 +1,6 @@
 import process from 'process';
 
-import { Scrapper } from './modules/Scrapper';
+import { Scrapper } from './modules/Scrapper/Scrapper';
 import { server } from './server';
 
 const OK = 0;
@@ -10,21 +10,19 @@ async function main() {
 
   console.log('Registering SIGINT listener.');
 
-  process.on('SIGINT', () => {
-    scrapper.close(() => {
-      console.log('Browser has been closed.');
-
-      server.close(() => {
-        console.log('HTTP server closed.');
-        process.exit(OK);
-      });
-    });
+  process.on('SIGINT', async () => {
+    await Promise.all([
+      new Promise<void>((resolve) => {
+        server.close(() => resolve());
+      }),
+      scrapper.halt(),
+    ]);
+    process.exit(OK);
   });
 
-  await scrapper.start();
-  const submission = await scrapper.scrapSubmission();
+  await scrapper.waitForScrapperToBeReady();
 
-  console.log('SUBMISSION', submission);
+  console.log('SCRAPPER', scrapper);
 }
 
 void main();
