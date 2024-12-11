@@ -1,15 +1,9 @@
 import dotenv from 'dotenv';
 import process from 'process';
 
+import { assert } from '../common/utils/assert';
+
 dotenv.config();
-
-function assert<T>(value: T | null | undefined): T {
-  if (value == null) {
-    throw new Error(`${value} es NULL!`);
-  }
-
-  return value;
-}
 
 const LEETCODE_SERVICE_COOKIE_DIR = assert(
   process.env.LEETCODE_SERVICE_COOKIE_DIR,

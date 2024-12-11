@@ -61,10 +61,6 @@ class ForeverBrowser {
         }
 
         const { browser } = await connect({
-          // customConfig: {
-          //   userDataDir: '',
-          //   pipe:
-          // },
           turnstile: true,
           disableXvfb: true,
           headless: false,
@@ -118,11 +114,12 @@ class ForeverBrowser {
     this.#waitForBrowserToBeOpen.waitForPromise();
 
     if (this.#browser && this.#onDisconnectedCallback) {
-      this.getBrowser().off('disconnected', this.#onDisconnectedCallback);
+      this.#browser.off('disconnected', this.#onDisconnectedCallback);
     }
 
     this.#halt = true;
     await this.close();
+    this.#halt = false;
   }
 
   public async close(): Promise<void> {

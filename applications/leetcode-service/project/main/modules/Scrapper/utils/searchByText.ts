@@ -5,7 +5,6 @@ async function searchByText(
   parentSelector: string,
   text: string,
 ): Promise<boolean> {
-  console.log('EVALUEEAETATTETTEE!!');
   try {
     const result = await page.evaluate(
       (searchText, parentSelector) => {
@@ -19,7 +18,6 @@ async function searchByText(
 
     return result;
   } catch (error) {
-    console.log(error);
     return false;
   }
 }

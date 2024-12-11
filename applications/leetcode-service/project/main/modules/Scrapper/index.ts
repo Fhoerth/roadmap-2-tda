@@ -3,11 +3,11 @@ import { CookieService } from '../CookieService';
 import { DeferredPromise } from '../DeferredPromise';
 import { ForeverBrowser } from '../ForeverBrowser';
 import { LoginService } from './LoginService';
+// import { changeToDarkTheme } from './utils/changeToDarkTheme';
 import { extractSlug } from './utils/extractSlugs';
 import { extractSourceCode } from './utils/extractSourceCode';
 // import { DeferredTimeoutPromise } from '../DeferredTimeoutPromise';
 // import { SingleTaskProcessor } from '../SingleTaskProcessor';
-// import { searchByText } from './utils/searchByText';
 import { extractStatistics } from './utils/extractStatistics';
 import type { Statistics } from './utils/extractStatistics';
 
@@ -58,6 +58,9 @@ class Scrapper {
 
       const mainGitHubPage = await browser.newPage();
       const mainLeetCodePage = await browser.newPage();
+      await mainLeetCodePage.evaluateOnNewDocument(() => {
+        localStorage.setItem('lc-theme', 'dark');
+      });
 
       this.#loginService.setMainGitHubPage(mainGitHubPage);
       this.#loginService.setMainLeetCodePage(mainLeetCodePage);

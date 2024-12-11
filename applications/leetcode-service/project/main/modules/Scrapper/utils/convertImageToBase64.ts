@@ -1,4 +1,4 @@
-import { readFile, unlink } from 'fs/promises';
+import { readFile } from 'fs/promises';
 
 const convertImageToBase64 = async (imagePath: string): Promise<string> => {
   try {
@@ -6,7 +6,7 @@ const convertImageToBase64 = async (imagePath: string): Promise<string> => {
     const base64String = imageBuffer.toString('base64');
     const mimeType = 'image/png';
 
-    await unlink(imagePath);
+    // await unlink(imagePath);
 
     return `data:${mimeType};base64,${base64String}`;
   } catch (error) {
