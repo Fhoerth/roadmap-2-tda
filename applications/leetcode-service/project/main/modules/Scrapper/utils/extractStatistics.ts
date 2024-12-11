@@ -40,7 +40,7 @@ async function extractStatistics(
   }
 
   const screenshotOutputPath = path.join(
-    env.LEETCODE_SERVICE_VIDEO_DIR,
+    env.LEETCODE_SERVICE_SCREENSHOTS_DIR,
     `statistics-${submissionId}.png`,
   );
   const elementHandle = assert(await statisticsPage.$('body'));

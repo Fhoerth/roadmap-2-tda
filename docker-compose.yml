@@ -10,7 +10,7 @@ services:
       DISPLAY: host.docker.internal:0
       PORT: ${LEETCODE_SERVICE_PORT}
       LEETCODE_SERVICE_COOKIE_DIR: ${LEETCODE_SERVICE_COOKIE_DIR}
-      LEETCODE_SERVICE_VIDEO_DIR: ${LEETCODE_SERVICE_VIDEO_DIR}
+      LEETCODE_SERVICE_SCREENSHOTS_DIR: ${LEETCODE_SERVICE_SCREENSHOTS_DIR}
       LEETCODE_SERVICE_MOCK_DIR: ${LEETCODE_SERVICE_MOCK_DIR}
       LEETCODE_PROFILE_NAME: ${LEETCODE_PROFILE_NAME}
       GITHUB_USERNAME: ${GITHUB_USERNAME}
@@ -31,7 +31,7 @@ services:
       - ./applications/leetcode-service/project:/leetcode-service/project
       - ./applications/leetcode-service/node_modules:/leetcode-service/node_modules
       - ./applications/leetcode-service/cookies:${LEETCODE_SERVICE_COOKIE_DIR}
-      - ./applications/leetcode-service/videos:${LEETCODE_SERVICE_VIDEO_DIR}
+      - ./applications/leetcode-service/screenshots:${LEETCODE_SERVICE_SCREENSHOTS_DIR}
       - ./applications/leetcode-service/mocks:${LEETCODE_SERVICE_MOCK_DIR}
 
   vite-dev:

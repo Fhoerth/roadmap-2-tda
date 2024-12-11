@@ -129,7 +129,7 @@ class Scrapper {
         waitUntil: 'domcontentloaded',
       });
       await new Promise((resolve) => setTimeout(resolve, 2500));
-      console.log('Resolved!');
+
       const statistics = await extractStatistics(submissionId, statisticsPage);
       const submission = {
         ...statistics,
@@ -138,7 +138,10 @@ class Scrapper {
       };
 
       this.#submissions.set(submissionId, submission);
+      
       await submissionPage.close();
+      await statisticsPage.close();
+
       return submission;
     } else {
       await submissionPage.close();
