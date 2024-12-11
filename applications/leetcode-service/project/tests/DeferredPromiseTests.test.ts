@@ -198,15 +198,15 @@ describe('DeferredPromise', () => {
   it('resolves promise when safe resetting', async () => {
     const resolvedDeferredPromise = new DeferredPromise<number>();
     const deferredPromise = new DeferredPromise<number>();
-    
+
     deferredPromise.waitForPromise().then((value) => {
       resolvedDeferredPromise.resolve(value);
     });
-    
+
     deferredPromise.safeReset();
     deferredPromise.safeReset();
     deferredPromise.safeReset();
-    
+
     deferredPromise.resolve(20);
 
     const result = await resolvedDeferredPromise.waitForPromise();

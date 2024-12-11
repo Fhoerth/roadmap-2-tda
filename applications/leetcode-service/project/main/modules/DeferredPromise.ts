@@ -33,7 +33,7 @@ class DeferredPromise<T> {
     };
     this.safeReset = (): void => {
       this.reject(this.#resetError);
-    }
+    };
     this.clear = (): void => {
       this.reject(this.#clearError);
     };
