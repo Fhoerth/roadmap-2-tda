@@ -3,22 +3,19 @@ import type { Page } from 'rebrowser-puppeteer-core';
 
 import { assert } from '../../../../common/utils/assert';
 import { env } from '../../../env';
+import {
+  Base64EncodedString,
+  StatisticsResult,
+} from '../types/StatisticsResult';
+import { SubmissionId } from '../types/SubmissionId';
 import { captureElementScreenshot } from './captureScreenshot';
 import { convertImageToBase64 } from './convertImageToBase64';
 import { searchByText } from './searchByText';
 
-type Base64EncodedString = string;
-type SubmissionId = string;
-type Statistics = {
-  submissionId: string;
-  solved: boolean;
-  image: Base64EncodedString | null;
-};
-
 async function extractStatistics(
   submissionId: SubmissionId,
   statisticsPage: Page,
-): Promise<Statistics> {
+): Promise<StatisticsResult> {
   const promises = new Array(10)
     .fill(0)
     .map((_, i) =>
@@ -30,7 +27,7 @@ async function extractStatistics(
     );
   const results = await Promise.all(promises);
   const solved = results.some((value) => value);
-  console.log(results);
+
   if (!solved) {
     return {
       submissionId,
@@ -56,4 +53,3 @@ async function extractStatistics(
 }
 
 export { extractStatistics };
-export type { Statistics };

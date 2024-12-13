@@ -1,4 +1,6 @@
-function extractSlug(content: string): string {
+import { ProblemSlug } from '../types/ProblemSlug';
+
+function extractProblemSlug(content: string): ProblemSlug {
   const slugRegex = /\/problems\/([\w-]+)\//g;
 
   let slug: string = '';
@@ -21,4 +23,4 @@ function extractSlug(content: string): string {
   return slug;
 }
 
-export { extractSlug };
+export { extractProblemSlug };

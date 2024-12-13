@@ -3,12 +3,11 @@ function extractSourceCode(content: string): string {
   const match = content.match(regex);
 
   if (match) {
-    const submissionCode = match[1]; // El contenido capturado
-    console.log('Extracted Code:', submissionCode);
+    const [, submissionCode] = match;
 
     return submissionCode;
   } else {
-    throw new Error('No match found');
+    throw new Error('No match found for source code.');
   }
 }
 

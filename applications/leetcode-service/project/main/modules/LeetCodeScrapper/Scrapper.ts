@@ -1,4 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
+import type { Page } from 'rebrowser-puppeteer-core';
 
 import { assert } from '../../../common/utils/assert';
 import { DeferredPromise } from '../DeferredPromise';
@@ -6,24 +7,22 @@ import { CookieService } from './CookieService';
 import { ForeverBrowser } from './ForeverBrowser';
 import { LoginService } from './LoginService';
 import { LeetCodeError } from './errors/LeetCodeError';
-import { extractSlug } from './utils/extractSlugs';
-import { extractSourceCode } from './utils/extractSourceCode';
+import type { ProblemSlug } from './types/ProblemSlug';
+import type { SourceCodeResult } from './types/SourceCodeResult';
+import type { StatisticsResult } from './types/StatisticsResult';
+import type { Submission } from './types/Submission';
+import type { SubmissionId } from './types/SubmissionId';
+import { extractProblemSlug } from './utils/extractProblemSlug';
 // import { DeferredTimeoutPromise } from '../DeferredTimeoutPromise';
 // import { SingleTaskProcessor } from '../SingleTaskProcessor';
+import { extractProfileName } from './utils/extractProfileName';
+import { extractSourceCode } from './utils/extractSourceCode';
 import { extractStatistics } from './utils/extractStatistics';
-import type { Statistics } from './utils/extractStatistics';
-
-type SubmissionId = string;
-type Submission = Statistics & {
-  code: string;
-  slug: string;
-};
 
 class Scrapper {
   #cookieService: CookieService | null;
   #loginService: LoginService | null;
   #foreverBrowser: ForeverBrowser;
-  #submissions: Map<SubmissionId, Submission>;
 
   #isFirstLaunch: boolean;
   #performingLoginCheck: boolean;
@@ -34,7 +33,6 @@ class Scrapper {
     this.#cookieService = null;
     this.#loginService = null;
     this.#foreverBrowser = new ForeverBrowser();
-    this.#submissions = new Map();
 
     this.#isFirstLaunch = true;
     this.#performingLoginCheck = false;
@@ -96,27 +94,18 @@ class Scrapper {
     }
   }
 
-  async #processSubmissionWithoutTimeout(
-    submissionId: SubmissionId,
-  ): Promise<Submission> {
-    if (this.#submissions.has(submissionId)) {
-      return this.#submissions.get(submissionId)!;
-    }
-
+  async #getSourceCodeResult(
+    submissionId: string,
+    submissionPage: Page,
+  ): Promise<SourceCodeResult> {
     const submissionDetailUrl = `https://leetcode.com/submissions/detail/${submissionId}/`;
-    const generateProblemStatisticsUrl = (slug: string): string =>
-      `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
-
-    const browser = this.#foreverBrowser.getBrowser();
-    const submissionPage = await browser.newPage();
-
-    await submissionPage.bringToFront();
     const response = await submissionPage.goto(submissionDetailUrl, {
       waitUntil: 'networkidle2',
     });
 
     if (!response) {
       await submissionPage.close();
+
       throw new LeetCodeError(
         StatusCodes.INTERNAL_SERVER_ERROR,
         `Submission ${submissionId} not found`,
@@ -125,6 +114,7 @@ class Scrapper {
 
     if (response.status() === 404) {
       await submissionPage.close();
+
       throw new LeetCodeError(
         StatusCodes.NOT_FOUND,
         `Submission ${submissionId} not found`,
@@ -133,6 +123,7 @@ class Scrapper {
 
     if (response.status() !== 200) {
       await submissionPage.close();
+
       throw new LeetCodeError(
         response.status(),
         `Error while fetching submission ${submissionId}`,
@@ -140,34 +131,73 @@ class Scrapper {
     }
 
     const content = await response.text();
-    const slug = extractSlug(content);
+    const problemSlug = extractProblemSlug(content);
+    const profileName = extractProfileName(content);
     const sourceCode = extractSourceCode(content);
-    const problemStatisticsUrl = generateProblemStatisticsUrl(slug);
 
-    const statisticsPage = await browser.newPage();
-    await statisticsPage.setViewport({
-      width: 1280,
-      height: 1024,
-    });
-    await statisticsPage.bringToFront();
+    return { profileName, problemSlug, sourceCode };
+  }
+
+  async #getStatisticsResult(
+    slug: ProblemSlug,
+    submissionId: SubmissionId,
+    statisticsPage: Page,
+  ): Promise<StatisticsResult> {
+    const problemStatisticsUrl = `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
     await statisticsPage.goto(problemStatisticsUrl, {
       waitUntil: 'domcontentloaded',
     });
     await new Promise((resolve) => setTimeout(resolve, 2500));
 
     const statistics = await extractStatistics(submissionId, statisticsPage);
-    const submission = {
-      ...statistics,
-      slug,
-      code: sourceCode,
+
+    return statistics;
+  }
+
+  async #processSubmissionWithoutTimeout(
+    submissionId: SubmissionId,
+  ): Promise<Submission> {
+    // Source Code
+    const browser = this.#foreverBrowser.getBrowser();
+    const submissionPage = await browser.newPage();
+    await submissionPage.bringToFront();
+
+    let sourceCodeResult: SourceCodeResult;
+    try {
+      sourceCodeResult = await this.#getSourceCodeResult(
+        submissionId,
+        submissionPage,
+      );
+    } finally {
+      await submissionPage.close();
+    }
+    sourceCodeResult = assert(sourceCodeResult);
+
+    // Statistics
+    const { problemSlug } = sourceCodeResult;
+    const statisticsPage = await browser.newPage();
+    await statisticsPage.setViewport({
+      width: 1280,
+      height: 1024,
+    });
+    await statisticsPage.bringToFront();
+
+    let statisticsResult: StatisticsResult;
+    try {
+      statisticsResult = await this.#getStatisticsResult(
+        problemSlug,
+        submissionId,
+        statisticsPage,
+      );
+    } finally {
+      await statisticsPage.close();
+    }
+    sourceCodeResult = assert(sourceCodeResult);
+
+    return {
+      ...sourceCodeResult,
+      ...statisticsResult,
     };
-
-    this.#submissions.set(submissionId, submission);
-
-    await submissionPage.close();
-    await statisticsPage.close();
-
-    return submission;
   }
 
   async #processSubmission(submissionId: SubmissionId): Promise<Submission> {
