@@ -1,4 +1,4 @@
-function failingVoidPromise(count = 3): () => Promise<void> {
+function createFailingVoidPromise(count = 3): () => Promise<void> {
   let failureCount = 0;
 
   return () =>
@@ -13,4 +13,4 @@ function failingVoidPromise(count = 3): () => Promise<void> {
     });
 }
 
-export { failingVoidPromise };
+export { createFailingVoidPromise };

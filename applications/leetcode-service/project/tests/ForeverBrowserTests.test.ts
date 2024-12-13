@@ -1,5 +1,5 @@
 import { ForeverBrowser } from '../main/modules/LeetCodeScrapper/ForeverBrowser';
-import { failingVoidPromise } from './utils/failingVoidPromise';
+import { createFailingVoidPromise } from './utils/createFailingVoidPromise';
 
 jest.setTimeout(30000);
 
@@ -78,10 +78,10 @@ describe('ForeverBrowser', () => {
     });
   });
 
-  it('keeps trying to execute launchCallback until it resolves', async () => {
+  it('keeps launching browser until launchCallback is resolved', async () => {
     const foreverBrowser = new ForeverBrowser();
 
-    foreverBrowser.launchForever(failingVoidPromise(5));
+    foreverBrowser.launchForever(createFailingVoidPromise(5));
 
     const browser = await foreverBrowser.waitForBrowserToBeOpen();
     await browser.newPage();
