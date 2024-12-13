@@ -2,6 +2,8 @@ import { DeferredPromise } from './DeferredPromise';
 import { Queue } from './Queue';
 
 class Task<T> {
+  #retryTimes: number = 5;
+
   readonly #solve: () => Promise<T>;
   readonly #deferredPromise: DeferredPromise<T>;
 
@@ -15,10 +17,16 @@ class Task<T> {
       const taskResult = await this.#solve();
       this.#deferredPromise.resolve(taskResult);
     } catch (error) {
-      if (error instanceof Error) {
-        this.reject(error);
+      this.#retryTimes -= 1;
+
+      if (this.#retryTimes === 0) {
+        if (error instanceof Error) {
+          this.reject(error);
+        } else {
+          this.reject(new Error('Task has been rejected'));
+        }
       } else {
-        this.reject(new Error('Task has been rejected'));
+        return this.solve();
       }
     }
   }

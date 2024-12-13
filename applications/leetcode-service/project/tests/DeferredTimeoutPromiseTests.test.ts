@@ -15,16 +15,20 @@ describe('DeferredTimeoutPromise', () => {
     await timeoutPromise.waitForPromise();
   });
 
-  it('does not allow to be reset', async () => {
+  it('allows promise to be reset', async () => {
+    let count = 10;
     const timeoutPromise = new DeferredTimeoutPromise(1000);
 
-    const timeout = setTimeout(() => {
-      expect(() => timeoutPromise.reset()).toThrow();
-      timeoutPromise.resolve();
-      expect(() => timeoutPromise.reset()).toThrow();
-    }, 500);
+    const interval = setInterval(() => {
+      if (count === 0) {
+        timeoutPromise.resolve();
+      } else {
+        timeoutPromise.reset();
+        count -= 1;
+      }
+    }, 50);
 
     await timeoutPromise.waitForPromise();
-    timeout.unref();
+    interval.unref();
   });
 });

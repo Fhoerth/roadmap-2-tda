@@ -1,5 +1,6 @@
 import { DeferredPromise } from '../main/modules/DeferredPromise';
 import { SingleTaskProcessor } from '../main/modules/SingleTaskProcessor';
+import { createFailingPromise } from './utils/createFailingPromise';
 
 jest.setTimeout(10000);
 
@@ -174,25 +175,40 @@ describe('SingleTaskProcessor', () => {
     ]);
   });
 
-  it('allows a task to be rejected', async () => {
+  it('when a task fails it retries until is resolved', async () => {
     const processor = new SingleTaskProcessor<number>();
 
     const deferredPromises = [
       processor.enqueueTask(async () => Promise.resolve(10)),
       processor.enqueueTask(async () => Promise.resolve(20)),
-      processor.enqueueTask(async () => Promise.resolve(30)),
+      processor.enqueueTask(createFailingPromise<number>(3, 30)),
+      processor.enqueueTask(async () => Promise.resolve(40)),
+      processor.enqueueTask(async () => Promise.resolve(50)),
     ];
 
-    const waitForDeferredPromise = async (
-      dP: DeferredPromise<number>,
-    ): Promise<void> => {
-      expect(dP.waitForPromise()).rejects.toThrow();
-    };
+    const promises = deferredPromises.map((dp) => dp.waitForPromise());
+    const results = await Promise.all(promises);
 
-    for (const dP of deferredPromises) {
-      dP.reject(new Error('Rejected!'));
-      await waitForDeferredPromise(dP);
-    }
+    expect(results).toEqual([10, 20, 30, 40, 50]);
+  });
+
+  it('rejects a task when it a cannot be resolved after trying 5 times', async () => {
+    const processor = new SingleTaskProcessor<number>();
+
+    const deferredPromises = [
+      processor.enqueueTask(createFailingPromise<number>(10, 10)),
+      processor.enqueueTask(async () => Promise.resolve(20)),
+      processor.enqueueTask(async () => Promise.resolve(30)),
+      processor.enqueueTask(async () => Promise.resolve(40)),
+      processor.enqueueTask(async () => Promise.resolve(50)),
+    ];
+
+    expect(deferredPromises[0].waitForPromise()).rejects.toThrow();
+
+    const promises = deferredPromises.slice(1).map((dp) => dp.waitForPromise());
+    const results = await Promise.all(promises);
+
+    expect(results).toEqual([20, 30, 40, 50]);
   });
 
   it('allows all tasks to be rejected', async () => {

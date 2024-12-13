@@ -2,6 +2,7 @@ import {
   DeferredPromise,
   DeferredPromiseStatus,
 } from '../main/modules/DeferredPromise';
+import { DeferredTimeoutPromise } from '../main/modules/DeferredTimeoutPromise';
 
 function createTimeoutPromise(t: number): {
   isFulfilled: () => boolean;
@@ -72,11 +73,13 @@ describe('DeferredPromise', () => {
     expect(result).toBe(50);
   });
 
-  it('does not resolve after it is rejected', () => {
+  it('does not resolve after it is rejected', async () => {
     const deferredPromise = new DeferredPromise<void>();
 
     deferredPromise.resolve();
     deferredPromise.reject(new Error('Error'));
+
+    await deferredPromise.waitForPromise();
 
     expect(deferredPromise.status).toEqual(DeferredPromiseStatus.FULFILLED);
   });
@@ -212,5 +215,71 @@ describe('DeferredPromise', () => {
     const result = await resolvedDeferredPromise.waitForPromise();
 
     expect(result).toEqual(20);
+  });
+
+  test('asd', async () => {
+    const deferredPromise = new DeferredPromise<void>();
+
+    try {
+      const promise = deferredPromise.waitForPromise();
+      deferredPromise.reject(new Error('Reject #1'));
+      deferredPromise.reset();
+
+      await promise;
+    } catch (_) {}
+
+    deferredPromise.resolve();
+    await deferredPromise.waitForPromise();
+  });
+
+  test('can be resolved before waiting for promise', (done) => {
+    const deferredPromise = new DeferredPromise<number>();
+    deferredPromise.clear();
+
+    const timer = setTimeout(async () => {
+      deferredPromise.resolve(Math.pow(2, 10));
+    }, 500);
+
+    deferredPromise.waitForPromise().then((result) => {
+      expect(result).toBe(Math.pow(2, 10));
+
+      timer.unref();
+      done();
+    });
+  });
+
+  test('a deferredPromise can be retried', async () => {
+    let counter = 10;
+    const deferredPromise = new DeferredPromise<number>();
+
+    const retry = async (): Promise<void> => {
+      const timeoutPromise = new DeferredTimeoutPromise(100);
+
+      try {
+        // Intentar resolver con una carrera de promesas
+        await Promise.race([
+          deferredPromise.waitForPromise(),
+          timeoutPromise.waitForPromise(),
+        ]);
+      } catch {
+        if (counter === 0) {
+          deferredPromise.resolve(Math.pow(2, 10));
+          timeoutPromise.halt();
+          return;
+        }
+
+        deferredPromise.clear();
+        timeoutPromise.clear();
+
+        counter -= 1;
+
+        return retry();
+      }
+    };
+
+    await retry();
+
+    const result = await deferredPromise.waitForPromise();
+    expect(result).toBe(Math.pow(2, 10));
   });
 });

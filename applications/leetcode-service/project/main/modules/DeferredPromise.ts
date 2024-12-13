@@ -75,7 +75,7 @@ class DeferredPromise<T> {
 
       this.reset = (): void => {
         if (this.status === Status.PENDING) {
-          this.reject(new Error('Error while resetting pending promise'));
+          this.reject(new Error('DeferredPromise was reset.'));
         }
 
         this.#promise = this.#createPromise();
