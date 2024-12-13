@@ -1,6 +1,6 @@
 import process from 'process';
 
-import { scrapper } from './modules/Scrapper';
+import { leetCodeScrapper } from './modules/LeetCodeScrapper';
 import { server } from './server';
 
 const OK = 0;
@@ -13,7 +13,7 @@ async function main() {
       new Promise<void>((resolve) => {
         server.close(() => resolve());
       }),
-      scrapper.halt(),
+      leetCodeScrapper.halt(),
     ]);
     process.exit(OK);
   });

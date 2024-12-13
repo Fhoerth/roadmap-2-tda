@@ -1,8 +1,11 @@
+import { StatusCodes } from 'http-status-codes';
+
 import { assert } from '../../../common/utils/assert';
 import { CookieService } from '../CookieService';
 import { DeferredPromise } from '../DeferredPromise';
 import { ForeverBrowser } from '../ForeverBrowser';
 import { LoginService } from './LoginService';
+import { LeetCodeError } from './errors/LeetCodeError';
 import { extractSlug } from './utils/extractSlugs';
 import { extractSourceCode } from './utils/extractSourceCode';
 // import { DeferredTimeoutPromise } from '../DeferredTimeoutPromise';
@@ -93,7 +96,7 @@ class Scrapper {
     }
   }
 
-  async #processSubmissionWihtoutTimeout(
+  async #processSubmissionWithoutTimeout(
     submissionId: SubmissionId,
   ): Promise<Submission> {
     if (this.#submissions.has(submissionId)) {
@@ -108,58 +111,79 @@ class Scrapper {
     const submissionPage = await browser.newPage();
 
     await submissionPage.bringToFront();
-    const response = await submissionPage.goto(
-      `https://leetcode.com/submissions/detail/${submissionId}/`,
-      { waitUntil: 'networkidle2' },
-    );
+    const response = await submissionPage.goto(submissionDetailUrl, {
+      waitUntil: 'networkidle2',
+    });
 
-    if (response) {
-      const content = await response.text();
-      const slug = extractSlug(content);
-      const sourceCode = extractSourceCode(content);
-      const problemStatisticsUrl = generateProblemStatisticsUrl(slug);
-
-      const statisticsPage = await browser.newPage();
-      await statisticsPage.setViewport({
-        width: 1280,
-        height: 1024,
-      });
-      await statisticsPage.bringToFront();
-      await statisticsPage.goto(problemStatisticsUrl, {
-        waitUntil: 'domcontentloaded',
-      });
-      await new Promise((resolve) => setTimeout(resolve, 2500));
-
-      const statistics = await extractStatistics(submissionId, statisticsPage);
-      const submission = {
-        ...statistics,
-        slug,
-        code: sourceCode,
-      };
-
-      this.#submissions.set(submissionId, submission);
-      
+    if (!response) {
       await submissionPage.close();
-      await statisticsPage.close();
-
-      return submission;
-    } else {
-      await submissionPage.close();
-      throw new Error(`No response for url: ${submissionDetailUrl}`);
+      throw new LeetCodeError(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        `Submission ${submissionId} not found`,
+      );
     }
+
+    if (response.status() === 404) {
+      await submissionPage.close();
+      throw new LeetCodeError(
+        StatusCodes.NOT_FOUND,
+        `Submission ${submissionId} not found`,
+      );
+    }
+
+    if (response.status() !== 200) {
+      await submissionPage.close();
+      throw new LeetCodeError(
+        response.status(),
+        `Error while fetching submission ${submissionId}`,
+      );
+    }
+
+    const content = await response.text();
+    const slug = extractSlug(content);
+    const sourceCode = extractSourceCode(content);
+    const problemStatisticsUrl = generateProblemStatisticsUrl(slug);
+
+    const statisticsPage = await browser.newPage();
+    await statisticsPage.setViewport({
+      width: 1280,
+      height: 1024,
+    });
+    await statisticsPage.bringToFront();
+    await statisticsPage.goto(problemStatisticsUrl, {
+      waitUntil: 'domcontentloaded',
+    });
+    await new Promise((resolve) => setTimeout(resolve, 2500));
+
+    const statistics = await extractStatistics(submissionId, statisticsPage);
+    const submission = {
+      ...statistics,
+      slug,
+      code: sourceCode,
+    };
+
+    this.#submissions.set(submissionId, submission);
+
+    await submissionPage.close();
+    await statisticsPage.close();
+
+    return submission;
   }
 
   async #processSubmission(submissionId: SubmissionId): Promise<Submission> {
-    return this.#processSubmissionWihtoutTimeout(submissionId);
+    return this.#processSubmissionWithoutTimeout(submissionId);
   }
 
   async #performLogin(): Promise<void> {
     try {
       this.#performingLoginCheck = true;
+
       await this.#getLoginService().performLogin();
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
       await this.#getCookieService().saveCookies();
       await new Promise((resolve) => setTimeout(resolve, 1000));
+
       this.#waitForLoginCheck.resolve();
       this.#performingLoginCheck = false;
     } catch (reason) {
@@ -188,6 +212,6 @@ class Scrapper {
   }
 }
 
-const scrapper = new Scrapper();
+const leetCodeScrapper = new Scrapper();
 
-export { scrapper };
+export { leetCodeScrapper };

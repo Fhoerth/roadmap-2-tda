@@ -1,7 +1,8 @@
 import { Router } from 'express';
 
-import { GraphQLClient, queries } from './leetcode/GraphQLClient';
-import { scrapper } from './modules/Scrapper';
+import { GraphQLClient, queries } from '../leetcode/GraphQLClient';
+import { leetCodeScrapper } from '../modules/LeetCodeScrapper';
+import { leetCodeErrorHandler } from './handlers/leetCodeErrorHandler';
 
 const router = Router();
 const graphQLClient = new GraphQLClient();
@@ -25,10 +26,16 @@ router.get('/user/:username/submissions', async (req, res) => {
   res.json(response);
 });
 
-router.get('/submission/:submissionId', async (req, res) => {
+router.get('/submission/:submissionId', async (req, res, next) => {
   const { submissionId } = req.params;
-  const result = await scrapper.fetchSubmission(submissionId);
-  res.json(result);
+  try {
+    const result = await leetCodeScrapper.fetchSubmission(submissionId);
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
 });
+
+router.use(leetCodeErrorHandler);
 
 export { router };

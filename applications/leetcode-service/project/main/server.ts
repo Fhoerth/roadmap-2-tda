@@ -1,7 +1,7 @@
 import express from 'express';
 
+import { router } from './api/router';
 import { env } from './env';
-import { router } from './router';
 
 const PORT = parseInt(env.PORT) || 3000;
 
