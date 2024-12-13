@@ -1,10 +1,6 @@
 import { ForeverBrowser } from '../main/modules/LeetCodeScrapper/ForeverBrowser';
 import { failingVoidPromise } from './utils/failingVoidPromise';
 
-// import { waitForChromeToLaunch } from './utils/waitForChromeToLaunch';
-// import { killProcess } from './utils/killProcess';
-// import { assert } from '../common/utils/assert';
-
 jest.setTimeout(30000);
 
 describe('ForeverBrowser', () => {
@@ -92,38 +88,4 @@ describe('ForeverBrowser', () => {
 
     await foreverBrowser.halt();
   });
-
-  // it.only('closes and opens browser 5 times', async () => {
-  //   let timesOpened = 0;
-  //   let timesToBeOpened = 5;
-
-  //   const browser = new ForeverBrowser();
-  //   const tearDown = await waitForChromeToLaunch((pid) => {
-  //     if (timesOpened >= timesToBeOpened) {
-  //       tearDown();
-  //     } else {
-  //       console.log('Browser Launched', pid);
-
-  //       setTimeout(() => {
-  //         console.log('Killing Process', pid);
-
-  //         timesOpened += 1;
-  //         console.log(assert, pid, killProcess);
-  //         // killProcess(assert(pid), () => {});
-  //       }, 1000);
-  //     }
-  //   })
-
-  //   await browser.launchForever();
-  //   await new Promise<void>((resolve) => {
-  //     const interval = setInterval(() => {
-  //       if (timesOpened == timesToBeOpened) {
-  //         clearInterval(interval);
-  //         resolve();
-  //       }
-  //     }, 50);
-  //   });
-  //   throw new Error('NO!!!!');
-  //   // await browser.halt();
-  // });
 });

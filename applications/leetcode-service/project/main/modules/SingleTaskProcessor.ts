@@ -75,6 +75,7 @@ class SingleTaskProcessor<T> {
       this.#processingTask = false;
       this.#waitForTaskToBeResolved.resolve();
       this.#waitForTaskToBeResolved.reset();
+
       return this.#processTasks();
     });
   }
