@@ -1,4 +1,4 @@
-import { ForeverBrowser } from '../main/modules/ForeverBrowser';
+import { ForeverBrowser } from '../main/modules/LeetCodeScrapper/ForeverBrowser';
 import { failingVoidPromise } from './utils/failingVoidPromise';
 
 // import { waitForChromeToLaunch } from './utils/waitForChromeToLaunch';

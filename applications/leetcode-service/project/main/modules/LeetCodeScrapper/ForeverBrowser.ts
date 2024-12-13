@@ -1,10 +1,9 @@
 import { connect } from 'puppeteer-real-browser';
 import type { Browser } from 'rebrowser-puppeteer-core';
 
-import { DeferredPromise } from './DeferredPromise';
+import { DeferredPromise } from '../DeferredPromise';
 
 class ForeverBrowser {
-  #halt: boolean;
   #launchingBrowser: boolean;
   #launchingBrowserForFirstTime: boolean;
   #browser: Browser | null;
@@ -13,7 +12,6 @@ class ForeverBrowser {
   #onDisconnectedCallback: (() => Promise<void>) | null;
 
   constructor() {
-    this.#halt = false;
     this.#launchingBrowser = false;
     this.#launchingBrowserForFirstTime = true;
     this.#browser = null;
@@ -39,10 +37,6 @@ class ForeverBrowser {
   async #launchForeverRecursive(
     onLaunchCallback?: () => Promise<void>,
   ): Promise<void> {
-    if (this.#halt) {
-      throw new Error('Halt');
-    }
-
     try {
       this.#onLaunchCallback = onLaunchCallback || null;
 
@@ -117,9 +111,7 @@ class ForeverBrowser {
       this.#browser.off('disconnected', this.#onDisconnectedCallback);
     }
 
-    this.#halt = true;
     await this.close();
-    this.#halt = false;
   }
 
   public async close(): Promise<void> {

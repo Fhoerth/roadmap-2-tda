@@ -3,8 +3,8 @@ import { mkdirp } from 'mkdirp';
 import path from 'path';
 import type { Browser, Cookie } from 'rebrowser-puppeteer-core';
 
-import { assert } from '../../common/utils/assert';
-import { env } from '../env';
+import { assert } from '../../../common/utils/assert';
+import { env } from '../../env';
 
 class CookieService {
   #cookieDir = env.LEETCODE_SERVICE_COOKIE_DIR;
