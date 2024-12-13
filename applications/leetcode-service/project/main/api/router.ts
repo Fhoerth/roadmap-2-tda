@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { GraphQLClient, queries } from '../leetcode/GraphQLClient';
+import { GraphQLClient, queries } from '../graphQL/GraphQLClient';
 import { leetCodeScrapper } from '../modules/LeetCodeScrapper';
 import { leetCodeErrorHandler } from './handlers/leetCodeErrorHandler';
 
