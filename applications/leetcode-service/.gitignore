@@ -24,8 +24,7 @@ dist-ssr
 *.sw?
 
 .yarn
-todo.txt
 .env
-Dockerfile.old
 cookies
+_cookies
 screenshots
