@@ -10,28 +10,18 @@ import {
 import { SubmissionId } from '../types/SubmissionId';
 import { captureElementScreenshot } from './captureScreenshot';
 import { convertImageToBase64 } from './convertImageToBase64';
-import { searchByText } from './searchByText';
+import { isAccepted } from './isAccepted';
 
 async function extractStatistics(
   submissionId: SubmissionId,
   statisticsPage: Page,
 ): Promise<StatisticsResult> {
-  const promises = new Array(10)
-    .fill(0)
-    .map((_, i) =>
-      searchByText(
-        statisticsPage,
-        `[data-layout-path="/ts0/t${i}"]`,
-        'Accepted',
-      ).catch(() => false),
-    );
-  const results = await Promise.all(promises);
-  const solved = results.some((value) => value);
+  const accepted = await isAccepted(statisticsPage);
 
-  if (!solved) {
+  if (!accepted) {
     return {
       submissionId,
-      solved,
+      accepted,
       image: null,
     };
   }
@@ -47,7 +37,7 @@ async function extractStatistics(
 
   return {
     submissionId,
-    solved,
+    accepted,
     image: base64EncodedString,
   };
 }

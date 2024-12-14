@@ -15,7 +15,6 @@ import type { SubmissionId } from './types/SubmissionId';
 import { extractProblemSlug } from './utils/extractProblemSlug';
 // import { DeferredTimeoutPromise } from '../DeferredTimeoutPromise';
 // import { SingleTaskProcessor } from '../SingleTaskProcessor';
-import { extractProfileName } from './utils/extractProfileName';
 import { extractSourceCode } from './utils/extractSourceCode';
 import { extractStatistics } from './utils/extractStatistics';
 
@@ -103,39 +102,30 @@ class Scrapper {
       waitUntil: 'networkidle2',
     });
 
-    if (!response) {
-      await submissionPage.close();
-
+    if (
+      !response ||
+      (response.status() !== StatusCodes.OK &&
+        response.status() !== StatusCodes.NOT_FOUND)
+    ) {
       throw new LeetCodeError(
         StatusCodes.INTERNAL_SERVER_ERROR,
-        `Submission ${submissionId} not found`,
+        `Cannot fetch submission ${submissionId} statistics.`,
       );
     }
 
-    if (response.status() === 404) {
-      await submissionPage.close();
-
+    if (response.status() === StatusCodes.NOT_FOUND) {
       throw new LeetCodeError(
         StatusCodes.NOT_FOUND,
-        `Submission ${submissionId} not found`,
-      );
-    }
-
-    if (response.status() !== 200) {
-      await submissionPage.close();
-
-      throw new LeetCodeError(
-        response.status(),
-        `Error while fetching submission ${submissionId}`,
+        `Submission ${submissionId} not found.`,
       );
     }
 
     const content = await response.text();
+
     const problemSlug = extractProblemSlug(content);
-    const profileName = extractProfileName(content);
     const sourceCode = extractSourceCode(content);
 
-    return { profileName, problemSlug, sourceCode };
+    return { problemSlug, sourceCode };
   }
 
   async #getStatisticsResult(
@@ -144,12 +134,34 @@ class Scrapper {
     statisticsPage: Page,
   ): Promise<StatisticsResult> {
     const problemStatisticsUrl = `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
-    await statisticsPage.goto(problemStatisticsUrl, {
+    const response = await statisticsPage.goto(problemStatisticsUrl, {
       waitUntil: 'domcontentloaded',
     });
+
+    if (
+      !response ||
+      (response.status() !== StatusCodes.OK &&
+        response.status() !== StatusCodes.NOT_FOUND)
+    ) {
+      throw new LeetCodeError(
+        StatusCodes.INTERNAL_SERVER_ERROR,
+        `Cannot fetch submission ${submissionId} statistics.`,
+      );
+    }
+
+    if (response.status() === StatusCodes.NOT_FOUND) {
+      throw new LeetCodeError(
+        StatusCodes.NOT_FOUND,
+        `Submission ${submissionId} not found.`,
+      );
+    }
+
+    // Wait for editor to load.
     await new Promise((resolve) => setTimeout(resolve, 2500));
 
     const statistics = await extractStatistics(submissionId, statisticsPage);
+
+    await new Promise((resolve) => setTimeout(resolve, 10000));
 
     return statistics;
   }
