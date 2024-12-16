@@ -8,8 +8,8 @@ import {
   TaskWithTimeout,
 } from '../../SingleTaskProcessor';
 import type { TimeoutSolver } from '../../SingleTaskProcessor';
-import { CookieService } from '../CookieService';
 import type { Browser } from '../Browser';
+import { CookieService } from '../CookieService';
 import type { ProcessService } from '../ProcessService';
 import type { Submission } from '../types/Submission';
 import { clickButton } from '../utils/clickButton';

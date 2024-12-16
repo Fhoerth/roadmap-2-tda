@@ -1,6 +1,6 @@
 import { SingleTaskProcessor } from '../SingleTaskProcessor';
-import { CookieService } from './CookieService';
 import { Browser } from './Browser';
+import { CookieService } from './CookieService';
 import { processService } from './ProcessService';
 import { BrowserTasks } from './tasks/BrowserTasks';
 import { LeetCodeTasks } from './tasks/LeetCodeTasks';
@@ -36,6 +36,7 @@ class Scrapper {
       this.#browser,
       this.#taskProcessor,
       this.#processService,
+      this.#browserTasks,
       this.#loginTasks,
     );
 

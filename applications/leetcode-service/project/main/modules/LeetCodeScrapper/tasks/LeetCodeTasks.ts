@@ -19,23 +19,27 @@ import type { SubmissionId } from '../types/SubmissionId';
 import { extractProblemSlug } from '../utils/extractProblemSlug';
 import { extractSourceCode } from '../utils/extractSourceCode';
 import { extractStatistics } from '../utils/extractStatistics';
+import { BrowserTasks } from './BrowserTasks';
 import { LoginTasks } from './LoginTasks';
 
 class LeetCodeTasks {
   readonly #browser: Browser;
   readonly #taskProcessor: SingleTaskProcessor<void | Submission>;
   readonly #processService: ProcessService;
+  readonly #browserTasks: BrowserTasks;
   readonly #loginTasks: LoginTasks;
 
   constructor(
     browser: Browser,
     taskProcessor: SingleTaskProcessor<void | Submission>,
     processService: ProcessService,
+    browserTasks: BrowserTasks,
     loginTasks: LoginTasks,
   ) {
     this.#browser = browser;
     this.#taskProcessor = taskProcessor;
     this.#processService = processService;
+    this.#browserTasks = browserTasks;
     this.#loginTasks = loginTasks;
   }
 
@@ -43,6 +47,9 @@ class LeetCodeTasks {
     submissionId: string,
     timeoutPromise: DeferredTimeoutPromise,
   ): Promise<SourceCodeResult> {
+    await this.#browserTasks.checkBrowserAlive(timeoutPromise);
+    timeoutPromise.reset();
+
     const browser = this.#browser.getBrowser();
     const submissionDetailUrl = `https://leetcode.com/submissions/detail/${submissionId}/`;
 
@@ -99,6 +106,9 @@ class LeetCodeTasks {
     submissionId: SubmissionId,
     timeoutPromise: DeferredTimeoutPromise,
   ): Promise<StatisticsResult> {
+    await this.#browserTasks.checkBrowserAlive(timeoutPromise);
+    timeoutPromise.reset();
+
     const browser = this.#browser.getBrowser();
     const problemStatisticsUrl = `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
 
