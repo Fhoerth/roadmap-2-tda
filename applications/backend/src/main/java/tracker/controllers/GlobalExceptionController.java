@@ -6,7 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import tracker.exceptions.BadRequestException;
-import tracker.exceptions.SubmissionRequestException;
+import tracker.exceptions.LeetCodeServiceForwardedException;
+import tracker.exceptions.LeetCodeServiceRequestException;
+import tracker.exceptions.LeetCodeServiceResponseException;
 import tracker.exceptions.UnauthorizedException;
 import tracker.exceptions.UserNotFoundException;
 import tracker.exceptions.UserNotUniqueException;
@@ -37,11 +39,28 @@ public class GlobalExceptionController {
     return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
   }
 
-  @ExceptionHandler(SubmissionRequestException.class)
-  public ResponseEntity<ErrorResponse> handleSubmissionRequestException(SubmissionRequestException exception) {
+  @ExceptionHandler(LeetCodeServiceRequestException.class)
+  public ResponseEntity<ErrorResponse> handleLeetCodeServiceRequestException(
+      LeetCodeServiceRequestException exception) {
     ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
         exception.getMessage());
     return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(LeetCodeServiceResponseException.class)
+  public ResponseEntity<ErrorResponse> handleLeetCodeServiceResponseException(
+      LeetCodeServiceResponseException exception) {
+    ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+        exception.getMessage());
+    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(LeetCodeServiceForwardedException.class)
+  public ResponseEntity<ErrorResponse> handleLeetCodeServiceForwardedException(
+      LeetCodeServiceForwardedException exception) {
+    System.out.println("Exception handler invoked for: " + exception.getMessage());
+    ErrorResponse errorResponse = new ErrorResponse(exception.status.toString(), exception.message);
+    return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(exception.status));
   }
 
   @Data

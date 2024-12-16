@@ -6,7 +6,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tracker.DTO.SubmissionDTO;
 import tracker.auth.Auth;
-import tracker.exceptions.SubmissionRequestException;
+import tracker.exceptions.LeetCodeServiceForwardedException;
+import tracker.exceptions.LeetCodeServiceRequestException;
+import tracker.exceptions.LeetCodeServiceResponseException;
 import tracker.services.LeetCodeService;
 
 @Validated
@@ -24,7 +26,7 @@ public class LeetCodeController {
   @GetMapping("/submission/{submissionId}")
   public SubmissionDTO getProblemStatus(
       @PathVariable @Pattern(regexp = "\\d+", message = "Problem ID must be numeric") String submissionId)
-      throws SubmissionRequestException {
+      throws LeetCodeServiceForwardedException, LeetCodeServiceRequestException, LeetCodeServiceResponseException {
     return leetCodeService.fetchSubmission(submissionId);
   }
 }
