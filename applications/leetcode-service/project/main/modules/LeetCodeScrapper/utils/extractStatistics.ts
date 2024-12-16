@@ -8,7 +8,7 @@ import {
   StatisticsResult,
 } from '../types/StatisticsResult';
 import { SubmissionId } from '../types/SubmissionId';
-import { captureElementScreenshot } from './captureScreenshot';
+import { captureSubmissionScreenshot } from './captureSubmissionScreenshot';
 import { convertImageToBase64 } from './convertImageToBase64';
 import { isAccepted } from './isAccepted';
 
@@ -31,7 +31,7 @@ async function extractStatistics(
     `statistics-${submissionId}.png`,
   );
   const elementHandle = assert(await statisticsPage.$('body'));
-  await captureElementScreenshot(elementHandle, screenshotOutputPath);
+  await captureSubmissionScreenshot(elementHandle, screenshotOutputPath);
   const base64EncodedString: Base64EncodedString =
     await convertImageToBase64(screenshotOutputPath);
 

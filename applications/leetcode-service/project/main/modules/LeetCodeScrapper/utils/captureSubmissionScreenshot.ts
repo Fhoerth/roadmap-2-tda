@@ -5,7 +5,7 @@ import type { ElementHandle } from 'rebrowser-puppeteer-core';
 async function cropImage(path: string): Promise<void> {
   return new Promise((resolve, reject) => {
     const tmpPath = path.replace('.png', '-cropped.png');
-    const command = `ffmpeg -i ${path} -vf "crop=626:510:10:80" ${tmpPath}`;
+    const command = `ffmpeg -i ${path} -vf "crop=611:458:15:122" ${tmpPath}`;
 
     exec(command, async (error) => {
       if (error) {
@@ -23,7 +23,7 @@ async function cropImage(path: string): Promise<void> {
   });
 }
 
-async function captureElementScreenshot(
+async function captureSubmissionScreenshot(
   elementHandle: ElementHandle<Node>,
   outputPath: string,
 ) {
@@ -33,4 +33,4 @@ async function captureElementScreenshot(
   console.log(`Screenshot has been saved: ${outputPath}`);
 }
 
-export { captureElementScreenshot };
+export { captureSubmissionScreenshot };
