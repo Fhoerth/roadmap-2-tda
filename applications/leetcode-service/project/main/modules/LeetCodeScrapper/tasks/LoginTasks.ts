@@ -9,14 +9,14 @@ import {
 } from '../../SingleTaskProcessor';
 import type { TimeoutSolver } from '../../SingleTaskProcessor';
 import { CookieService } from '../CookieService';
-import { ForeverBrowser } from '../ForeverBrowser';
+import type { Browser } from '../Browser';
 import type { ProcessService } from '../ProcessService';
 import type { Submission } from '../types/Submission';
 import { clickButton } from '../utils/clickButton';
 import { BrowserTasks } from './BrowserTasks';
 
 class LoginTasks {
-  readonly #foreverBrowser: ForeverBrowser;
+  readonly #browser: Browser;
   readonly #taskProcessor: SingleTaskProcessor<void | Submission>;
 
   readonly #processService: ProcessService;
@@ -30,13 +30,13 @@ class LoginTasks {
   readonly #gitHubToptSecret: string;
 
   constructor(
-    foreverBrowser: ForeverBrowser,
+    browser: Browser,
     taskProcessor: SingleTaskProcessor<void | Submission>,
     processService: ProcessService,
     browserTasks: BrowserTasks,
     cookieService: CookieService,
   ) {
-    this.#foreverBrowser = foreverBrowser;
+    this.#browser = browser;
     this.#taskProcessor = taskProcessor;
 
     this.#processService = processService;
@@ -55,7 +55,7 @@ class LoginTasks {
   }
 
   async #isGitHubLoggedIn(): Promise<boolean> {
-    const browser = this.#foreverBrowser.getBrowser();
+    const browser = this.#browser.getBrowser();
     const settingsUrl = 'https://github.com/settings';
 
     try {
@@ -82,7 +82,7 @@ class LoginTasks {
   }
 
   async #isLeetCodeLoggedIn(): Promise<boolean> {
-    const browser = this.#foreverBrowser.getBrowser();
+    const browser = this.#browser.getBrowser();
     const profileUrl = 'https://leetcode.com/profile/';
     const loginUrl = 'https://leetcode.com/accounts/github/login/?next=%2F';
 
@@ -125,7 +125,7 @@ class LoginTasks {
   }
 
   async #loginToGitHub(timeoutPromise: DeferredTimeoutPromise): Promise<void> {
-    const browser = this.#foreverBrowser.getBrowser();
+    const browser = this.#browser.getBrowser();
     const loginUrl = 'https://www.github.com/login';
 
     const gitHubPage = await browser.newPage();
@@ -180,7 +180,7 @@ class LoginTasks {
   async #loginToLeetCode(
     timeoutPromise: DeferredTimeoutPromise,
   ): Promise<void> {
-    const browser = this.#foreverBrowser.getBrowser();
+    const browser = this.#browser.getBrowser();
     const loginUrl = 'https://leetcode.com/accounts/github/login/?next=%2F';
 
     const leetCodePage = await browser.newPage();

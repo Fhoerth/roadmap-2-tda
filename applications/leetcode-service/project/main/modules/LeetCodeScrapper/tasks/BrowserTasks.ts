@@ -1,19 +1,19 @@
 import { assert } from '../../../../common/utils/assert';
 import { DeferredTimeoutPromise } from '../../DeferredTimeoutPromise';
-import { ForeverBrowser } from '../ForeverBrowser';
+import type { Browser } from '../Browser';
 
 class BrowserTasks {
-  readonly #foreverBrowser: ForeverBrowser;
+  readonly #browser: Browser;
   readonly #pingURL = 'https://httpbin.org/get';
 
-  constructor(foreverBrowser: ForeverBrowser) {
-    this.#foreverBrowser = foreverBrowser;
+  constructor(browser: Browser) {
+    this.#browser = browser;
   }
 
   public async checkBrowserAlive(
     timeoutPromise: DeferredTimeoutPromise,
   ): Promise<void> {
-    const pingPage = await this.#foreverBrowser.getBrowser().newPage();
+    const pingPage = await this.#browser.getBrowser().newPage();
     const response = assert(await pingPage.goto(this.#pingURL));
     timeoutPromise.reset();
 

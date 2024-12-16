@@ -1,6 +1,6 @@
 import { SingleTaskProcessor } from '../SingleTaskProcessor';
 import { CookieService } from './CookieService';
-import { ForeverBrowser } from './ForeverBrowser';
+import { Browser } from './Browser';
 import { processService } from './ProcessService';
 import { BrowserTasks } from './tasks/BrowserTasks';
 import { LeetCodeTasks } from './tasks/LeetCodeTasks';
@@ -9,7 +9,7 @@ import type { Submission } from './types/Submission';
 import type { SubmissionId } from './types/SubmissionId';
 
 class Scrapper {
-  #foreverBrowser: ForeverBrowser;
+  #browser: Browser;
   #cookieService: CookieService;
   #taskProcessor: SingleTaskProcessor<void | Submission>;
 
@@ -19,27 +19,27 @@ class Scrapper {
   #leetCodeTasks: LeetCodeTasks;
 
   constructor() {
-    this.#foreverBrowser = new ForeverBrowser();
-    this.#cookieService = new CookieService(this.#foreverBrowser);
+    this.#browser = new Browser();
+    this.#cookieService = new CookieService(this.#browser);
     this.#taskProcessor = new SingleTaskProcessor<void | Submission>();
 
     this.#processService = processService;
-    this.#browserTasks = new BrowserTasks(this.#foreverBrowser);
+    this.#browserTasks = new BrowserTasks(this.#browser);
     this.#loginTasks = new LoginTasks(
-      this.#foreverBrowser,
+      this.#browser,
       this.#taskProcessor,
       this.#processService,
       this.#browserTasks,
       this.#cookieService,
     );
     this.#leetCodeTasks = new LeetCodeTasks(
-      this.#foreverBrowser,
+      this.#browser,
       this.#taskProcessor,
       this.#processService,
       this.#loginTasks,
     );
 
-    this.#foreverBrowser.launchForever(this.#onBrowserLaunch.bind(this));
+    this.#browser.launch(this.#onBrowserLaunch.bind(this));
   }
 
   async #onBrowserLaunch(): Promise<void> {
@@ -49,7 +49,7 @@ class Scrapper {
   }
 
   public async halt(): Promise<void> {
-    return this.#foreverBrowser.halt();
+    return this.#browser.halt();
   }
 
   public async fetchSubmission(

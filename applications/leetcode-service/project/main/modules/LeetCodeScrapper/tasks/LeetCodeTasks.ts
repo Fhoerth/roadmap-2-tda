@@ -6,7 +6,7 @@ import {
   SingleTaskProcessor,
   TaskWithTimeout,
 } from '../../SingleTaskProcessor';
-import { ForeverBrowser } from '../ForeverBrowser';
+import type { Browser } from '../Browser';
 import type { ProcessService } from '../ProcessService';
 import { LeetCodeError } from '../errors/LeetCodeError';
 import { LoginRequiredError } from '../errors/LoginRequiredError';
@@ -22,18 +22,18 @@ import { extractStatistics } from '../utils/extractStatistics';
 import { LoginTasks } from './LoginTasks';
 
 class LeetCodeTasks {
-  readonly #foreverBrowser: ForeverBrowser;
+  readonly #browser: Browser;
   readonly #taskProcessor: SingleTaskProcessor<void | Submission>;
   readonly #processService: ProcessService;
   readonly #loginTasks: LoginTasks;
 
   constructor(
-    foreverBrowser: ForeverBrowser,
+    browser: Browser,
     taskProcessor: SingleTaskProcessor<void | Submission>,
     processService: ProcessService,
     loginTasks: LoginTasks,
   ) {
-    this.#foreverBrowser = foreverBrowser;
+    this.#browser = browser;
     this.#taskProcessor = taskProcessor;
     this.#processService = processService;
     this.#loginTasks = loginTasks;
@@ -43,7 +43,7 @@ class LeetCodeTasks {
     submissionId: string,
     timeoutPromise: DeferredTimeoutPromise,
   ): Promise<SourceCodeResult> {
-    const browser = this.#foreverBrowser.getBrowser();
+    const browser = this.#browser.getBrowser();
     const submissionDetailUrl = `https://leetcode.com/submissions/detail/${submissionId}/`;
 
     const submissionPage = await browser.newPage();
@@ -99,7 +99,7 @@ class LeetCodeTasks {
     submissionId: SubmissionId,
     timeoutPromise: DeferredTimeoutPromise,
   ): Promise<StatisticsResult> {
-    const browser = this.#foreverBrowser.getBrowser();
+    const browser = this.#browser.getBrowser();
     const problemStatisticsUrl = `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
 
     const statisticsPage = await browser.newPage();
