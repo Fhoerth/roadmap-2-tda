@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import tracker.exceptions.BadRequestException;
+import tracker.exceptions.SubmissionRequestException;
 import tracker.exceptions.UnauthorizedException;
 import tracker.exceptions.UserNotFoundException;
 import tracker.exceptions.UserNotUniqueException;
@@ -34,6 +35,13 @@ public class GlobalExceptionController {
   public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException exception) {
     ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NOT_FOUND.toString(), exception.getMessage());
     return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+  }
+
+  @ExceptionHandler(SubmissionRequestException.class)
+  public ResponseEntity<ErrorResponse> handleSubmissionRequestException(SubmissionRequestException exception) {
+    ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+        exception.getMessage());
+    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   @Data

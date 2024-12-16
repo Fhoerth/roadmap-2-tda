@@ -65,6 +65,7 @@ services:
       MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
       MONGO_DB_URL: ${MONGO_DB_URL}
       FRONTEND_URL: ${FRONTEND_URL}
+      LEETCODE_SERVICE_API_URL: ${LEETCODE_SERVICE_API_URL}
       BACKEND_MASTER_KEY: ${BACKEND_MASTER_KEY}
       BACKEND_AUTH_REGISTRATION_KEY: ${BACKEND_AUTH_REGISTRATION_KEY}
       JAVA_OPTS: -Dspring.devtools.restart.enabled=true -Dspring.devtools.livereload.enabled=true
