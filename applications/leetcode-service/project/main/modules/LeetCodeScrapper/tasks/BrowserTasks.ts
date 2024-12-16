@@ -13,7 +13,9 @@ class BrowserTasks {
   public async checkBrowserAlive(
     timeoutPromise: DeferredTimeoutPromise,
   ): Promise<void> {
-    const pingPage = await this.#browser.getBrowser().newPage();
+    const browser = await this.#browser.getBrowser();
+
+    const pingPage = await browser.newPage();
     const response = assert(await pingPage.goto(this.#pingURL));
     timeoutPromise.reset();
 

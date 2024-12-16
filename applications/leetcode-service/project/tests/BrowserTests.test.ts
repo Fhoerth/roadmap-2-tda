@@ -1,3 +1,5 @@
+import type { Browser as ReBrowser } from 'rebrowser-puppeteer-core';
+
 import { Browser } from '../main/modules/LeetCodeScrapper/Browser';
 
 jest.setTimeout(30000);
@@ -13,26 +15,30 @@ describe('Browser', () => {
     let timesBrowserHasBeenOpened = 0;
     const browser = new Browser();
 
+    const assertPage = async (rebrowser: ReBrowser): Promise<void> => {
+      const page = await rebrowser.newPage();
+      await page.goto('about:blank', { waitUntil: 'domcontentloaded' });
+      assertTrue(page.url() === 'about:blank');
+      await page.close();
+    };
+
     browser.launch(async () => {
       console.log(
         'Browser has been relaunched for:',
         timesBrowserHasBeenOpened + 1,
       );
-      await browser.getBrowser().newPage();
+
+      const rebrowser = await browser.getBrowser();
+      await assertPage(rebrowser);
+
       timesBrowserHasBeenOpened += 1;
     });
 
-    await browser.waitForBrowserToBeOpen();
-    const page = await browser.getBrowser().newPage();
+    const rebrowser = await browser.getBrowser();
 
     try {
-      assertTrue(page.url() == 'about:blank');
-
-      console.log('Done!');
-    } catch (error) {
-      throw error;
+      await assertPage(rebrowser);
     } finally {
-      await page.close();
       await browser.halt();
     }
   });

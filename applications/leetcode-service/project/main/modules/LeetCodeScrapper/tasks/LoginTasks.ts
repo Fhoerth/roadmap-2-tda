@@ -55,7 +55,7 @@ class LoginTasks {
   }
 
   async #isGitHubLoggedIn(): Promise<boolean> {
-    const browser = this.#browser.getBrowser();
+    const browser = await this.#browser.getBrowser();
     const settingsUrl = 'https://github.com/settings';
 
     try {
@@ -82,7 +82,7 @@ class LoginTasks {
   }
 
   async #isLeetCodeLoggedIn(): Promise<boolean> {
-    const browser = this.#browser.getBrowser();
+    const browser = await this.#browser.getBrowser();
     const profileUrl = 'https://leetcode.com/profile/';
     const loginUrl = 'https://leetcode.com/accounts/github/login/?next=%2F';
 
@@ -125,7 +125,7 @@ class LoginTasks {
   }
 
   async #loginToGitHub(timeoutPromise: DeferredTimeoutPromise): Promise<void> {
-    const browser = this.#browser.getBrowser();
+    const browser = await this.#browser.getBrowser();
     const loginUrl = 'https://www.github.com/login';
 
     const gitHubPage = await browser.newPage();
@@ -180,7 +180,7 @@ class LoginTasks {
   async #loginToLeetCode(
     timeoutPromise: DeferredTimeoutPromise,
   ): Promise<void> {
-    const browser = this.#browser.getBrowser();
+    const browser = await this.#browser.getBrowser();
     const loginUrl = 'https://leetcode.com/accounts/github/login/?next=%2F';
 
     const leetCodePage = await browser.newPage();

@@ -50,7 +50,7 @@ class LeetCodeTasks {
     await this.#browserTasks.checkBrowserAlive(timeoutPromise);
     timeoutPromise.reset();
 
-    const browser = this.#browser.getBrowser();
+    const browser = await this.#browser.getBrowser();
     const submissionDetailUrl = `https://leetcode.com/submissions/detail/${submissionId}/`;
 
     const submissionPage = await browser.newPage();
@@ -109,7 +109,7 @@ class LeetCodeTasks {
     await this.#browserTasks.checkBrowserAlive(timeoutPromise);
     timeoutPromise.reset();
 
-    const browser = this.#browser.getBrowser();
+    const browser = await this.#browser.getBrowser();
     const problemStatisticsUrl = `https://leetcode.com/problems/${slug}/submissions/${submissionId}/`;
 
     const statisticsPage = await browser.newPage();

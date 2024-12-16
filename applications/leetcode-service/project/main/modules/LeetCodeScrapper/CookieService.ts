@@ -16,7 +16,7 @@ class CookieService {
   }
 
   async saveCookies(): Promise<void> {
-    const browser = this.#browser.getBrowser();
+    const browser = await this.#browser.getBrowser();
     const context = browser.defaultBrowserContext();
 
     try {
@@ -46,7 +46,7 @@ class CookieService {
   }
 
   async loadCookies(): Promise<void> {
-    const browser = this.#browser.getBrowser();
+    const browser = await this.#browser.getBrowser();
 
     try {
       const cookiesExist = await fs.stat(this.#cookieFile).catch(() => false);

@@ -66,42 +66,16 @@ class Browser {
         this.#launchingBrowserForFirstTime = false;
       }
 
-      await this.#runOnLaunchCallback();
+      this.#waitForBrowserToBeOpen.resolve(browser);
 
-      this.#waitForBrowserToBeOpen.resolve(this.getBrowser());
+      await this.#runOnLaunchCallback();
     } catch (_) {
       return this.#launchRecursive(onLaunchCallback);
     }
   }
 
-  public getBrowser(): ReBrowser {
-    if (!this.#browser) {
-      throw new Error('Browser not set');
-    }
-
-    return this.#browser;
-  }
-
-  public waitForBrowserToBeOpen(): Promise<ReBrowser> {
-    return this.#waitForBrowserToBeOpen.waitForPromise();
-  }
-
-  public launch(onLaunchCallback?: () => Promise<void>): void {
-    void this.#launchRecursive(onLaunchCallback);
-  }
-
-  public async halt(): Promise<void> {
-    this.#waitForBrowserToBeOpen.waitForPromise();
-
-    if (this.#browser && this.#onDisconnectedCallback) {
-      this.#browser.off('disconnected', this.#onDisconnectedCallback);
-    }
-
-    await this.close();
-  }
-
-  public async close(): Promise<void> {
-    const browser = this.getBrowser();
+  async #close(): Promise<void> {
+    const browser = await this.getBrowser();
 
     try {
       const pages = await browser.pages();
@@ -115,6 +89,30 @@ class Browser {
 
     await browser.disconnect();
     await browser.close();
+  }
+
+  public async getBrowser(): Promise<ReBrowser> {
+    await this.#waitForBrowserToBeOpen.waitForPromise();
+
+    if (!this.#browser) {
+      throw new Error('Browser not set');
+    }
+
+    return this.#browser;
+  }
+
+  public launch(onLaunchCallback?: () => Promise<void>): void {
+    void this.#launchRecursive(onLaunchCallback);
+  }
+
+  public async halt(): Promise<void> {
+    this.#waitForBrowserToBeOpen.waitForPromise();
+
+    if (this.#browser && this.#onDisconnectedCallback) {
+      this.#browser.off('disconnected', this.#onDisconnectedCallback);
+    }
+
+    await this.#close();
   }
 }
 
