@@ -39,13 +39,16 @@ public class UserService {
   public User createUser(UserInputDTO input) throws UserNotUniqueException {
     Boolean existsByLu = userRepository.existsByLu(input.lu());
     Boolean existsByNickname = userRepository.existsByNickname(input.nickname());
+    Boolean existsByLeetCodeUsernName = userRepository.existsByLeetCodeUsername(input.leetCodeUserName());
 
     if (existsByLu)
       throw new UserNotUniqueException("LU not unique.");
     else if (existsByNickname)
       throw new UserNotUniqueException("Nickname not unique.");
+    else if (existsByLeetCodeUsernName)
+      throw new UserNotUniqueException("LeetCode userName not unique.");
 
-    User user = new User(input.lu(), input.nickname(), input.pin());
+    User user = new User(input.lu(), input.nickname(), input.leetCodeUserName(), input.pin());
 
     userRepository.save(user);
 

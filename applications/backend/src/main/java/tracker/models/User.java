@@ -17,16 +17,19 @@ public class User {
 
   private String lu;
   private String nickname;
+  private String leetCodeUserName;
   private Integer pin;
 
   // spotless:off
-  public User() {}
+  public User() {
+  }
   // spotless:on
 
-  public User(String lu, String nickname, Integer pin) {
-    this.nickname = nickname;
+  public User(String lu, String nickname, String leetCodeUserName, Integer pin) {
     this.lu = lu;
     this.pin = pin;
+    this.nickname = nickname;
+    this.leetCodeUserName = leetCodeUserName;
   }
 
   public ObjectId getId() {
@@ -51,6 +54,14 @@ public class User {
 
   public void setNickname(String nickname) {
     this.nickname = nickname;
+  }
+
+  public void setLeetCodeUserName(String leetCodeUserName) {
+    this.leetCodeUserName = leetCodeUserName;
+  }
+
+  public String getLeetCodeUserName() {
+    return leetCodeUserName;
   }
 
   public Integer getpin() {

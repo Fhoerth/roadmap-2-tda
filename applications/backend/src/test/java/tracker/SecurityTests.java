@@ -111,7 +111,7 @@ public class SecurityTests {
 
     byte[] unsignedSecretKey = keyService.getUnsignedSecretKey();
 
-    User user = new User("752/23", "JohnDoe", 1234);
+    User user = new User("752/23", "JohnDoe", "JohnDoeLeetCode", 1234);
     Token token = new Token(user);
     user.setId(new ObjectId("64a98712c0a73b4bf8f91b75"));
 
