@@ -8,4 +8,5 @@ target
 cron_job.txt
 metabase
 JWT.txt
+todo.txt
 generate-master-key

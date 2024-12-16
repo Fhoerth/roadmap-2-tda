@@ -1,3 +1,4 @@
+import { sleep } from '../common/utils/sleep';
 import { DeferredTimeoutPromise } from '../main/modules/DeferredTimeoutPromise';
 
 describe('DeferredTimeoutPromise', () => {
@@ -30,5 +31,25 @@ describe('DeferredTimeoutPromise', () => {
 
     await timeoutPromise.waitForPromise();
     interval.unref();
+  });
+
+  it('deferred timeout promise can be catched', async () => {
+    const timeoutPromise = new DeferredTimeoutPromise(1000);
+
+    try {
+      await timeoutPromise.waitForPromise();
+    } catch {}
+  });
+
+  it('allows promises to start later', async () => {
+    const timeoutPromise = new DeferredTimeoutPromise(200, false);
+
+    await sleep(500);
+    timeoutPromise.start();
+
+    await sleep(100);
+    timeoutPromise.resolve();
+
+    await timeoutPromise.waitForPromise();
   });
 });

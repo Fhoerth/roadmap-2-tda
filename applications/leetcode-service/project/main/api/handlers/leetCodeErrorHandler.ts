@@ -1,23 +1,20 @@
-import { NextFunction, Request, Response } from 'express';
-import { StatusCodes, getReasonPhrase } from 'http-status-codes';
+import type { NextFunction, Request, Response } from 'express';
 
 import { LeetCodeError } from '../../modules/LeetCodeScrapper/errors/LeetCodeError';
 
 function leetCodeErrorHandler(
-  error: Error,
-  _req: Request,
-  res: Response,
-  _next: NextFunction,
+  error: unknown,
+  _request: Request,
+  response: Response,
+  next: NextFunction,
 ): void {
   if (error instanceof LeetCodeError) {
-    res.status(error.status).json(error);
+    response.status(error.status).json({
+      status: error.status,
+      message: error.message,
+    });
   } else {
-    const status = StatusCodes.INTERNAL_SERVER_ERROR;
-    const message =
-      error instanceof Error
-        ? error.message
-        : getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR);
-    res.status(status).json({ status, message });
+    next(error);
   }
 }
 

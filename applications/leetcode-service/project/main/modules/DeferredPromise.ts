@@ -88,8 +88,7 @@ class DeferredPromise<T> {
   }
 
   public async waitForPromise(): Promise<T> {
-    const result = await this.#getPromise();
-    return result;
+    return await this.#getPromise();
   }
 }
 

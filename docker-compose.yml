@@ -17,6 +17,7 @@ services:
       GITHUB_PASSWORD: ${GITHUB_PASSWORD}
       GITHUB_PROFILE_NAME: ${GITHUB_PROFILE_NAME}
       GITHUB_TOPT_SECRET: ${GITHUB_TOPT_SECRET}
+    restart: on-failure
     env_file:
       - ./.env
     ports:

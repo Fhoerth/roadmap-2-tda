@@ -1,6 +1,7 @@
-import { DeferredPromise } from '../main/modules/DeferredPromise';
-import { SingleTaskProcessor } from '../main/modules/SingleTaskProcessor';
-import { createFailingPromise } from './utils/createFailingPromise';
+import { assert } from '../common/utils/assert';
+import { sleep } from '../common/utils/sleep';
+import { DeferredTimeoutPromise } from '../main/modules/DeferredTimeoutPromise';
+import { SingleTaskProcessor, Task } from '../main/modules/SingleTaskProcessor';
 
 jest.setTimeout(10000);
 
@@ -8,26 +9,20 @@ describe('SingleTaskProcessor', () => {
   it('processes a single task', async () => {
     const processor = new SingleTaskProcessor<number>();
 
-    const deferredPromiseTask1 = processor.enqueueTask(() =>
-      Promise.resolve(10),
-    );
+    const task1 = processor.enqueueTask('task1', () => Promise.resolve(10));
 
-    expect(await deferredPromiseTask1.waitForPromise()).toBe(10);
+    expect(await task1.waitForPromise()).toBe(10);
   });
 
   it('processes two tasks', async () => {
     const processor = new SingleTaskProcessor<number>();
 
-    const deferredPromiseTask1 = processor.enqueueTask(() =>
-      Promise.resolve(10),
-    );
-    const deferredPromiseTask2 = processor.enqueueTask(() =>
-      Promise.resolve(20),
-    );
+    const task1 = processor.enqueueTask('task1', () => Promise.resolve(10));
+    const task2 = processor.enqueueTask('task2', () => Promise.resolve(20));
 
     const results = await Promise.all([
-      deferredPromiseTask1.waitForPromise(),
-      deferredPromiseTask2.waitForPromise(),
+      task1.waitForPromise(),
+      task2.waitForPromise(),
     ]);
 
     expect(results).toEqual([10, 20]);
@@ -36,20 +31,14 @@ describe('SingleTaskProcessor', () => {
   it('processes three tasks', async () => {
     const processor = new SingleTaskProcessor<number>();
 
-    const deferredPromiseTask1 = processor.enqueueTask(() =>
-      Promise.resolve(10),
-    );
-    const deferredPromiseTask2 = processor.enqueueTask(() =>
-      Promise.resolve(20),
-    );
-    const deferredPromiseTask3 = processor.enqueueTask(() =>
-      Promise.resolve(30),
-    );
+    const task1 = processor.enqueueTask('task1', () => Promise.resolve(10));
+    const task2 = processor.enqueueTask('task2', () => Promise.resolve(20));
+    const task3 = processor.enqueueTask('task3', () => Promise.resolve(30));
 
     const results = await Promise.all([
-      deferredPromiseTask1.waitForPromise(),
-      deferredPromiseTask2.waitForPromise(),
-      deferredPromiseTask3.waitForPromise(),
+      task1.waitForPromise(),
+      task2.waitForPromise(),
+      task3.waitForPromise(),
     ]);
 
     expect(results).toEqual([10, 20, 30]);
@@ -58,19 +47,22 @@ describe('SingleTaskProcessor', () => {
   it('processes tasks when solve takes some time', async () => {
     const processor = new SingleTaskProcessor<number>();
 
-    const deferredPromiseTask1 = processor.enqueueTask(
+    const task1 = processor.enqueueTask(
+      'task1',
       () =>
         new Promise<number>((resolve) => {
           setTimeout(() => resolve(10), 300);
         }),
     );
-    const deferredPromiseTask2 = processor.enqueueTask(
+    const task2 = processor.enqueueTask(
+      'task2',
       () =>
         new Promise<number>((resolve) => {
           setTimeout(() => resolve(20), 200);
         }),
     );
-    const deferredPromiseTask3 = processor.enqueueTask(
+    const task3 = processor.enqueueTask(
+      'task3',
       () =>
         new Promise<number>((resolve) => {
           setTimeout(() => resolve(30), 100);
@@ -78,12 +70,58 @@ describe('SingleTaskProcessor', () => {
     );
 
     const results = await Promise.all([
-      deferredPromiseTask1.waitForPromise(),
-      deferredPromiseTask2.waitForPromise(),
-      deferredPromiseTask3.waitForPromise(),
+      task1.waitForPromise(),
+      task2.waitForPromise(),
+      task3.waitForPromise(),
     ]);
 
     expect(results).toEqual([10, 20, 30]);
+  });
+
+  it('processes tasks with timeout', async () => {
+    const processor = new SingleTaskProcessor<number>();
+    let deferredTimeoutPromise: DeferredTimeoutPromise | undefined = undefined;
+
+    const task = processor.enqueueTaskWithTimeout(
+      'task',
+      (timeoutPromise: DeferredTimeoutPromise) =>
+        new Promise<number>((resolve) => {
+          if (!deferredTimeoutPromise) {
+            deferredTimeoutPromise = timeoutPromise;
+          }
+
+          setTimeout(() => resolve(Math.pow(2, 10)), 1000);
+        }),
+      100,
+    );
+
+    let resetTimes = 5;
+    for (let i = resetTimes; i <= 0; i -= 1) {
+      await sleep(80);
+      const timeoutPromise = assert(
+        deferredTimeoutPromise,
+      ) as unknown as DeferredTimeoutPromise;
+      timeoutPromise.reset();
+    }
+    const timeoutPromise = assert(
+      deferredTimeoutPromise,
+    ) as unknown as DeferredTimeoutPromise;
+    timeoutPromise.resolve();
+
+    const result = await task.waitForPromise();
+
+    expect(result).toBe(Math.pow(2, 10));
+  });
+
+  it('rejects a task when timeout promise is not resolved', async () => {
+    const processor = new SingleTaskProcessor<number>();
+    const task = processor.enqueueTaskWithTimeout(
+      'task',
+      () => Promise.resolve(Math.pow(2, 10)),
+      100,
+    );
+
+    await expect(task.waitForPromise()).rejects.toThrow();
   });
 
   it('processes one task at a time', async () => {
@@ -106,14 +144,14 @@ describe('SingleTaskProcessor', () => {
       });
     };
 
-    const deferredPromises: DeferredPromise<string>[] = [];
+    const tasks: Task<string>[] = [];
     const nTasks = 50;
 
     for (let i = 0; i < nTasks; i += 1) {
-      deferredPromises.push(processor.enqueueTask(createTaskMock(i)));
+      tasks.push(processor.enqueueTask(`task_${i}`, createTaskMock(i)));
     }
 
-    const promises = deferredPromises.map((dP) => dP.waitForPromise());
+    const promises = tasks.map((task) => task.waitForPromise());
     const results = await Promise.all(promises);
 
     for (let i = 0; i < nTasks; i += 1) {
@@ -124,20 +162,20 @@ describe('SingleTaskProcessor', () => {
   it('allows tasks to handle errors', async () => {
     const processor = new SingleTaskProcessor<string>();
 
-    const deferredPromiseTask1 = processor.enqueueTask(() =>
+    const task1 = processor.enqueueTask('task1', () =>
       Promise.reject(new Error('Error Task 1')).catch(() => {
         return 'Task 1 error has been catched';
       }),
     );
-    const deferredPromiseTask2 = processor.enqueueTask(() =>
+    const task2 = processor.enqueueTask('task2', () =>
       Promise.reject(new Error('Error Task 2')).catch(() => {
         return 'Task 2 error has been catched';
       }),
     );
 
     const results = await Promise.all([
-      deferredPromiseTask1.waitForPromise(),
-      deferredPromiseTask2.waitForPromise(),
+      task1.waitForPromise(),
+      task2.waitForPromise(),
     ]);
 
     expect(results).toEqual([
@@ -149,14 +187,14 @@ describe('SingleTaskProcessor', () => {
   it('allows heavy tasks to handle errors', async () => {
     const processor = new SingleTaskProcessor<string>();
 
-    const deferredPromiseTask1 = processor.enqueueTask(async () => {
+    const task1 = processor.enqueueTask('task1', async () => {
       const promise = new Promise<string>((_, reject) => {
         setTimeout(() => reject('Error Task 1'), 300);
       });
 
       return promise.catch(() => 'Task 1 error has been catched');
     });
-    const deferredPromiseTask2 = processor.enqueueTask(async () => {
+    const task2 = processor.enqueueTask('task2', async () => {
       const promise = new Promise<string>((_, reject) => {
         setTimeout(() => reject('Error Task 2'), 100);
       });
@@ -165,8 +203,8 @@ describe('SingleTaskProcessor', () => {
     });
 
     const results = await Promise.all([
-      deferredPromiseTask1.waitForPromise(),
-      deferredPromiseTask2.waitForPromise(),
+      task1.waitForPromise(),
+      task2.waitForPromise(),
     ]);
 
     expect(results).toEqual([
@@ -175,63 +213,29 @@ describe('SingleTaskProcessor', () => {
     ]);
   });
 
-  it('when a task fails it retries until is resolved', async () => {
-    const processor = new SingleTaskProcessor<number>();
-
-    const deferredPromises = [
-      processor.enqueueTask(async () => Promise.resolve(10)),
-      processor.enqueueTask(async () => Promise.resolve(20)),
-      processor.enqueueTask(createFailingPromise<number>(3, 30)),
-      processor.enqueueTask(async () => Promise.resolve(40)),
-      processor.enqueueTask(async () => Promise.resolve(50)),
-    ];
-
-    const promises = deferredPromises.map((dp) => dp.waitForPromise());
-    const results = await Promise.all(promises);
-
-    expect(results).toEqual([10, 20, 30, 40, 50]);
-  });
-
-  it('rejects a task when it a cannot be resolved after trying 5 times', async () => {
-    const processor = new SingleTaskProcessor<number>();
-
-    const deferredPromises = [
-      processor.enqueueTask(createFailingPromise<number>(10, 10)),
-      processor.enqueueTask(async () => Promise.resolve(20)),
-      processor.enqueueTask(async () => Promise.resolve(30)),
-      processor.enqueueTask(async () => Promise.resolve(40)),
-      processor.enqueueTask(async () => Promise.resolve(50)),
-    ];
-
-    expect(deferredPromises[0].waitForPromise()).rejects.toThrow();
-
-    const promises = deferredPromises.slice(1).map((dp) => dp.waitForPromise());
-    const results = await Promise.all(promises);
-
-    expect(results).toEqual([20, 30, 40, 50]);
-  });
-
   it('allows all tasks to be rejected', async () => {
     const processor = new SingleTaskProcessor<number>();
 
-    const deferredPromises = [
+    const tasks = [
       // First promise will be unqueued automatically so we set reject, but we expect
       // normal promises to be rejected :).
-      processor.enqueueTask(async () => Promise.reject(new Error('Error!'))),
-      processor.enqueueTask(async () => Promise.resolve(20)),
-      processor.enqueueTask(async () => Promise.resolve(30)),
+      processor.enqueueTask('task1', async () =>
+        Promise.reject(new Error('Error!')),
+      ),
+      processor.enqueueTask('task2', async () => Promise.resolve(20)),
+      processor.enqueueTask('task3', async () => Promise.resolve(30)),
     ];
 
     processor.rejectAll();
 
     const waitForDeferredPromise = async (
-      dP: DeferredPromise<number>,
+      task: Task<number>,
     ): Promise<void> => {
-      expect(dP.waitForPromise()).rejects.toThrow();
+      expect(task.waitForPromise()).rejects.toThrow();
     };
 
-    for (const dP of deferredPromises) {
-      await waitForDeferredPromise(dP);
+    for (const task of tasks) {
+      await waitForDeferredPromise(task);
     }
   });
 });

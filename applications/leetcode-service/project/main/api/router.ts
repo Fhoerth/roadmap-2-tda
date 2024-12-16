@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import { GraphQLClient, queries } from '../graphQL/GraphQLClient';
 import { leetCodeScrapper } from '../modules/LeetCodeScrapper';
+import { processService } from '../modules/LeetCodeScrapper/ProcessService';
 import { leetCodeErrorHandler } from './handlers/leetCodeErrorHandler';
 
 const router = Router();
@@ -27,10 +28,13 @@ router.get('/user/:username/submissions', async (req, res) => {
 });
 
 router.get('/submission/:submissionId', async (req, res, next) => {
+  const removeNode = processService.addPendingResponse(res);
+
   const { submissionId } = req.params;
+
   try {
-    const result = await leetCodeScrapper.fetchSubmission(submissionId);
-    res.json(result);
+    res.json(await leetCodeScrapper.fetchSubmission(submissionId));
+    removeNode();
   } catch (error) {
     next(error);
   }

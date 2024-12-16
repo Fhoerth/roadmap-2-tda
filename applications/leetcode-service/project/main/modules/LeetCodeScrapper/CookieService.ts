@@ -1,26 +1,22 @@
 import fs from 'fs/promises';
 import { mkdirp } from 'mkdirp';
 import path from 'path';
-import type { Browser, Cookie } from 'rebrowser-puppeteer-core';
+import type { Cookie } from 'rebrowser-puppeteer-core';
 
-import { assert } from '../../../common/utils/assert';
 import { env } from '../../env';
+import { ForeverBrowser } from './ForeverBrowser';
 
 class CookieService {
   #cookieDir = env.LEETCODE_SERVICE_COOKIE_DIR;
   #cookieFile = path.join(this.#cookieDir, 'cookies.json');
-  #browser: Browser | null = null;
+  #foreverBrowser: ForeverBrowser;
 
-  #getBrowser(): Browser {
-    return assert(this.#browser);
-  }
-
-  public setBrowser(browser: Browser) {
-    this.#browser = browser;
+  constructor(foreverBrowser: ForeverBrowser) {
+    this.#foreverBrowser = foreverBrowser;
   }
 
   async saveCookies(): Promise<void> {
-    const browser = this.#getBrowser();
+    const browser = this.#foreverBrowser.getBrowser();
     const context = browser.defaultBrowserContext();
 
     try {
@@ -50,7 +46,7 @@ class CookieService {
   }
 
   async loadCookies(): Promise<void> {
-    const browser = this.#getBrowser();
+    const browser = this.#foreverBrowser.getBrowser();
 
     try {
       const cookiesExist = await fs.stat(this.#cookieFile).catch(() => false);

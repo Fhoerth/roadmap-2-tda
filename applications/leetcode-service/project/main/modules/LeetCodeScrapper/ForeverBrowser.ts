@@ -65,13 +65,13 @@ class ForeverBrowser {
 
         if (this.#launchingBrowserForFirstTime) {
           this.#launchingBrowserForFirstTime = false;
-          await this.#runOnLaunchCallback();
         }
+
+        await this.#runOnLaunchCallback();
 
         this.#onDisconnectedCallback = async () => {
           this.#waitForBrowserToBeOpen.reset();
           await launch();
-          await this.#runOnLaunchCallback();
         };
         this.#browser.on('disconnected', this.#onDisconnectedCallback);
 
@@ -104,6 +104,14 @@ class ForeverBrowser {
     void this.#launchForeverRecursive(onLaunchCallback);
   }
 
+  public async relaunch(): Promise<void> {
+    this.#waitForBrowserToBeOpen = new DeferredPromise<Browser>();
+    try {
+      await this.close();
+    } catch {}
+    void this.#launchForeverRecursive();
+  }
+
   public async halt(): Promise<void> {
     this.#waitForBrowserToBeOpen.waitForPromise();
 
@@ -119,6 +127,7 @@ class ForeverBrowser {
 
     try {
       const pages = await browser.pages();
+
       for (const page of pages) {
         if (!page.isClosed()) {
           await page.close();

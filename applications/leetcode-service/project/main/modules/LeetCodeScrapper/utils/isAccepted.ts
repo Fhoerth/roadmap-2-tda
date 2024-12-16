@@ -4,11 +4,9 @@ async function searchByText(
   elementHandle: ElementHandle<HTMLElement>,
   searchText: string,
 ): Promise<boolean> {
-  const result = await elementHandle.evaluate((element, searchText) => {
+  return await elementHandle.evaluate((element, searchText) => {
     return element.innerHTML.includes(searchText);
   }, searchText);
-
-  return result;
 }
 
 async function isAccepted(statisticsPage: Page): Promise<boolean> {
