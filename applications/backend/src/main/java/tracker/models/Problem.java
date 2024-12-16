@@ -1,54 +1,32 @@
 package tracker.models;
 
-import java.util.List;
+import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "problems")
+@Data
 public class Problem {
   @Id
   private ObjectId id;
 
-  private Integer level;
+  private ObjectId levelId;
+  private Integer leetCodeProblemId;
   private String name;
-  private List<Task> tasks;
+  private String difficulty;
+  private String url;
+  private String editCodeUrl;
+  private String slug;
 
-  public Problem(Integer level, String name, List<Task> tasks) {
-    this.level = level;
+  public Problem(ObjectId levelId, Integer leetCodeProblemId, String name, String difficulty, String url,
+      String editCodeUrl, String slug) {
+    this.levelId = levelId;
+    this.leetCodeProblemId = leetCodeProblemId;
     this.name = name;
-    this.tasks = tasks;
-  }
-
-  public ObjectId getId() {
-    return id;
-  }
-
-  public void setId(ObjectId id) {
-    this.id = id;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public Integer getLevel() {
-    return level;
-  }
-
-  public Integer setLevel(Integer level) {
-    return this.level = level;
-  }
-
-  public List<Task> getTasks() {
-    return tasks;
-  }
-
-  public void setTasks(List<Task> tasks) {
-    this.tasks = tasks;
+    this.difficulty = difficulty;
+    this.url = url;
+    this.editCodeUrl = editCodeUrl;
+    this.slug = slug;
   }
 }

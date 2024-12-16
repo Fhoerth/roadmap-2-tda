@@ -1,7 +1,7 @@
 package tracker.DTO;
 
-import java.util.List;
 import org.bson.types.ObjectId;
 
-public record ProblemDTO(ObjectId id, Integer level, String name, List<TaskDTO> tasks) {
+public record ProblemDTO(ObjectId id, ObjectId levelId, Integer leetCodeProblemId, String name, String difficulty,
+    String url, String editCodeUrl, String slug) {
 }

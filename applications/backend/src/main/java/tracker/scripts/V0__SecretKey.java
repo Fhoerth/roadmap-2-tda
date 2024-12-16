@@ -8,15 +8,15 @@ import tracker.services.security.KeyService;
 import tracker.utils.Logger;
 
 @Component
-public class V3__SecretKey implements MongoScript {
-  private String name = "v3__secret-key";
-  private String id = "v3__secret-key";
+public class V0__SecretKey implements MongoScript {
+  private String name = "v0__SecretKey";
+  private String id = "v0__SecretKey";
 
   private KeyService keyService;
   private KeyRepository keyRepository;
 
   @Autowired
-  public V3__SecretKey(KeyService keyService, KeyRepository keyRepository) {
+  public V0__SecretKey(KeyService keyService, KeyRepository keyRepository) {
     this.keyService = keyService;
     this.keyRepository = keyRepository;
   }
