@@ -29,4 +29,12 @@ public class LeetCodeController {
       throws LeetCodeServiceForwardedException, LeetCodeServiceRequestException, LeetCodeServiceResponseException {
     return leetCodeService.fetchSubmission(submissionId);
   }
+
+  @Auth
+  @GetMapping("/mark-as-solved/{problemSlug}")
+  public SubmissionDTO markAsSolved(
+      @PathVariable @Pattern(regexp = "^[a-zA-Z0-9-]+$", message = "Problem SLUG must be a valid alphanumeric string.") String problemSlug)
+      throws LeetCodeServiceForwardedException, LeetCodeServiceRequestException, LeetCodeServiceResponseException {
+    return null;
+  }
 }

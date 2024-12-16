@@ -7,7 +7,7 @@ import tracker.models.User;
 
 public class UserMapper {
   public static UserDTO toDTO(User user) {
-    return new UserDTO(user.getId(), user.getNickname());
+    return new UserDTO(user.getId(), user.getLu(), user.getLeetCodeUserName(), user.getNickname());
   }
 
   public static List<UserDTO> toDTOList(List<User> users) {

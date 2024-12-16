@@ -11,6 +11,7 @@ import java.net.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tracker.DTO.LeetCodeErrorDTO;
+import tracker.DTO.RecentAcceptedSubmissionsDTO;
 import tracker.DTO.SubmissionDTO;
 import tracker.exceptions.LeetCodeServiceForwardedException;
 import tracker.exceptions.LeetCodeServiceRequestException;
@@ -78,6 +79,21 @@ public class LeetCodeService {
       return objectMapper.readValue(response.body(), SubmissionDTO.class);
     } catch (Exception exception) {
       throw new LeetCodeServiceResponseException(String.format("Unable to parse submission: %s", submissionId));
+    }
+  }
+
+  public RecentAcceptedSubmissionsDTO fetchRecentAcceptedSubmissions(String leetCodeUserName)
+      throws LeetCodeServiceForwardedException, LeetCodeServiceRequestException {
+    String path = String.format("/user/%s/recent-accepted-submissions", leetCodeUserName);
+
+    HttpResponse<String> response = this.makeRequest(path);
+    Logger.printRed(response.statusCode());
+
+    try {
+      return objectMapper.readValue(response.body(), RecentAcceptedSubmissionsDTO.class);
+    } catch (Exception exception) {
+      throw new LeetCodeServiceResponseException(
+          String.format("Unable to parse recent-accepted-submissions for username: %s", leetCodeUserName));
     }
   }
 }

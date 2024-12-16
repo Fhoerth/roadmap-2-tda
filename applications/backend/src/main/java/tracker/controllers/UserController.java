@@ -11,6 +11,7 @@ import tracker.DTO.UserLoginDTO;
 import tracker.DTO.UserRegistrationDTO;
 import tracker.auth.Auth;
 import tracker.auth.AuthCookie;
+import tracker.auth.AuthenticatedUser;
 import tracker.exceptions.BadRequestException;
 import tracker.models.User;
 import tracker.providers.AuthRegistrationKeyProvider;
@@ -44,7 +45,7 @@ public class UserController {
 
     response.addCookie(cookie);
 
-    return new UserDTO(user.getId(), user.getNickname());
+    return new UserDTO(user.getId(), user.getLu(), user.getLeetCodeUserName(), user.getNickname());
   }
 
   @Auth
@@ -65,6 +66,12 @@ public class UserController {
 
     User user = userService.createUser(input.getData());
 
-    return new UserDTO(user.getId(), user.getNickname());
+    return new UserDTO(user.getId(), user.getLu(), user.getLeetCodeUserName(), user.getNickname());
+  }
+
+  @Auth
+  @GetMapping("/profile")
+  public UserDTO getProfile(@AuthenticatedUser User user) {
+    return new UserDTO(user.getId(), user.getLu(), user.getLeetCodeUserName(), user.getNickname());
   }
 }
