@@ -2,12 +2,16 @@ package tracker.models;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import lombok.NoArgsConstructor;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import tracker.serialization.ObjectIdDeserializer;
 import tracker.serialization.ObjectIdSerializer;
 
+@NoArgsConstructor
 @Document(collection = "users")
 public class User {
   @Id
@@ -19,11 +23,6 @@ public class User {
   private String nickname;
   private String leetCodeUserName;
   private Integer pin;
-
-  // spotless:off
-  public User() {
-  }
-  // spotless:on
 
   public User(String lu, String nickname, String leetCodeUserName, Integer pin) {
     this.lu = lu;

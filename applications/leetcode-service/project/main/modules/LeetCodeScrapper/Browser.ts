@@ -57,7 +57,20 @@ class Browser {
         turnstile: true,
         disableXvfb: true,
         headless: false,
-        args: ['--no-sandbox'],
+        customConfig: {
+          chromePath: '/usr/bin/google-chrome',
+        },
+        args: [
+          '--no-sandbox',
+          '--disable-dev-shm-usage',
+          '--no-zygote',
+          // '--disable-setuid-sandbox',
+          // '--disable-blink-features=AutomationControlled',
+          // '--disable-accelerated-2d-canvas',
+          // '--disable-gpu',
+          // '--single-process',
+          // '--start-maximized',
+        ],
       });
 
       this.#browser = browser;

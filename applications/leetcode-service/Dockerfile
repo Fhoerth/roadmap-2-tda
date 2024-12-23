@@ -1,4 +1,3 @@
-# Usar una imagen base de Debian
 FROM debian:bullseye-slim
 
 ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/google-chrome
@@ -11,6 +10,9 @@ ENV GITHUB_PASSWORD=OVERRIDE_DEFAULT_GITHUB_PASSWORD
 ENV GITHUB_TOPT_SECRET=OVERRIDE_DEFAULT_GITHUB_TOPT_SECRET
 ENV GITHUB_PROFILE_NAME=OVERRIDE_DEFAULT_GITHUB_PROFILE_NAME
 ENV PORT=9994
+ENV DISPLAY=
+ENV WAYLAND_DISPLAY=
+ENV HOST_OSTYPE=
 
 # Configuración inicial e instalación de dependencias
 RUN apt-get update --fix-missing && apt-get install -y \
@@ -54,10 +56,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
+
 # Set up the working directory in the container
 WORKDIR /leetcode-service
 
-# Copy package.json and package-lock.json to the working directory
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Copy package.json and pnpm-lock.yaml to the working directory
 COPY package.json pnpm-lock.yaml ./
 
 RUN pnpm install --frozen-lockfile || pnpm install
@@ -73,4 +79,6 @@ RUN mkdir -p ${LEETCODE_SERVICE_MOCK_DIR}
 # Expose the port your app runs on
 EXPOSE ${PORT}
 
-CMD ["npm", "run", "start"]
+# CMD ["npm", "run", "start"]
+# CMD ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

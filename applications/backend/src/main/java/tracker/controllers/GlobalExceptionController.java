@@ -63,6 +63,13 @@ public class GlobalExceptionController {
     return new ResponseEntity<>(errorResponse, HttpStatus.valueOf(exception.status));
   }
 
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<Object> handleException(Exception exception) {
+    ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(),
+        "An unexpected error occurred. Please try again later.");
+    return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
   @Data
   public static class ErrorResponse {
     private String errorCode;

@@ -9,8 +9,7 @@
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-    <maven.compiler.release>17</maven.compiler.release>
-    <spring-boot.version>3.1.3</spring-boot.version>
+    <spring-boot.version>3.4.1</spring-boot.version>
     <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -23,9 +22,25 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+        <version>10.1.34</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   <dependencies>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.5.13</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.5.13</version>
+    </dependency>
     <dependency>
       <groupId>org.aspectj</groupId>
       <artifactId>aspectjweaver</artifactId>
@@ -39,75 +54,52 @@
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-devtools</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-    <!-- Spring Boot Starter Web -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-mongodb</artifactId>
-      <version>3.1.3</version>
     </dependency>
-    <!-- Spring Boot Starter Test -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-      <version>${spring-boot.version}</version>
     </dependency>
-    <!-- JUnit 5 -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>
       <version>5.10.0</version>
-      <!-- Cambia según la versión deseada -->
       <scope>test</scope>
     </dependency>
-    <!-- Mockito -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>5.5.0</version>
-      <!-- Cambia según la versión deseada -->
       <scope>test</scope>
     </dependency>
-    <!-- Jackson-->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>2.14.0</version>
+      <version>2.15.2</version>
     </dependency>
-    <!-- Validator -->
     <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
-      <version>8.0.0.Final</version>
+      <version>8.0.1.Final</version>
     </dependency>
-    <!-- Jakarta -->
     <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
-      <version>3.0.0</version>
+      <version>3.0.2</version>
     </dependency>
-    <!-- Mockito JUnit 5 Integration -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
       <version>5.5.0</version>
-      <!-- Cambia según la versión deseada -->
       <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
-    <!-- <resources>
-        <resource>
-            <directory>${project.basedir}/backend/src/main/resources</directory>
-        </resource>
-    </resources> -->
     <resources>
       <resource>
         <directory>${project.basedir}/src/main/resources</directory>
@@ -116,32 +108,11 @@
         </includes>
       </resource>
     </resources>
-    <!-- <testResources>
-        <testResource>
-            <directory>${project.basedir}/src/test/resources</directory>
-        </testResource>
-    </testResources> -->
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>3.4.1</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>tracker.TrackerApplication</mainClass>
-            </manifest>
-          </archive>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <version>${spring-boot.version}</version>
-        <configuration>
-          <mainClass>tracker.TrackerApplication</mainClass>
-          <!-- Cambia a la clase principal de tu proyecto -->
-        </configuration>
         <executions>
           <execution>
             <goals>
@@ -151,31 +122,13 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.2.0</version>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.10.1</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
-          <!-- <configuration>
-						<includes>
-							<include>**/*.java</include>
-							<include>**/*Test.java</include>
-						</includes>
-					</configuration> -->
         </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>com.diffplug.spotless</groupId>
@@ -199,19 +152,17 @@
             </includes>
             <palantirJavaFormat>
               <version>2.44.0</version>
-              <!-- optional -->
             </palantirJavaFormat>
             <eclipse>
               <file>${basedir}/eclipse-formatter.xml</file>
             </eclipse>
             <importOrder>
               <order>
-												java
-												javax
-												org
-												com
-										</order>
-              <!-- <removeUnused>true</removeUnused> -->
+                java
+                javax
+                org
+                com
+              </order>
             </importOrder>
           </java>
         </configuration>
@@ -223,12 +174,13 @@
         <configuration>
           <excludes>
             <exclude>**/performance/**</exclude>
+            <exclude>src/performance/**</exclude>
             <exclude>**/src/performance/**</exclude>
             <exclude>**/performance/**/*.class</exclude>
+            <exclude>performance/**</exclude>
           </excludes>
         </configuration>
         <executions>
-          <!-- Prepare Agent -->
           <execution>
             <id>prepare-agent</id>
             <goals>
@@ -251,7 +203,6 @@
               </excludes>
             </configuration>
           </execution>
-          <!-- Generate Report with Exclusion -->
         </executions>
       </plugin>
       <plugin>
@@ -267,35 +218,4 @@
       </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-      <id>include-performance</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <version>3.2.0</version>
-            <executions>
-              <execution>
-                <id>add-performance-source</id>
-                <phase>initialize</phase>
-                <goals>
-                  <goal>add-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>src/performance/java</source>
-                  </sources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 </project>
